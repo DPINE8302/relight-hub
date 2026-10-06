@@ -1,0 +1,9 @@
+The browser game bundles Three.js (including GLTFLoader and SkeletonUtils).
+Three.js is licensed under MIT. Its full license is included at dist/THREE-LICENSE.txt.
+The original geometric art, synthesized audio, and game code were created for this project.
+The ten supplied visual references and GDD are retained in references/ as user-provided source material.
+Vite is used only as a development/build tool.
+
+LINE Seed Sans TH regular and bold: bundled Thai fonts. License: dist/fonts/LICENSE-LINE-Seed.md (source: public/fonts/). English typography retains the original system rounded font stack.
+
+Five adapted models from Quaternius Stylized Nature MegaKit Standard (CommonTree_1, Bush_Common_Flowers, Plant_1, Rock_Medium_1, Flower_3_Group). Downloaded from https://quaternius.itch.io/stylized-nature-megakit. The supplied archive includes CC0 1.0 dedication; preserved in dist/nature/LICENSE-Quaternius.txt (source: public/nature/). Current website also has Quaternius Asset License terms: https://quaternius.com/license.html. Distributed only as incorporated game assets, not a standalone asset pack. Palette, shader materials, scale, density, and placement adapted for PUFF WORLD.
