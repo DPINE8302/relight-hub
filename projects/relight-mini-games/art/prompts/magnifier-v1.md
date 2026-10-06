@@ -1,0 +1,1 @@
+Use case: illustration-story. Single large charcoal-and-brass magnifying glass with handle, three-quarter overhead angle, complete object transparent background, polished tactile cut-paper/clay handpainted art matching reference RE:Light language lab. No letters, logo, scene, hands or UI.

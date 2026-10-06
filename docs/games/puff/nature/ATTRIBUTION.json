@@ -1,0 +1,14 @@
+{
+  "source": "https://quaternius.itch.io/stylized-nature-megakit",
+  "official": "https://quaternius.com/packs/stylizednaturemegakit.html",
+  "version": "Standard, 68 models; 5 selected for game",
+  "download_sha256": "298f6732b872e4cf7b30e6e7abf9641c7f6dc6b326df37ac089533ed7e3d58c9",
+  "adaptation": "Geometry retained. Materials simplified, maps retained only for alpha cutouts. Runtime tint uses PUFF zone colours, neutral map shading, scaled/batched meshes.",
+  "selected": [
+    "CommonTree_1",
+    "Bush_Common_Flowers",
+    "Plant_1",
+    "Rock_Medium_1",
+    "Flower_3_Group"
+  ]
+}

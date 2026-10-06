@@ -1,0 +1,64 @@
+{
+  "updated": "2026-10-04",
+  "scenes": [
+    {
+      "number": "01",
+      "title": "ความทรงจำ",
+      "status": "draft",
+      "duration_seconds": 18.0,
+      "url": "/relight-hub/sites/progress/media/progress/scene01-draft1-480p-v5.mp4",
+      "width": 1120,
+      "height": 480,
+      "fps": "24/1"
+    },
+    {
+      "number": "02",
+      "title": "ความเป็นไปได้",
+      "status": "draft",
+      "duration_seconds": 22.05,
+      "url": "/relight-hub/sites/progress/media/progress/scene02-montage-review.mp4",
+      "width": 992,
+      "height": 432,
+      "fps": "24/1"
+    },
+    {
+      "number": "03",
+      "title": "คำชวน",
+      "status": "draft",
+      "duration_seconds": 25.05,
+      "url": "/relight-hub/sites/progress/media/progress/scene03-classroom-review.mp4",
+      "width": 992,
+      "height": 432,
+      "fps": "24/1"
+    },
+    {
+      "number": "04",
+      "title": "โลกแคบลง",
+      "status": "draft",
+      "duration_seconds": 24.05,
+      "url": "/relight-hub/sites/progress/media/progress/scene04-phone-review.mp4",
+      "width": 992,
+      "height": 432,
+      "fps": "24/1"
+    },
+    {
+      "number": "05",
+      "title": "ตื่น",
+      "status": "film_pending",
+      "duration_seconds": 0,
+      "url": null
+    }
+  ],
+  "draft_scene_count": 4,
+  "scene_count": 5,
+  "draft_seconds": 89.15,
+  "target_seconds": 120,
+  "draft_runtime_percent": 74.29,
+  "milestones": {
+    "done": 6,
+    "review": 1,
+    "next": 3
+  },
+  "final_film_approved": false,
+  "physical_exhibition_verified": false
+}

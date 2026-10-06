@@ -1,0 +1,10 @@
+{
+  "name": "relight-packaged-v14",
+  "version": "14.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/preview-server.mjs",
+    "build": "node scripts/verify-prebuilt.mjs"
+  }
+}

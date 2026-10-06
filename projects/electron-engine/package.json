@@ -1,0 +1,127 @@
+{
+  "name": "relight-engine",
+  "version": "1.0.0",
+  "description": "Offline exhibition runtime for the RE:Light immersive experience",
+  "main": "./out/main/index.js",
+  "type": "module",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "dev": "electron-vite dev",
+    "preview": "electron-vite preview",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --max-warnings=0",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "npm run build && playwright test",
+    "test:hid": "node scripts/build-hid-helper.mjs --test",
+    "test:soak": "vitest run tests/unit/soak.test.ts",
+    "verify:source": "node scripts/verify-source-boundary.mjs",
+    "build:hid": "node scripts/build-hid-helper.mjs",
+    "build": "npm run build:hid && electron-vite build",
+    "package:mac:local": "npm run verify:source && npm run build && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac dmg --arm64",
+    "verify:package": "node scripts/verify-package.mjs"
+  },
+  "dependencies": {
+    "electron-log": "5.4.4",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "latest",
+    "@babel/core": "latest",
+    "@babel/eslint-parser": "latest",
+    "@babel/plugin-syntax-jsx": "8.0.1",
+    "@babel/preset-typescript": "latest",
+    "@electron/asar": "latest",
+    "@eslint/js": "9.39.2",
+    "@playwright/test": "latest",
+    "@swc/core": "latest",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "@vitejs/plugin-react": "5.2.0",
+    "@vitest/coverage-v8": "4.1.10",
+    "electron": "43.3.0",
+    "electron-builder": "26.15.3",
+    "electron-vite": "5.0.0",
+    "eslint": "9.39.2",
+    "eslint-plugin-react-hooks": "latest",
+    "eslint-plugin-react-refresh": "latest",
+    "globals": "latest",
+    "typescript": "7.0.2",
+    "vite": "7.3.6",
+    "vitest": "4.1.10"
+  },
+  "build": {
+    "appId": "com.relight.engine",
+    "productName": "RELight",
+    "asar": true,
+    "artifactName": "RELight-Engine-${version}-${arch}.${ext}",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "out/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "resources/default-content",
+        "to": "default-content",
+        "filter": [
+          "experience.json",
+          "media/.keep"
+        ]
+      },
+      {
+        "from": "resources/fonts",
+        "to": "fonts",
+        "filter": [
+          "line-seed-sans-th/LINESeedSansTH-Regular.woff2",
+          "line-seed-sans-th/LINESeedSansTH-Bold.woff2",
+          "line-seed-sans-th/OFL-1.1.txt"
+        ]
+      },
+      {
+        "from": "resources/notices",
+        "to": "notices",
+        "filter": [
+          "CONTENT_BOUNDARY.txt"
+        ]
+      }
+    ],
+    "extraFiles": [
+      {
+        "from": "native/hid-bridge/build/relight-hid-bridge",
+        "to": "Library/Helpers/relight-hid-bridge"
+      }
+    ],
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64"
+          ]
+        }
+      ],
+      "category": "public.app-category.utilities",
+      "minimumSystemVersion": "13.0",
+      "identity": "-",
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false,
+      "extendInfo": {
+        "CFBundleDisplayName": "RE:Light Engine",
+        "CFBundleName": "RELight",
+        "LSMinimumSystemVersion": "13.0",
+        "NSMicrophoneUsageDescription": "RE:Light uses the microphone to temporarily record the participant's response as part of the interactive experience."
+      }
+    },
+    "dmg": {
+      "title": "RE:Light Engine 1.0.0",
+      "sign": false
+    }
+  }
+}

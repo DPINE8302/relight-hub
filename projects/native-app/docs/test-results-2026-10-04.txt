@@ -1,0 +1,80 @@
+Building for debugging...
+[2 / 7] RELightNativeTests-product
+[4 / 9] RELightNativeTests-product
+[7 / 10] RELightNativeTests-product
+[9 / 13] RELightNativeTests-product
+Build complete! (1.30 sec)
+Test Suite 'All tests' started at 2026-10-04 18:41:22.932.
+Test Suite 'All tests' passed at 2026-10-04 18:41:22.932.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+Test Suite 'All tests' started at 2026-10-04 18:41:22.993.
+Test Suite 'All tests' passed at 2026-10-04 18:41:22.994.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test manualRecordingWaitsForStopAndResumesAuthoredGateFrame() started.
+◇ Test shortTakeCanRepeatOrFillLongRegionAndResumeInsideLoop() started.
+◇ Test rehearsalUsesGateAndDeclineThenCompletes() started.
+◇ Test disconnectedNamedRouteFailsInsteadOfFallingBack() started.
+◇ Test nativeCanRouteTheInstalledMacDevices() started.
+◇ Test nativeCaptureConvertsAndDisposesPCM() started.
+◇ Test hardwareUnderstandsActualHelperInventoryResponse() started.
+◇ Test resumedVoicePreservesSampleFadesAndSourcePosition() started.
+◇ Test runningProjectRejectsEditsAndStopClearsVoice() started.
+◇ Test nativeEffectsRenderAudioAndBoundFeedback() started.
+◇ Test unchangedEditorValuesPreserveSavedStateAndRedo() started.
+◇ Test bundledDraftSchemaFitsOriginalMovieAndRetainsDraftStatus() started.
+◇ Test bypassPreservesMixAndRemovesCreativeProcessing() started.
+◇ Test manualTestTakeReturnsToEditorAndCanAuditionLoop() started.
+◇ Test silenceIsNotAUsableRecording() started.
+◇ Test activeVoicePauseResumeFreezesClockAndRestoresAutomation() started.
+◇ Test decliningAuthoredGateResumesSameSceneWithoutRetriggering() started.
+✔ Test disconnectedNamedRouteFailsInsteadOfFallingBack() passed after 0.277 seconds.
+✔ Test shortTakeCanRepeatOrFillLongRegionAndResumeInsideLoop() passed after 0.714 seconds.
+✔ Test bypassPreservesMixAndRemovesCreativeProcessing() passed after 0.776 seconds.
+✔ Test nativeCanRouteTheInstalledMacDevices() passed after 0.780 seconds.
+✔ Test manualTestTakeReturnsToEditorAndCanAuditionLoop() passed after 1.057 seconds.
+✔ Test unchangedEditorValuesPreserveSavedStateAndRedo() passed after 1.072 seconds.
+✔ Test rehearsalUsesGateAndDeclineThenCompletes() passed after 1.120 seconds.
+✔ Test nativeCaptureConvertsAndDisposesPCM() passed after 1.129 seconds.
+✔ Test bundledDraftSchemaFitsOriginalMovieAndRetainsDraftStatus() passed after 1.130 seconds.
+✔ Test nativeEffectsRenderAudioAndBoundFeedback() passed after 1.189 seconds.
+✔ Test silenceIsNotAUsableRecording() passed after 1.208 seconds.
+✔ Test resumedVoicePreservesSampleFadesAndSourcePosition() passed after 1.252 seconds.
+✔ Test hardwareUnderstandsActualHelperInventoryResponse() passed after 1.253 seconds.
+✔ Test runningProjectRejectsEditsAndStopClearsVoice() passed after 1.272 seconds.
+✔ Test decliningAuthoredGateResumesSameSceneWithoutRetriggering() passed after 1.331 seconds.
+✔ Test activeVoicePauseResumeFreezesClockAndRestoresAutomation() passed after 1.990 seconds.
+✔ Test manualRecordingWaitsForStopAndResumesAuthoredGateFrame() passed after 6.786 seconds.
+✔ Test run with 17 tests in 0 suites passed after 6.786 seconds.
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test projectRoundTripAndNoVoiceBytes() started.
+◇ Test onceOnlyAndSeekSemantics() started.
+◇ Test automaticCaptureMustCompleteBeforeReplay() started.
+◇ Test echoMixRemainsCompatibleWithExistingProjects() started.
+◇ Test automationInterpolatesAndRejectsUnsafeValues() started.
+◇ Test untrustedProjectIntegersCannotOverflowValidation() started.
+◇ Test invalidConfigurationsCannotRun() started.
+◇ Test frameConversions() started.
+◇ Test starterMatchesV5() started.
+◇ Test cuesRequireCaptureAndFitScene() started.
+◇ Test recordingModesAndRepeatsPreserveLegacyProjects() started.
+◇ Test sourceCannotEscapeRoot() started.
+◇ Test outputCompensationMovesAutomationAndCueEndWithPlayback() started.
+✔ Test outputCompensationMovesAutomationAndCueEndWithPlayback() passed after 0.001 seconds.
+✔ Test frameConversions() passed after 0.001 seconds.
+✔ Test onceOnlyAndSeekSemantics() passed after 0.001 seconds.
+✔ Test untrustedProjectIntegersCannotOverflowValidation() passed after 0.001 seconds.
+✔ Test echoMixRemainsCompatibleWithExistingProjects() passed after 0.001 seconds.
+✔ Test automationInterpolatesAndRejectsUnsafeValues() passed after 0.001 seconds.
+✔ Test cuesRequireCaptureAndFitScene() passed after 0.001 seconds.
+✔ Test starterMatchesV5() passed after 0.001 seconds.
+✔ Test automaticCaptureMustCompleteBeforeReplay() passed after 0.001 seconds.
+✔ Test invalidConfigurationsCannotRun() passed after 0.001 seconds.
+✔ Test recordingModesAndRepeatsPreserveLegacyProjects() passed after 0.001 seconds.
+✔ Test projectRoundTripAndNoVoiceBytes() passed after 0.001 seconds.
+✔ Test sourceCannotEscapeRoot() passed after 0.002 seconds.
+✔ Test run with 13 tests in 0 suites passed after 0.002 seconds.

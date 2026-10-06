@@ -1,0 +1,53 @@
+RE:Light Native 2.0
+Project: Draft 1 · Scenes 1–4 · provisional boundaries
+Setup: This Mac   State: Complete   Frame: 00:01:40:13
+Visitor recording: none
+Microphone test: passed
+Speakers: not confirmed
+Picture: not confirmed
+USB access: unknown
+AC power: connected
+
+PROJECT CHECKS
+Project can rehearse with current setup
+
+MEDIA
+Memory: 414 frames from source 0 · 24.0 fps · playable
+Possibility: 409 frames from source 414 · 24.0 fps · playable
+The Choice: 707 frames from source 823 · 24.0 fps · playable
+Narrowing World / Hospital: 547 frames from source 1530 · 24.0 fps · playable
+Wake — film pending: Film not supplied · rehearsal text available
+
+RECENT EVENTS
+12:28:54 PM  Run complete. Participant voice cleared.
+12:28:40 PM  Running Wake — film pending
+12:28:40 PM  Preparing scene 5: Wake — film pending
+12:28:33 PM  Voice scheduled at 00:01:19:18 · lead 56 ms
+12:28:17 PM  Running Narrowing World / Hospital
+12:28:17 PM  Preparing scene 4: Narrowing World / Hospital
+12:27:47 PM  Running The Choice
+12:27:47 PM  Preparing scene 3: The Choice
+12:27:30 PM  Running Possibility
+12:27:30 PM  Preparing scene 2: Possibility
+12:27:30 PM  6.0 seconds captured · ready for voice cues
+12:27:24 PM  Recording participant voice
+12:26:54 PM  Off-clock consent gate after Memory
+12:26:36 PM  Running Memory
+12:26:36 PM  Preparing scene 1: Memory
+12:26:20 PM  Microphone signal passed
+12:26:01 PM  Using this Mac. Your project and saved exhibition assignments are unchanged.
+12:25:48 PM  Native workspace opened. Participant audio is never saved.
+
+SHORTCUTS
+⌘Return  Start / Pause / Resume     ⌘.  Stop & Clear
+⌘S  Save     ⌘Z  Undo     ⌘⇧Z  Redo
+
+RECOVERY
+Missing microphone: choose the intended input in Devices and Test signal.
+Denied microphone access: enable RE:Light in System Settings → Privacy & Security → Microphone.
+Missing exhibition kit: Continue with this Mac starts rehearsal using local devices.
+Failed film: choose the scene in Edit, replace its film, then Validate media.
+Stop & Clear stops playback, cancels effect tails, and deletes the temporary voice.
+
+Physical projector framing, speaker latency, room levels, external microphones, and USB controls require tests with the connected exhibition kit. Mac rehearsal does not certify the installation.
+Support reports contain no recorded audio or transcript.

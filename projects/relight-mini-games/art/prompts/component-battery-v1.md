@@ -1,0 +1,1 @@
+One stylized fictional small green cylindrical battery for simplified educational e-cigarette inspection diagram, front three-quarter angle, complete isolated object. Muted green body small silver ends, deliberately simple schematic design not detailed assembly instructions. Tactile handpainted paper/clay art. Transparent background no labels numbers logos glow or other objects.

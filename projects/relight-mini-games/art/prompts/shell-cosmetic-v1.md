@@ -1,0 +1,1 @@
+One half of a plain muted teal cosmetic-like tall rounded fictional e-cigarette outer shell, isolated full front slightly angled right, open side faces centre/right, no internal components, no brand, no text, for educational inspection diagram. Tactile handpainted paper/clay art matching reference. Transparent background, no glow beyond silhouette.

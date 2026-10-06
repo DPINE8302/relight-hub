@@ -1,0 +1,1 @@
+One cheerful potted monstera-like small houseplant, lush sculptural leaves, warm terracotta pot, polished handpainted cut-paper and clay illustration matching the approved RE:Light creative studio, warm upper-left light, full complete object with transparent background. No letters, face, people, other objects or UI.

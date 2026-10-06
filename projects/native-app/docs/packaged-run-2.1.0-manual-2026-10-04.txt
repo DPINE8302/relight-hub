@@ -1,0 +1,52 @@
+RE:Light Native 2.1.0
+Project: Manual recording QA · no final media changes
+Setup: This Mac   State: Complete   Frame: 00:01:40:13
+Visitor recording: none
+Microphone test: passed
+Speakers: not confirmed
+Picture: not confirmed
+USB access: unknown
+AC power: connected
+
+PROJECT CHECKS
+Project can rehearse with current setup
+
+MEDIA
+Memory: Film not supplied · rehearsal text available
+Possibility: Film not supplied · rehearsal text available
+The Choice: Film not supplied · rehearsal text available
+Narrowing World / Hospital: Film not supplied · rehearsal text available
+Wake — film pending: Film not supplied · rehearsal text available
+
+RECENT EVENTS
+8:22:20 PM  Run complete. Participant voice cleared.
+8:22:06 PM  Running Wake — film pending
+8:22:06 PM  Preparing scene 5: Wake — film pending
+8:21:48 PM  Voice scheduled at 00:01:08:18 · lead 50 ms
+8:21:43 PM  Running Narrowing World / Hospital
+8:21:43 PM  Preparing scene 4: Narrowing World / Hospital
+8:21:36 PM  Running The Choice
+8:21:36 PM  Preparing scene 3: The Choice
+8:21:19 PM  Running Possibility
+8:21:19 PM  Preparing scene 2: Possibility
+8:21:02 PM  29.1 seconds captured · ready for voice cues
+8:20:32 PM  Recording participant voice · press Stop & Continue when finished
+8:20:22 PM  Off-clock consent gate after Memory
+8:20:22 PM  Running Memory
+8:20:22 PM  Preparing scene 1: Memory
+8:19:33 PM  Microphone signal passed
+8:19:03 PM  Native workspace opened. Participant audio is never saved.
+
+SHORTCUTS
+⌘Return  Start / Pause / Resume     ⌘.  Stop & Clear
+⌘S  Save     ⌘Z  Undo     ⌘⇧Z  Redo
+
+RECOVERY
+Missing microphone: choose the intended input in Devices and Test signal.
+Denied microphone access: enable RE:Light in System Settings → Privacy & Security → Microphone.
+Missing exhibition kit: Continue with this Mac starts rehearsal using local devices.
+Failed film: choose the scene in Edit, replace its film; media checks update automatically.
+Stop & Clear stops playback, cancels effect tails, and deletes the temporary voice.
+
+Physical projector framing, speaker latency, room levels, external microphones, and USB controls require tests with the connected exhibition kit. Mac rehearsal does not certify the installation.
+Support reports contain no recorded audio or transcript.

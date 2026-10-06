@@ -1,0 +1,1 @@
+Use case: illustration-story. Single wood-and-coral rubber stamp with rounded handle, three-quarter overhead angle, complete isolated object transparent background, tactile cut-paper/clay handpainted art matching reference RE:Light language lab. Blank stamping face. No words, logo, scene, hands or UI.

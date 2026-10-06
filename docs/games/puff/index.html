@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#122643" />
+    <title>PUFF//WORLD: INSIDE</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='52' font-size='52'%3E☁️%3C/text%3E%3C/svg%3E"
+    />
+    <script type="module" crossorigin src="./assets/index-BORliSrK.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/three-uB8yeP1I.js">
+    <link rel="stylesheet" crossorigin href="./assets/index-CtutpheL.css">
+  </head>
+  <body>
+    <canvas
+      tabindex="0"
+      id="game"
+      aria-busy="true"
+      aria-label="เกมสามมิติ PUFF WORLD"
+    ></canvas>
+    <div id="vignette"></div>
+    <div id="flash"></div>
+    <header>
+      <a class="wordmark" href="#" id="home">PUFF<span>//</span>WORLD</a>
+      <div class="topright">
+        <button id="languageButton" aria-label="Switch to English">EN</button
+        ><button
+          id="journalButton"
+          aria-label="วิธีเล่นและเรื่องที่เราเรียนรู้"
+        >
+          ?</button
+        ><button id="pauseButton" aria-label="พักและตั้งค่า">Ⅱ</button>
+      </div>
+    </header>
+    <button id="skipScene" hidden>Skip story →</button>
+    <div id="hud" hidden>
+      <h2 id="zoneName"></h2>
+      <div class="objective">
+        <p id="mission"></p>
+        <span id="zoneMeter" aria-live="polite"></span>
+      </div>
+    </div>
+    <div id="compass" hidden aria-label="ทิศทางสู่เป้าหมาย">
+      <span id="compassNeedle">↑</span><span id="distance"></span>
+    </div>
+    <div id="caption" role="status" aria-live="polite"></div>
+    <div id="hint"></div>
+    <div id="controls" hidden><kbd>Esc</kbd> · Pause</div>
+    <main id="welcome">
+      <h1>PUFF<span>//</span>WORLD</h1>
+      <div class="title-inside">INSIDE</div>
+      <p>Help Airy find the way to clear air.</p>
+      <button id="start" class="primary" disabled>Let’s go ↗</button>
+      <small>Keyboard + mouse</small>
+    </main>
+    <section
+      id="pause"
+      class="modal"
+      hidden
+      role="dialog"
+      aria-modal="true"
+      aria-label="พักเกมและตั้งค่า"
+    >
+      <div class="modal-content">
+        <h2>Take a breath</h2>
+        <button id="resume" class="primary">Continue →</button>
+        <label
+          >Sound<input
+            id="master"
+            type="range"
+            min="0"
+            max="1"
+            step=".01"
+            value=".65"
+        /></label>
+        <label
+          >Music<input
+            id="music"
+            type="range"
+            min="0"
+            max="1"
+            step=".01"
+            value=".35"
+        /></label>
+        <label
+          >Camera<input
+            id="sensitivity"
+            type="range"
+            min=".2"
+            max="2"
+            step=".1"
+            value="1"
+        /></label>
+        <label
+          >Graphics<select id="quality">
+            <option value="high">High</option>
+            <option value="low">Low</option>
+          </select></label
+        >
+        <div class="row">
+          <button id="restart">Start again</button
+          ><button id="fullscreen">Fullscreen</button>
+        </div>
+      </div>
+    </section>
+    <section
+      id="journal"
+      class="modal"
+      hidden
+      role="dialog"
+      aria-modal="true"
+      aria-label="วิธีเล่นและความรู้"
+    >
+      <div class="modal-content journal-content">
+        <h2>A little breath, a big journey</h2>
+        <div class="help-controls">
+          <p>WASD · Walk</p>
+          <p>Space · Jump</p>
+          <p>Click · Breathe / push the lure</p>
+          <p>Drag · Look around</p>
+        </div>
+        <details>
+          <summary>What did we discover?</summary>
+          <div class="journal-chapters">
+            <p>
+              Aerosol can contain tiny particles, metals, and harmful chemicals.
+            </p>
+            <p>Nicotine can increase heart rate and blood pressure.</p>
+            <p>
+              Nicotine is addictive and can harm adolescent brain development.
+            </p>
+            <p>People nearby can also be exposed to e-cigarette aerosol.</p>
+            <p>The world and Airy’s powers are symbols, not real treatment.</p>
+            <a
+              href="https://www.cdc.gov/tobacco/e-cigarettes/health-effects.html"
+              target="_blank"
+              rel="noopener"
+              >Learn more · CDC ↗</a
+            >
+          </div>
+        </details>
+        <p id="journalStats" class="fine"></p>
+        <button id="closeJournal" class="primary">Back →</button>
+      </div>
+    </section>
+    <section
+      id="ending"
+      class="modal"
+      hidden
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="endingTitle"
+    >
+      <div class="modal-content ending-content">
+        <h2 id="endingTitle"></h2>
+        <p id="endingIntro"></p>
+        <button id="replay" class="primary">Play again ↗</button
+        ><button id="chooseAgain">Choose another path</button>
+        <details id="learning">
+          <summary>What did we discover?</summary>
+          <div id="facts">
+            <p>
+              Aerosol can contain tiny particles, metals, and harmful chemicals.
+            </p>
+            <p>Nicotine can increase heart rate and blood pressure.</p>
+            <p>
+              Nicotine is addictive and can harm adolescent brain development.
+            </p>
+            <p>People nearby can also be exposed to e-cigarette aerosol.</p>
+            <p>
+              The restored world is a symbol of choosing a healthier future.
+              Real recovery takes time and varies.
+            </p>
+            <a
+              href="https://www.cdc.gov/tobacco/e-cigarettes/health-effects.html"
+              target="_blank"
+              rel="noopener"
+              >Learn more · CDC ↗</a
+            >
+          </div>
+        </details>
+      </div>
+    </section>
+    <div id="error" class="modal" hidden role="alertdialog">
+      <div class="modal-content">
+        <h2>Unable to start 3D</h2>
+        <p id="errorText"></p>
+        <button onclick="location.reload()">Try again</button>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,1 @@
+One simplified stylized small heating component for educational e-cigarette diagram: a dull silver short cylinder with small ochre heating element visible in a tiny window. Clearly schematic, no buildable wiring detail. Single complete isolated object, tactile handpainted paper/clay art consistent with reference. Transparent background, no labels, logo, glow, arrows, text.

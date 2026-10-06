@@ -1,0 +1,135 @@
+{
+  "SPAudioDataType": [
+    {
+      "_items": [
+        {
+          "_name": "EPSON PJ",
+          "coreaudio_device_manufacturer": "SEC",
+          "coreaudio_device_output": 2,
+          "coreaudio_device_srate": 48000,
+          "coreaudio_device_transport": "coreaudio_device_type_hdmi",
+          "coreaudio_output_source": "spaudio_default"
+        },
+        {
+          "_name": "External Microphone",
+          "coreaudio_default_audio_input_device": "spaudio_yes",
+          "coreaudio_device_input": 1,
+          "coreaudio_device_manufacturer": "Apple Inc.",
+          "coreaudio_device_srate": 48000,
+          "coreaudio_device_transport": "coreaudio_device_type_builtin",
+          "coreaudio_input_source": "External Microphone"
+        },
+        {
+          "_name": "External Headphones",
+          "_properties": "coreaudio_default_audio_system_device",
+          "coreaudio_default_audio_output_device": "spaudio_yes",
+          "coreaudio_default_audio_system_device": "spaudio_yes",
+          "coreaudio_device_manufacturer": "Apple Inc.",
+          "coreaudio_device_output": 2,
+          "coreaudio_device_srate": 48000,
+          "coreaudio_device_transport": "coreaudio_device_type_builtin",
+          "coreaudio_output_source": "External Headphones"
+        },
+        {
+          "_name": "MacBook Pro Microphone",
+          "coreaudio_device_input": 1,
+          "coreaudio_device_manufacturer": "Apple Inc.",
+          "coreaudio_device_srate": 48000,
+          "coreaudio_device_transport": "coreaudio_device_type_builtin",
+          "coreaudio_input_source": "MacBook Pro Microphone"
+        },
+        {
+          "_name": "MacBook Pro Speakers",
+          "coreaudio_device_manufacturer": "Apple Inc.",
+          "coreaudio_device_output": 2,
+          "coreaudio_device_srate": 48000,
+          "coreaudio_device_transport": "coreaudio_device_type_builtin",
+          "coreaudio_output_source": "MacBook Pro Speakers"
+        },
+        {
+          "_name": "Wiq\u2019 Microphone",
+          "coreaudio_device_input": 1,
+          "coreaudio_device_manufacturer": "Apple Inc.",
+          "coreaudio_device_srate": 48000,
+          "coreaudio_device_transport": "coreaudio_device_type_unknown",
+          "coreaudio_input_source": "spaudio_default"
+        },
+        {
+          "_name": "Microsoft Teams Audio",
+          "coreaudio_device_input": 1,
+          "coreaudio_device_manufacturer": "Microsoft Corp.",
+          "coreaudio_device_output": 1,
+          "coreaudio_device_srate": 48000,
+          "coreaudio_device_transport": "coreaudio_device_type_virtual",
+          "coreaudio_input_source": "Microsoft Teams Audio Device",
+          "coreaudio_output_source": "Microsoft Teams Audio Device"
+        },
+        {
+          "_name": "Steam Streaming Microphone",
+          "coreaudio_device_input": 2,
+          "coreaudio_device_manufacturer": "Valve Corporation",
+          "coreaudio_device_output": 2,
+          "coreaudio_device_srate": 44100,
+          "coreaudio_device_transport": "coreaudio_device_type_virtual"
+        },
+        {
+          "_name": "Steam Streaming Speakers",
+          "coreaudio_device_input": 2,
+          "coreaudio_device_manufacturer": "Valve Corporation",
+          "coreaudio_device_output": 2,
+          "coreaudio_device_srate": 44100,
+          "coreaudio_device_transport": "coreaudio_device_type_virtual"
+        }
+      ],
+      "_name": "coreaudio_device"
+    }
+  ],
+  "SPDisplaysDataType": [
+    {
+      "_name": "Apple M5 Pro",
+      "spdisplays_mtlgpufamilysupport": "spdisplays_metal4",
+      "spdisplays_ndrvs": [
+        {
+          "_name": "Color LCD",
+          "_spdisplays_display-product-id": "a05e",
+          "_spdisplays_display-serial-number": "fd626d62",
+          "_spdisplays_display-vendor-id": "610",
+          "_spdisplays_display-week": "0",
+          "_spdisplays_display-year": "0",
+          "_spdisplays_displayID": "1",
+          "_spdisplays_pixels": "3024 x 1964",
+          "_spdisplays_resolution": "1512 x 982 @ 120.00Hz",
+          "spdisplays_ambient_brightness": "spdisplays_yes",
+          "spdisplays_connection_type": "spdisplays_internal",
+          "spdisplays_display_type": "spdisplays_built-in-liquid-retina-xdr",
+          "spdisplays_main": "spdisplays_yes",
+          "spdisplays_mirror": "spdisplays_off",
+          "spdisplays_online": "spdisplays_yes",
+          "spdisplays_pixelresolution": "spdisplays_3024x1964Retina"
+        },
+        {
+          "_name": "EPSON PJ",
+          "_spdisplays_display-product-id": "a11a",
+          "_spdisplays_display-serial-number": "1010101",
+          "_spdisplays_display-vendor-id": "4ca3",
+          "_spdisplays_display-week": "14",
+          "_spdisplays_display-year": "2015",
+          "_spdisplays_displayID": "5",
+          "_spdisplays_pixels": "1920 x 1080",
+          "_spdisplays_projector": "spdisplays_yes",
+          "_spdisplays_resolution": "1920 x 1080 @ 60.00Hz",
+          "spdisplays_mirror": "spdisplays_off",
+          "spdisplays_online": "spdisplays_yes",
+          "spdisplays_pixelresolution": "spdisplays_1080p",
+          "spdisplays_resolution": "1920 x 1080 @ 60.00Hz",
+          "spdisplays_rotation": "spdisplays_supported"
+        }
+      ],
+      "spdisplays_vendor": "sppci_vendor_Apple",
+      "sppci_bus": "spdisplays_builtin",
+      "sppci_cores": "16",
+      "sppci_device_type": "spdisplays_gpu",
+      "sppci_model": "Apple M5 Pro"
+    }
+  ]
+}

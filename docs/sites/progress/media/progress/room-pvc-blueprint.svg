@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1700 760" role="img" aria-labelledby="title desc">
+<title id="title">แบบโครงห้องท่อ PVC สามด้าน</title><desc id="desc">ด้านหน้ากว้าง 200 ซม. สูง 200 ซม. แบ่งแนวกว้าง 130 และ 70 ซม. ด้านข้างลึก 200 ซม. ช่วงแรก 100 ซม. หลังคาราบ จากนั้นลาดลง 70 ซม. ในระยะ 100 ซม. ด้านหลังกว้าง 200 ซม. สูง 130 ซม.</desc>
+<defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="#4e5a65" stroke-opacity=".25" stroke-width="1"/></pattern><marker id="arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto-start-reverse"><path d="M7 1 1 4 7 7" fill="none" stroke="#efc46f" stroke-width="1.5"/></marker></defs>
+<rect width="1700" height="760" fill="#08111a"/><rect width="1700" height="760" fill="url(#grid)"/>
+<g fill="#f8f6f0" font-family="LINE Seed Sans TH, Arial, sans-serif" font-size="24" font-weight="600" text-anchor="middle"><text x="300" y="85">ด้านหน้า</text><text x="850" y="85">ด้านข้าง</text><text x="1400" y="85">ด้านหลัง</text></g>
+<g fill="none" stroke="#f8f6f0" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+<!-- front 200 x 200, 130 + 70, top band 30 -->
+<path d="M100 580V180H500V580M360 180V580M100 240H500"/>
+<!-- side depth 200, level 100 at 200 high, slope 100 horizontal by 70 vertical, back 130 high -->
+<path d="M650 580V180H850L1050 320V580M850 180V580M650 320H1050"/>
+<!-- back 200 wide and 130 high -->
+<path d="M1200 580V320H1600V580M1400 320V580"/>
+</g>
+<g fill="#08111a" stroke="#efc46f" stroke-width="3"><circle cx="100" cy="180" r="7"/><circle cx="360" cy="180" r="7"/><circle cx="500" cy="180" r="7"/><circle cx="100" cy="240" r="7"/><circle cx="360" cy="240" r="7"/><circle cx="500" cy="240" r="7"/><circle cx="650" cy="180" r="7"/><circle cx="850" cy="180" r="7"/><circle cx="650" cy="320" r="7"/><circle cx="850" cy="320" r="7"/><circle cx="1050" cy="320" r="7"/><circle cx="1200" cy="320" r="7"/><circle cx="1400" cy="320" r="7"/><circle cx="1600" cy="320" r="7"/></g>
+<g fill="none" stroke="#efc46f" stroke-width="2" marker-start="url(#arrow)" marker-end="url(#arrow)"><path d="M100 123H500M100 642H360M360 642H500M52 180V580M650 642H850M850 642H1050M650 123H1050M1097 320V580M1200 642H1400M1400 642H1600M1200 270H1600"/></g>
+<g fill="#efc46f" font-family="LINE Seed Sans TH, Arial, sans-serif" font-size="19" font-weight="600" text-anchor="middle"><text x="300" y="114">200 cm</text><text x="230" y="675">130 cm</text><text x="430" y="675">70 cm</text><text x="31" y="390" transform="rotate(-90 31 390)">200 cm</text><text x="750" y="675">100 cm</text><text x="950" y="675">100 cm</text><text x="850" y="114">200 cm</text><text x="1120" y="460" transform="rotate(-90 1120 460)">130 cm</text><text x="1300" y="675">100 cm</text><text x="1500" y="675">100 cm</text><text x="1400" y="261">200 cm</text></g>
+<g fill="#aab4bd" font-family="LINE Seed Sans TH, Arial, sans-serif" font-size="18" text-anchor="middle"><text x="300" y="716">แถบบน 30 ซม. · แบ่งช่วง 130 / 70 ซม.</text><text x="850" y="716">หลังคาราบ 100 ซม. · ช่วงลาด 100 ซม. · ต่ำลง 70 ซม.</text><text x="1400" y="716">สูง 130 ซม.</text></g>
+</svg>

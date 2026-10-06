@@ -1,0 +1,1 @@
+One orange basketball, clearly visible curved black seams, slight handcrafted paper/clay surface, front three-quarter view, warm upper-left light, readable playful illustration matching the approved RE:Light creative-studio game. Isolated centered complete object, transparent background, no text, logo, people or other props.

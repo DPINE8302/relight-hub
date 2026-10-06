@@ -1,0 +1,1 @@
+One pair of cobalt and charcoal over-ear headphones, compact curved band, tactile padded earcups, three-quarter angle, full readable silhouette, polished handpainted cut-paper/clay illustration matching the approved RE:Light creative studio, warm upper-left light. Isolated on genuine transparent background, no logo, letters, person, collage or UI.

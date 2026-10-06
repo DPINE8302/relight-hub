@@ -1,0 +1,107 @@
+{
+  "status": "Thai primary story; English alternative. Text only, no narrator recorded or generated.",
+  "cues": [
+    {
+      "id": "PW-01",
+      "english": "Airy: I’m a little breath inside the body.",
+      "thai": "Airy: เราคือลมหายใจเล็ก ๆ ในโลกของร่างกาย",
+      "voiceFile": null
+    },
+    {
+      "id": "PW-02",
+      "english": "A vape cloud enters. It carries more than water vapour.",
+      "thai": "เมฆบุหรี่ไฟฟ้าเข้ามา มันไม่ได้มีแค่ไอน้ำ",
+      "voiceFile": null
+    },
+    {
+      "id": "PW-03",
+      "english": "The way out is ahead. Through lungs, heart and brain.",
+      "thai": "ทางออกอยู่ข้างหน้า ผ่านปอด หัวใจ และสมองไปด้วยกัน",
+      "voiceFile": null
+    },
+    {
+      "id": "PW-04",
+      "english": "Vape aerosol can carry particles, metals and harmful chemicals.",
+      "thai": "ละอองบุหรี่ไฟฟ้าอาจมีอนุภาคเล็ก โลหะ และสารที่เป็นอันตราย",
+      "voiceFile": null
+    },
+    {
+      "id": "PW-05",
+      "english": "Breathe away twelve particles before they reach the garden.",
+      "thai": "ใช้ลมพัดอนุภาค 12 ก้อน ก่อนเข้าถึงสวนปอด",
+      "voiceFile": null
+    },
+    {
+      "id": "PW-06",
+      "english": "Nicotine can increase heart rate and blood pressure.",
+      "thai": "นิโคตินทำให้หัวใจเต้นเร็วขึ้นและความดันเลือดสูงขึ้นได้",
+      "voiceFile": null
+    },
+    {
+      "id": "PW-07",
+      "english": "The steps move with the faster pulse. Jump to light all four.",
+      "thai": "แท่นขยับตามหัวใจที่เต้นเร็ว กระโดดเปิดทางทั้ง 4 แท่น",
+      "voiceFile": null
+    },
+    {
+      "id": "PW-08",
+      "english": "Nicotine gives a brief reward. Then the feeling fades.",
+      "thai": "นิโคตินทำให้รู้สึกดีชั่วครู่ แล้วความรู้สึกนั้นก็จางไป",
+      "voiceFile": null
+    },
+    {
+      "id": "PW-09",
+      "english": "The craving returns, pulling us towards it again.",
+      "thai": "ความอยากกลับมา ชวนให้เราเข้าไปหาอีกครั้ง",
+      "voiceFile": null
+    },
+    {
+      "id": "PW-10",
+      "english": "Follow the blue path out. Breathe to push the golden lure away.",
+      "thai": "ตามทางสีฟ้าไปทางออก ใช้ลมพัดแสงสีทองให้ห่าง",
+      "voiceFile": null
+    },
+    {
+      "id": "PW-11",
+      "english": "One more sends us around the same loop.",
+      "thai": "ขออีกครั้ง ก็วนกลับเข้าสู่วงจรเดิม",
+      "voiceFile": null
+    },
+    {
+      "id": "PW-12",
+      "english": "Or we can walk away. This next step is ours.",
+      "thai": "หรือเลือกเดินออกมา ก้าวต่อไปนี้เป็นของเรา",
+      "voiceFile": null
+    },
+    {
+      "id": "PW-13",
+      "english": "Feels good… but only for a moment.",
+      "thai": "รู้สึกดี… แต่แค่ชั่วคราว",
+      "voiceFile": null
+    },
+    {
+      "id": "PW-14",
+      "english": "The boost fades. The craving can return.",
+      "thai": "แรงหมดแล้ว ความอยากก็วนกลับมา",
+      "voiceFile": null
+    },
+    {
+      "id": "PW-15",
+      "english": "We can choose a different path.",
+      "thai": "เราเลือกทางใหม่ได้",
+      "voiceFile": null
+    },
+    {
+      "id": "PW-16",
+      "english": "Airy: We found clear air.",
+      "thai": "Airy: เรากลับสู่อากาศใสแล้ว!",
+      "voiceFile": null
+    },
+    {
+      "id": "PW-17",
+      "english": "Airy: Back here again?",
+      "thai": "Airy: เรากลับมาที่เดิมอีกแล้วเหรอ?",
+      "voiceFile": null
+    }
+  ]
+}
