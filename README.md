@@ -8,7 +8,7 @@ Public link and download portal. Plain HTML, CSS and JavaScript hosted by GitHub
 
 ## Layout
 
-`docs/index.html`: portal. `docs/games/`: three playable static game builds. `docs/sites/`: progress, storyboard and pitch sites. `projects/`: curated application/game/education source snapshots. No credentials, private identity documents or visitor recordings are included.
+`docs/index.html`: portal. `docs/games/`: three playable static game builds. `docs/sites/`: progress and pitch sites. `projects/`: curated application/game/education source snapshots. No credentials, private identity documents or visitor recordings are included.
 
 Education is a dynamic Next.js website linked to its existing backend host. Its ZIP is source, not an offline static export. Other ZIPs include a local Python server and `Start Website.command`.
 
@@ -22,4 +22,8 @@ Edit `docs/index.html`, `docs/assets/style.css` or `docs/assets/hub.js` and push
 
 Release files are kept out of Git history. Download them from Releases, verify `SHA256SUMS.txt`, and keep large installers in Releases rather than committing them. Native app 2.1.1 is Apple silicon, macOS 14+, ad-hoc signed and not notarized.
 
-Historical storyboard and pitch editions retain their original content; current production approval is not implied. Original source/asset folders elsewhere in the workspace are preserved.
+The historical pitch edition retains its original content; current production approval is not implied. Original source/asset folders elsewhere in the workspace are preserved.
+
+## Visual assets
+
+The hub inherits the Education website stylesheet and local fonts. Its hero has no image. Nine project covers were generated with the built-in image generation tool from real project screenshots, in one navy/ivory/gold style. `art/cover-originals/` holds original PNGs; `art/prompts.md` records prompts; `docs/assets/covers/` holds delivery WebP assets.

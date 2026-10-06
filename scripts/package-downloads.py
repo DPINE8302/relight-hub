@@ -27,13 +27,13 @@ def archive(name,folder,prefix=None,website=True):
    info=zipfile.ZipInfo('Start Website.command');info.external_attr=0o100755<<16;z.writestr(info,launcher)
    z.writestr('serve.py',server)
    z.writestr('README.txt','RE:Light website download\n\nMac: Install Python 3 if needed, then double-click Start Website.command.\nWindows/Linux: Run python3 serve.py (or python serve.py).\nKeep the Terminal open while using the website.\nThis is a static site; external links and community services require internet.\n')
-for name,folder in [('PUFF-WORLD-INSIDE-Website.zip','games/puff'),('RELight-Arcade-Website.zip','games/arcade'),('RELight-Mini-Games-Website.zip','games/mini'),('RELight-Progress-Website.zip','sites/progress'),('RELight-Storyboard-Website.zip','sites/storyboard'),('RELight-Pitch-Website.zip','sites/pitch')]:
+for name,folder in [('PUFF-WORLD-INSIDE-Website.zip','games/puff'),('RELight-Arcade-Website.zip','games/arcade'),('RELight-Mini-Games-Website.zip','games/mini'),('RELight-Progress-Website.zip','sites/progress'),('RELight-Pitch-Website.zip','sites/pitch')]:
  prefix='/relight-hub/'+folder+'/' if folder.startswith('sites/') else None
  archive(name,S/folder,prefix)
 archive('RELight-Education-Source.zip',H/'projects/education',website=False)
 archive('RELight-Pitch-Source.zip',H/'projects/pitch-progress',website=False)
 # Only requested public website/app downloads in this release.
-allowed={'PUFF-WORLD-INSIDE-Website.zip','RELight-Arcade-Website.zip','RELight-Mini-Games-Website.zip','RELight-Progress-Website.zip','RELight-Storyboard-Website.zip','RELight-Pitch-Website.zip','RELight-Education-Source.zip','RELight-Pitch-Source.zip'}
+allowed={'PUFF-WORLD-INSIDE-Website.zip','RELight-Arcade-Website.zip','RELight-Mini-Games-Website.zip','RELight-Progress-Website.zip','RELight-Pitch-Website.zip','RELight-Education-Source.zip','RELight-Pitch-Source.zip'}
 for f in out.iterdir():
  if f.name not in allowed and f.is_file():f.unlink()
 app=R/'relight-engine/native-app/artifacts/RELight-Native-2.1.1-Mac.dmg';files=[app]+sorted(out.glob('*.zip'))

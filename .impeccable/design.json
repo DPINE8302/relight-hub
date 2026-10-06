@@ -1,68 +1,96 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-06T04:17:14.300471+00:00",
-  "title": "Design System: RE:Light Hub",
+  "generatedAt": "2026-10-06T04:33:29.541906+00:00",
+  "title": "Design System: RE;light Hub",
   "extensions": {
     "colorMeta": {
-      "yellow": {
-        "role": "primary",
-        "displayName": "Warm yellow",
-        "tonalRamp": [
-          "oklch(15% 0.1199 91.73)",
-          "oklch(26% 0.1199 91.73)",
-          "oklch(38% 0.1199 91.73)",
-          "oklch(49% 0.1199 91.73)",
-          "oklch(61% 0.1199 91.73)",
-          "oklch(72% 0.1199 91.73)",
-          "oklch(84% 0.1199 91.73)",
-          "oklch(95% 0.1199 91.73)"
-        ]
-      },
-      "yellow-hover": {
-        "role": "primary",
-        "displayName": "Light warm yellow",
-        "tonalRamp": [
-          "oklch(15% 0.0971 90.24)",
-          "oklch(26% 0.0971 90.24)",
-          "oklch(38% 0.0971 90.24)",
-          "oklch(49% 0.0971 90.24)",
-          "oklch(61% 0.0971 90.24)",
-          "oklch(72% 0.0971 90.24)",
-          "oklch(84% 0.0971 90.24)",
-          "oklch(95% 0.0971 90.24)"
-        ]
-      },
-      "night": {
+      "ink": {
+        "displayName": "Ink",
         "role": "neutral",
-        "displayName": "Midnight blue",
         "tonalRamp": [
-          "oklch(15% 0.0264 260.93)",
-          "oklch(26% 0.0264 260.93)",
-          "oklch(38% 0.0264 260.93)",
-          "oklch(49% 0.0264 260.93)",
-          "oklch(61% 0.0264 260.93)",
-          "oklch(72% 0.0264 260.93)",
-          "oklch(84% 0.0264 260.93)",
-          "oklch(95% 0.0264 260.93)"
+          "oklch(15% 0.0269 268.10)",
+          "oklch(26% 0.0269 268.10)",
+          "oklch(38% 0.0269 268.10)",
+          "oklch(49% 0.0269 268.10)",
+          "oklch(61% 0.0269 268.10)",
+          "oklch(72% 0.0269 268.10)",
+          "oklch(84% 0.0269 268.10)",
+          "oklch(95% 0.0269 268.10)"
         ]
       },
-      "deep": {
+      "ink-deep": {
+        "displayName": "Ink Deep",
         "role": "neutral",
-        "displayName": "Deep room blue",
         "tonalRamp": [
-          "oklch(15% 0.0232 260.27)",
-          "oklch(26% 0.0232 260.27)",
-          "oklch(38% 0.0232 260.27)",
-          "oklch(49% 0.0232 260.27)",
-          "oklch(61% 0.0232 260.27)",
-          "oklch(72% 0.0232 260.27)",
-          "oklch(84% 0.0232 260.27)",
-          "oklch(95% 0.0232 260.27)"
+          "oklch(15% 0.0174 263.83)",
+          "oklch(26% 0.0174 263.83)",
+          "oklch(38% 0.0174 263.83)",
+          "oklch(49% 0.0174 263.83)",
+          "oklch(61% 0.0174 263.83)",
+          "oklch(72% 0.0174 263.83)",
+          "oklch(84% 0.0174 263.83)",
+          "oklch(95% 0.0174 263.83)"
+        ]
+      },
+      "cream": {
+        "displayName": "Cream",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15% 0.0131 82.40)",
+          "oklch(26% 0.0131 82.40)",
+          "oklch(38% 0.0131 82.40)",
+          "oklch(49% 0.0131 82.40)",
+          "oklch(61% 0.0131 82.40)",
+          "oklch(72% 0.0131 82.40)",
+          "oklch(84% 0.0131 82.40)",
+          "oklch(95% 0.0131 82.40)"
         ]
       },
       "paper": {
+        "displayName": "Paper",
         "role": "neutral",
-        "displayName": "Soft paper",
+        "tonalRamp": [
+          "oklch(15% 0.0013 106.42)",
+          "oklch(26% 0.0013 106.42)",
+          "oklch(38% 0.0013 106.42)",
+          "oklch(49% 0.0013 106.42)",
+          "oklch(61% 0.0013 106.42)",
+          "oklch(72% 0.0013 106.42)",
+          "oklch(84% 0.0013 106.42)",
+          "oklch(95% 0.0013 106.42)"
+        ]
+      },
+      "text": {
+        "displayName": "Text",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15% 0.0274 267.73)",
+          "oklch(26% 0.0274 267.73)",
+          "oklch(38% 0.0274 267.73)",
+          "oklch(49% 0.0274 267.73)",
+          "oklch(61% 0.0274 267.73)",
+          "oklch(72% 0.0274 267.73)",
+          "oklch(84% 0.0274 267.73)",
+          "oklch(95% 0.0274 267.73)"
+        ]
+      },
+      "text-soft": {
+        "displayName": "Text Soft",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15% 0.0272 264.30)",
+          "oklch(26% 0.0272 264.30)",
+          "oklch(38% 0.0272 264.30)",
+          "oklch(49% 0.0272 264.30)",
+          "oklch(61% 0.0272 264.30)",
+          "oklch(72% 0.0272 264.30)",
+          "oklch(84% 0.0272 264.30)",
+          "oklch(95% 0.0272 264.30)"
+        ]
+      },
+      "white": {
+        "displayName": "White",
+        "role": "neutral",
         "tonalRamp": [
           "oklch(15% 0.0082 91.48)",
           "oklch(26% 0.0082 91.48)",
@@ -74,99 +102,66 @@
           "oklch(95% 0.0082 91.48)"
         ]
       },
-      "muted": {
-        "role": "neutral",
-        "displayName": "Cool muted gray",
+      "gold": {
+        "displayName": "Gold",
+        "role": "primary",
         "tonalRamp": [
-          "oklch(15% 0.0191 258.36)",
-          "oklch(26% 0.0191 258.36)",
-          "oklch(38% 0.0191 258.36)",
-          "oklch(49% 0.0191 258.36)",
-          "oklch(61% 0.0191 258.36)",
-          "oklch(72% 0.0191 258.36)",
-          "oklch(84% 0.0191 258.36)",
-          "oklch(95% 0.0191 258.36)"
+          "oklch(15% 0.1101 83.30)",
+          "oklch(26% 0.1101 83.30)",
+          "oklch(38% 0.1101 83.30)",
+          "oklch(49% 0.1101 83.30)",
+          "oklch(61% 0.1101 83.30)",
+          "oklch(72% 0.1101 83.30)",
+          "oklch(84% 0.1101 83.30)",
+          "oklch(95% 0.1101 83.30)"
         ]
       },
-      "line": {
-        "role": "neutral",
-        "displayName": "Slate divider",
+      "blue": {
+        "displayName": "Blue",
+        "role": "secondary",
         "tonalRamp": [
-          "oklch(15% 0.0268 252.80)",
-          "oklch(26% 0.0268 252.80)",
-          "oklch(38% 0.0268 252.80)",
-          "oklch(49% 0.0268 252.80)",
-          "oklch(61% 0.0268 252.80)",
-          "oklch(72% 0.0268 252.80)",
-          "oklch(84% 0.0268 252.80)",
-          "oklch(95% 0.0268 252.80)"
+          "oklch(15% 0.0995 228.54)",
+          "oklch(26% 0.0995 228.54)",
+          "oklch(38% 0.0995 228.54)",
+          "oklch(49% 0.0995 228.54)",
+          "oklch(61% 0.0995 228.54)",
+          "oklch(72% 0.0995 228.54)",
+          "oklch(84% 0.0995 228.54)",
+          "oklch(95% 0.0995 228.54)"
         ]
       },
-      "ink": {
-        "role": "neutral",
-        "displayName": "Dark ink",
-        "tonalRamp": [
-          "oklch(15% 0.0319 258.31)",
-          "oklch(26% 0.0319 258.31)",
-          "oklch(38% 0.0319 258.31)",
-          "oklch(49% 0.0319 258.31)",
-          "oklch(61% 0.0319 258.31)",
-          "oklch(72% 0.0319 258.31)",
-          "oklch(84% 0.0319 258.31)",
-          "oklch(95% 0.0319 258.31)"
-        ]
+      "line-dark": {
+        "displayName": "Line Dark",
+        "role": "neutral"
       },
-      "open-surface": {
-        "role": "neutral",
-        "displayName": "Pale action surface",
-        "tonalRamp": [
-          "oklch(15% 0.0092 258.34)",
-          "oklch(26% 0.0092 258.34)",
-          "oklch(38% 0.0092 258.34)",
-          "oklch(49% 0.0092 258.34)",
-          "oklch(61% 0.0092 258.34)",
-          "oklch(72% 0.0092 258.34)",
-          "oklch(84% 0.0092 258.34)",
-          "oklch(95% 0.0092 258.34)"
-        ]
-      },
-      "zip-border": {
-        "role": "neutral",
-        "displayName": "Muted gold border",
-        "tonalRamp": [
-          "oklch(15% 0.0319 88.81)",
-          "oklch(26% 0.0319 88.81)",
-          "oklch(38% 0.0319 88.81)",
-          "oklch(49% 0.0319 88.81)",
-          "oklch(61% 0.0319 88.81)",
-          "oklch(72% 0.0319 88.81)",
-          "oklch(84% 0.0319 88.81)",
-          "oklch(95% 0.0319 88.81)"
-        ]
+      "line-light": {
+        "displayName": "Line Light",
+        "role": "neutral"
       }
     },
-    "shadows": [],
+    "shadows": [
+      {
+        "name": "header",
+        "value": "0 14px 50px rgba(0, 0, 0, 0.22)",
+        "purpose": "Inherited Education navigation pill."
+      }
+    ],
     "motion": [
       {
-        "name": "action-background",
-        "value": "background .2s",
-        "purpose": "Primary button fill transition."
+        "name": "controls",
+        "value": "180ms ease",
+        "purpose": "Button transform/background/border and navigation states."
       },
       {
-        "name": "action-lift",
-        "value": "transform .3s",
-        "purpose": "Primary button hover translateY(-2px)."
-      },
-      {
-        "name": "reduced-motion",
-        "value": "transition: none; scroll-behavior: auto",
-        "purpose": "Honor prefers-reduced-motion."
+        "name": "hero-copy",
+        "value": "900ms cubic-bezier(0.2, 0.7, 0.2, 1)",
+        "purpose": "Inherited rise-in animation."
       }
     ],
     "breakpoints": [
       {
-        "name": "wide",
-        "value": "1500px"
+        "name": "covers-compact",
+        "value": "1050px"
       },
       {
         "name": "compact",
@@ -174,83 +169,86 @@
       },
       {
         "name": "mobile",
-        "value": "600px"
+        "value": "620px"
       },
       {
         "name": "narrow",
-        "value": "360px"
+        "value": "350px"
       }
     ]
   },
   "components": [
     {
-      "name": "Primary action",
+      "name": "Light directory action",
       "kind": "button",
-      "description": "Primary action extracted from the current portal.",
-      "html": "<a class=\"ds-primary\" href=\"#websites\">เลือกเว็บไซต์ <span>↓</span></a>",
-      "css": ".ds-primary{font-family:Seed,system-ui,sans-serif;line-height:1.65;display:inline-flex;justify-content:space-between;align-items:center;gap:35px;padding:14px 24px;min-height:52px;border-radius:4px;font-size:15px;font-weight:700;text-decoration:none;background:var(--yellow,#f2d374);color:var(--ink,#192332);transition:background .2s,transform .3s}.ds-primary:hover{background:#ffe49a;transform:translateY(-2px)}@media(prefers-reduced-motion:reduce){.ds-primary{transition:none}}a:focus-visible,summary:focus-visible{outline:3px solid var(--yellow,#f2d374);outline-offset:5px}",
-      "refersTo": "button-primary"
+      "description": "Light directory action from the Education-derived portal.",
+      "html": "<a class=\"ds-light\" href=\"#websites\">เลือกเว็บไซต์ ↓</a>",
+      "css": ".ds-light{font-family:\"LINE Seed Sans TH\", -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"Thonburi\", \"Noto Sans Thai\", \"Leelawadee UI\", sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:14px;min-height:54px;padding:13px 22px;border:1px solid transparent;border-radius:999px;font-size:16px;font-weight:700;line-height:1.2;text-decoration:none;transition:transform 180ms ease,background 180ms ease,border-color 180ms ease;background:var(--white,#f8f6f0);color:var(--ink,#070b17)}.ds-light:hover{background:var(--gold,#f2c978)}.ds-light:focus-visible,.ds-zip:focus-visible,.ds-primary:focus-visible,.ds-install summary:focus-visible{outline:3px solid var(--blue,#0f7598);outline-offset:4px}.ds-outline:focus-visible,.ds-nav a:focus-visible{outline:3px solid var(--gold,#f2c978);outline-offset:4px}.ds-light:hover,.ds-outline:hover,.ds-zip:hover,.ds-primary:hover{transform:translateY(-2px)}.ds-light:active,.ds-outline:active,.ds-zip:active,.ds-primary:active{opacity:.88;transform:scale(.98)}@media(prefers-reduced-motion:reduce){.ds-light,.ds-outline,.ds-zip,.ds-primary{transition-duration:.001ms!important}}",
+      "refersTo": "button-light"
     },
     {
-      "name": "Open action",
+      "name": "Outline Mac action",
       "kind": "button",
-      "description": "Open action extracted from the current portal.",
-      "html": "<a class=\"ds-open\" href=\"#website\">เข้าเว็บไซต์ ↗</a>",
-      "css": ".ds-open{font-family:Seed,system-ui,sans-serif;line-height:1.65;display:inline-flex;align-items:center;justify-content:center;min-height:46px;min-width:127px;padding:10px 18px;border-radius:4px;background:#e1e5eb;color:var(--ink,#192332);font-size:13px;font-weight:700;text-decoration:none}.ds-open:hover{background:var(--yellow,#f2d374)}a:focus-visible,summary:focus-visible{outline:3px solid var(--yellow,#f2d374);outline-offset:5px}",
-      "refersTo": "button-open"
+      "description": "Outline Mac action from the Education-derived portal.",
+      "html": "<a class=\"ds-outline\" href=\"#dmg\">ดาวน์โหลดแอป Mac ↓</a>",
+      "css": ".ds-outline{font-family:\"LINE Seed Sans TH\", -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"Thonburi\", \"Noto Sans Thai\", \"Leelawadee UI\", sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:14px;min-height:54px;padding:13px 22px;border:1px solid transparent;border-radius:999px;font-size:16px;font-weight:700;line-height:1.2;text-decoration:none;transition:transform 180ms ease,background 180ms ease,border-color 180ms ease;background:rgba(255,255,255,.06);border-color:#77808e;color:var(--cream,#f5f0e7)}.ds-outline:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.42)}.ds-light:focus-visible,.ds-zip:focus-visible,.ds-primary:focus-visible,.ds-install summary:focus-visible{outline:3px solid var(--blue,#0f7598);outline-offset:4px}.ds-outline:focus-visible,.ds-nav a:focus-visible{outline:3px solid var(--gold,#f2c978);outline-offset:4px}.ds-light:hover,.ds-outline:hover,.ds-zip:hover,.ds-primary:hover{transform:translateY(-2px)}.ds-light:active,.ds-outline:active,.ds-zip:active,.ds-primary:active{opacity:.88;transform:scale(.98)}@media(prefers-reduced-motion:reduce){.ds-light,.ds-outline,.ds-zip,.ds-primary{transition-duration:.001ms!important}}",
+      "refersTo": "button-outline"
     },
     {
-      "name": "ZIP action",
+      "name": "Website ZIP action",
       "kind": "button",
-      "description": "ZIP action extracted from the current portal.",
-      "html": "<a class=\"ds-zip\" href=\"#download\">ดาวน์โหลด ZIP ↓</a>",
-      "css": ".ds-zip{font-family:Seed,system-ui,sans-serif;line-height:1.65;display:inline-flex;align-items:center;justify-content:center;min-height:46px;min-width:140px;padding:10px 18px;border:1px solid #6c6450;border-radius:4px;color:var(--yellow,#f2d374);font-size:13px;text-decoration:none}.ds-zip:hover{background:#f2d37414}a:focus-visible,summary:focus-visible{outline:3px solid var(--yellow,#f2d374);outline-offset:5px}",
+      "description": "Website ZIP action from the Education-derived portal.",
+      "html": "<a class=\"ds-zip\" href=\"#zip\">ดาวน์โหลด ZIP ↓</a>",
+      "css": ".ds-zip{font-family:\"LINE Seed Sans TH\", -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"Thonburi\", \"Noto Sans Thai\", \"Leelawadee UI\", sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:14px;min-height:54px;padding:13px 22px;border:1px solid transparent;border-radius:999px;font-size:16px;font-weight:700;line-height:1.2;text-decoration:none;transition:transform 180ms ease,background 180ms ease,border-color 180ms ease;background:none;border-color:var(--line-light,rgba(7,11,23,.13));color:var(--ink,#070b17);font-size:13px;min-height:46px;padding:12px 20px}.ds-zip:hover{background:var(--cream,#f5f0e7);border-color:#a39d91}.ds-light:focus-visible,.ds-zip:focus-visible,.ds-primary:focus-visible,.ds-install summary:focus-visible{outline:3px solid var(--blue,#0f7598);outline-offset:4px}.ds-outline:focus-visible,.ds-nav a:focus-visible{outline:3px solid var(--gold,#f2c978);outline-offset:4px}.ds-light:hover,.ds-outline:hover,.ds-zip:hover,.ds-primary:hover{transform:translateY(-2px)}.ds-light:active,.ds-outline:active,.ds-zip:active,.ds-primary:active{opacity:.88;transform:scale(.98)}@media(prefers-reduced-motion:reduce){.ds-light,.ds-outline,.ds-zip,.ds-primary{transition-duration:.001ms!important}}",
       "refersTo": "button-zip"
     },
     {
-      "name": "Wordmark navigation",
-      "kind": "nav",
-      "description": "Wordmark navigation extracted from the current portal.",
-      "html": "<nav class=\"ds-nav\"><a class=\"ds-wordmark\" href=\"#home\">RE<span>:</span>Light</a><a class=\"ds-repo\" href=\"#github\">GitHub ↗</a></nav>",
-      "css": ".ds-nav{font-family:Seed,system-ui,sans-serif;line-height:1.65;display:flex;justify-content:space-between;align-items:center;gap:25px;color:var(--paper,#f5f3ed);background:var(--deep,#090f19);padding:27px}.ds-nav a{color:inherit;text-decoration:none;display:flex;align-items:center;min-height:44px}.ds-wordmark{font-size:32px;font-weight:800;letter-spacing:-.03em;line-height:1}.ds-wordmark span{color:var(--yellow,#f2d374)}.ds-repo{font-size:14px}a:focus-visible,summary:focus-visible{outline:3px solid var(--yellow,#f2d374);outline-offset:5px}"
+      "name": "Native DMG action",
+      "kind": "button",
+      "description": "Native DMG action from the Education-derived portal.",
+      "html": "<a class=\"ds-primary\" href=\"#dmg\">ดาวน์โหลดแอป Mac ↓</a>",
+      "css": ".ds-primary{font-family:\"LINE Seed Sans TH\", -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"Thonburi\", \"Noto Sans Thai\", \"Leelawadee UI\", sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:14px;min-height:54px;padding:13px 22px;border:1px solid transparent;border-radius:999px;font-size:16px;font-weight:700;line-height:1.2;text-decoration:none;transition:transform 180ms ease,background 180ms ease,border-color 180ms ease;background:var(--ink,#070b17);color:var(--white,#f8f6f0)}.ds-primary:hover{background:#263248}.ds-light:focus-visible,.ds-zip:focus-visible,.ds-primary:focus-visible,.ds-install summary:focus-visible{outline:3px solid var(--blue,#0f7598);outline-offset:4px}.ds-outline:focus-visible,.ds-nav a:focus-visible{outline:3px solid var(--gold,#f2c978);outline-offset:4px}.ds-light:hover,.ds-outline:hover,.ds-zip:hover,.ds-primary:hover{transform:translateY(-2px)}.ds-light:active,.ds-outline:active,.ds-zip:active,.ds-primary:active{opacity:.88;transform:scale(.98)}@media(prefers-reduced-motion:reduce){.ds-light,.ds-outline,.ds-zip,.ds-primary{transition-duration:.001ms!important}}",
+      "refersTo": "button-native"
     },
     {
-      "name": "Directory identity",
-      "kind": "custom",
-      "description": "Directory identity extracted from the current portal.",
-      "html": "<div class=\"ds-entry\"><span class=\"ds-symbol\" aria-hidden=\"true\">↗</span><div><h3>RE:Light Education</h3><p>เว็บการเรียนรู้ · เกมสถานการณ์ · กำแพงคำตอบ</p></div></div>",
-      "css": ".ds-entry{font-family:Seed,system-ui,sans-serif;line-height:1.65;display:flex;gap:22px;align-items:center;padding:23px 0;color:var(--paper,#f5f3ed);border-bottom:1px solid var(--line,#35404d)}.ds-symbol{display:grid;place-items:center;width:95px;height:65px;flex-shrink:0;border-radius:4px;background:#ddd4b8;color:#383d2d;font-size:25px;font-weight:800}.ds-entry h3{margin:0;font-size:21px;font-weight:800;line-height:1.35}.ds-entry p{margin:7px 0 0;font-size:13px;color:var(--muted,#b8c0cc)}a:focus-visible,summary:focus-visible{outline:3px solid var(--yellow,#f2d374);outline-offset:5px}"
+      "name": "Pill navigation",
+      "kind": "nav",
+      "description": "Pill navigation from the Education-derived portal.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-brand\" href=\"#top\">RE<span>;</span>light</a><a class=\"ds-navlink\" href=\"#websites\">เว็บไซต์</a><a class=\"ds-help\" href=\"#download\">ดาวน์โหลดแอป</a></nav>",
+      "css": ".ds-nav{font-family:\"LINE Seed Sans TH\", -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"Thonburi\", \"Noto Sans Thai\", \"Leelawadee UI\", sans-serif;display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:58px;padding:6px 12px 6px 22px;border:1px solid rgba(255,255,255,.13);border-radius:999px;background:rgba(5,9,19,.72);box-shadow:0 14px 50px rgba(0,0,0,.22);backdrop-filter:blur(22px) saturate(145%)}.ds-nav a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;text-decoration:none;white-space:nowrap}.ds-brand{font-size:20px;font-weight:700;letter-spacing:-.045em;color:var(--white,#f8f6f0)}.ds-brand span{color:var(--gold,#f2c978)}.ds-navlink,.ds-help{font-size:14px;padding:8px 13px;border-radius:999px;color:rgba(255,255,255,.73)}.ds-navlink:hover{background:rgba(255,255,255,.08);color:var(--white,#f8f6f0)}.ds-help{background:var(--white,#f8f6f0);color:var(--ink,#070b17)}.ds-help:hover{background:var(--gold,#f2c978)}@media(prefers-reduced-transparency:reduce){.ds-nav{backdrop-filter:none;background:#050913}}.ds-light:focus-visible,.ds-zip:focus-visible,.ds-primary:focus-visible,.ds-install summary:focus-visible{outline:3px solid var(--blue,#0f7598);outline-offset:4px}.ds-outline:focus-visible,.ds-nav a:focus-visible{outline:3px solid var(--gold,#f2c978);outline-offset:4px}.ds-light:hover,.ds-outline:hover,.ds-zip:hover,.ds-primary:hover{transform:translateY(-2px)}.ds-light:active,.ds-outline:active,.ds-zip:active,.ds-primary:active{opacity:.88;transform:scale(.98)}@media(prefers-reduced-motion:reduce){.ds-light,.ds-outline,.ds-zip,.ds-primary{transition-duration:.001ms!important}}"
     },
     {
       "name": "Installation disclosure",
       "kind": "custom",
-      "description": "Installation disclosure extracted from the current portal.",
-      "html": "<details class=\"ds-install\"><summary>วิธีติดตั้ง</summary><p>เปิด .dmg → ลากแอปไป Applications → เปิดแอป</p></details>",
-      "css": ".ds-install{font-family:Seed,system-ui,sans-serif;line-height:1.65;max-width:600px;color:var(--muted,#b8c0cc);font-size:12px}.ds-install summary{display:flex;align-items:center;min-height:44px;list-style:none;text-decoration:underline;cursor:pointer;color:#d3dbe5}.ds-install p{margin:6px 0 12px;font-size:12px;line-height:1.8}a:focus-visible,summary:focus-visible{outline:3px solid var(--yellow,#f2d374);outline-offset:5px}"
+      "description": "Installation disclosure from the Education-derived portal.",
+      "html": "<details class=\"ds-install\"><summary>วิธีติดตั้งแอป</summary><p>เปิด .dmg → ลากแอปไป Applications → เปิดแอป</p></details>",
+      "css": ".ds-install{font-family:\"LINE Seed Sans TH\", -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"Thonburi\", \"Noto Sans Thai\", \"Leelawadee UI\", sans-serif;max-width:600px;color:var(--text-soft,#606878)}.ds-install summary{display:flex;align-items:center;min-height:44px;cursor:pointer;font-size:13px;list-style:none}.ds-install summary:after{content:\"+\";margin-left:16px}.ds-install[open] summary:after{content:\"−\"}.ds-install p{font-size:13px;line-height:1.8;margin:12px 0 0}.ds-light:focus-visible,.ds-zip:focus-visible,.ds-primary:focus-visible,.ds-install summary:focus-visible{outline:3px solid var(--blue,#0f7598);outline-offset:4px}.ds-outline:focus-visible,.ds-nav a:focus-visible{outline:3px solid var(--gold,#f2c978);outline-offset:4px}.ds-light:hover,.ds-outline:hover,.ds-zip:hover,.ds-primary:hover{transform:translateY(-2px)}.ds-light:active,.ds-outline:active,.ds-zip:active,.ds-primary:active{opacity:.88;transform:scale(.98)}@media(prefers-reduced-motion:reduce){.ds-light,.ds-outline,.ds-zip,.ds-primary{transition-duration:.001ms!important}}"
     }
   ],
   "narrative": {
-    "northStar": "The cinematic room entrance",
-    "overview": "The existing RE:Light room artwork sets the atmosphere: midnight surfaces, warm projected light, pale Thai typography and the yellow colon in the wordmark. The portal carries that visual identity into a direct, compact link directory. This is a description of the implemented system, not a new identity proposal.\n\nThe opening has a large two-line Thai heading beside the room image. Below it, the native Mac download is a distinct yellow action, followed by seven website/game rows with paired open and ZIP links. Visual emphasis comes from type size, contrast and spacing rather than decorative panels.",
+    "northStar": "The Education site’s direct-link entrance",
+    "overview": "The hub inherits the actual RE;light Education stylesheet, loaded before the hub’s layout overrides. Its visual authority is the Education site: deep navy, ivory and cream surfaces, soft gold, LINE Seed Sans TH and pill-shaped navigation and actions. The brand uses the gold semicolon in RE;light.\n\nThe opening is centered, text-only and immediately offers a website-directory link and a direct Mac DMG download. Light website rows, dark game rows and a cream Mac section provide the main rhythm. Project imagery appears only as screenshot-derived covers within rows; the homepage has no room photograph, film player or decorative project-card grid.",
     "keyCharacteristics": [
-      "Cinematic room imagery with dark blue surfaces.",
-      "LINE Seed Thai typography with heavy, balanced headings.",
-      "Warm yellow for the identity, primary actions and ZIP links.",
-      "Flat directory rows with clear, paired actions."
+      "Education’s actual CSS palette, type and controls.",
+      "Centered text-only heading with two direct actions.",
+      "Alternating light, dark and cream directory sections.",
+      "Real project screens in unified navy, ivory and gold cover frames."
     ],
     "rules": [],
     "dos": [
-      "Do preserve the existing room artwork and yellow colon identity.",
-      "Do use the loaded Seed weights for Thai and Latin text.",
-      "Do keep open/play and ZIP actions together for every directory row.",
-      "Do preserve the prominent, full-width Mac download action on mobile.",
-      "Do retain visible focus, semantic links, installation disclosure and reduced-motion behavior."
+      "Do inherit Education’s visual tokens and LINE Seed Sans TH weights.",
+      "Do keep the hero text-only and preserve its direct Mac DMG link.",
+      "Do keep open/play and ZIP actions together in every project row.",
+      "Do use actual website/game/app screenshots inside the shared cover frame.",
+      "Do retain platform requirements, Source ZIP labels and installation disclosures.",
+      "Do preserve keyboard focus and reduced-motion/reduced-transparency behavior."
     ],
     "donts": [
-      "Don't add film playback, galleries or editorial sections to this narrowed portal.",
-      "Don't replace the flat directory with raised cards or add shadows absent from the implementation.",
-      "Don't disguise Education Source ZIP as a ready-to-open static website package.",
-      "Don't hide device requirements or download instructions behind decorative interactions."
+      "Don't restore the original room-image hero or cinematic room palette.",
+      "Don't introduce book covers, generic generated art or decorative project-card grids.",
+      "Don't restore Teacher Storyboard to the listing, hosted sites or release assets.",
+      "Don't describe Education Source ZIP as a ready-to-open static website package.",
+      "Don't add film playback, galleries or unrelated editorial sections to the portal."
     ]
   }
 }
