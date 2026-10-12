@@ -27,3 +27,7 @@ The historical pitch edition retains its original content; current production ap
 ## Visual assets
 
 The hub inherits the Education website stylesheet and local fonts. Its hero has no image. Nine project covers were generated with the built-in image generation tool from real project screenshots, in one navy/ivory/gold style. `art/cover-originals/` holds original PNGs; `art/prompts.md` records prompts; `docs/assets/covers/` holds delivery WebP assets.
+
+## Identity kit
+
+The [RE;light identity guide](https://dpine8302.github.io/relight-hub/brand/) includes approved logos, palette, typography, CSS tokens and a self-contained ZIP. Published sources are in `docs/brand/`; rejected marks remain in the local archive.

@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#070b17">
+  <title>RE;light — Brand identity</title>
+  <style>
+    @font-face{font-family:LINE Seed Sans TH;src:url("fonts/LINESeedSansTH-Regular.woff2") format("woff2");font-weight:400;font-display:swap}
+    @font-face{font-family:LINE Seed Sans TH;src:url("fonts/LINESeedSansTH-Bold.woff2") format("woff2");font-weight:700 800;font-display:swap}
+    :root{font-family:"LINE Seed Sans TH",-apple-system,BlinkMacSystemFont,"SF Pro Text","Thonburi","Noto Sans Thai",sans-serif;color:#101522;background:#fbfbfa;font-synthesis:none;--ink:#070b17;--deep:#03050b;--cream:#f5f0e7;--paper:#fbfbfa;--white:#f8f6f0;--gold:#f2c978;--gold-deep:#c79a4d;--blue:#0f7598;--muted:#606878}
+    *{box-sizing:border-box}body{margin:0}a{color:inherit}header,main,footer{width:min(1120px,calc(100% - 48px));margin-inline:auto}header{display:flex;align-items:center;justify-content:space-between;padding:24px 0;border-bottom:1px solid #070b171c}header img{width:152px;height:auto}header span,.eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+    .hero{padding:78px 0 64px}.hero h1{font-size:clamp(48px,9vw,92px);line-height:1.02;letter-spacing:-.055em;margin:18px 0 14px;color:var(--ink)}.hero h1 b{color:var(--gold-deep)}.hero p{font-size:18px;line-height:1.7;color:#414958;max-width:660px;margin:0}
+    .section{padding:36px 0 54px;border-top:1px solid #070b171c}.section-head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:22px}.section h2{font-size:26px;line-height:1.2;margin:0;color:var(--ink)}.section-head p{max-width:470px;font-size:14px;line-height:1.65;color:var(--muted);margin:0}
+    .logo-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.logo-card{min-height:190px;border-radius:20px;padding:26px;display:grid;align-content:space-between;gap:18px}.logo-card.light{background:var(--cream);border:1px solid #070b171c}.logo-card.dark{background:var(--ink);color:var(--white)}.logo-card img{width:min(100%,390px);height:auto}.logo-card small{font-size:12px;color:var(--muted)}.logo-card.dark small{color:#c2c7d1}
+    .marks{display:flex;align-items:center;gap:18px;margin-top:16px;padding:20px 24px;background:#f5f0e7;border-radius:16px}.marks img{width:96px;height:96px;object-fit:contain}.marks p{margin:0;color:#414958;line-height:1.6}.marks strong{color:var(--ink)}
+    .signature-art{min-height:310px;display:grid;place-items:center;overflow:hidden;border-radius:20px;background:var(--ink);margin-top:18px}.signature-art img{display:block;width:min(48vw,300px);height:auto}.signature-caption{margin:10px 0 0;color:var(--muted);font-size:13px;line-height:1.6}
+    .palette{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.swatch{border:1px solid #070b171c;border-radius:14px;overflow:hidden;background:white}.chip{height:92px;background:var(--swatch)}.swatch-info{padding:12px 14px}.swatch-name{display:block;font-size:14px;font-weight:700}.swatch-code{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}.swatch-role{display:block;margin-top:5px;font-size:11px;color:var(--muted);line-height:1.45}
+    .type-sample{display:grid;grid-template-columns:1fr 1fr;gap:14px}.type-box{padding:22px;border-radius:16px;background:var(--cream)}.type-box.dark{background:var(--ink);color:var(--white)}.type-box .label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}.type-box.dark .label{color:#c2c7d1}.sample-large{font-size:34px;line-height:1.3;font-weight:700;letter-spacing:-.035em;margin:14px 0 6px}.sample-body{font-size:16px;line-height:1.65;margin:0;color:inherit}.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.rule{padding:18px;border:1px solid #070b171c;background:#f5f0e7;border-radius:14px}.rule strong{display:block;margin-bottom:6px}.rule p{font-size:13px;line-height:1.6;color:#414958;margin:0}.footer{padding:24px 0 40px;color:var(--muted);font-size:12px;line-height:1.6}
+    @media(max-width:700px){header,main,footer{width:min(100% - 36px,1120px)}header span{font-size:10px}.hero{padding:58px 0 42px}.section{padding:28px 0 40px}.section-head{display:block}.section-head p{margin-top:10px}.logo-grid,.type-sample{grid-template-columns:1fr}.logo-card{min-height:150px}.palette{grid-template-columns:repeat(2,1fr)}.chip{height:74px}.rules{grid-template-columns:1fr}.sample-large{font-size:29px}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo/relight-wordmark-dark.svg" alt="RE;light">
+    <span>Identity system · v1</span>
+  </header>
+  <main>
+    <section class="hero" aria-labelledby="page-title">
+      <div class="eyebrow">Project identity</div>
+      <h1 id="page-title">RE<span style="color:#c79a4d">;</span>light</h1>
+      <p>The project-wide identity reference, consolidated from the existing Education and Hub design system. It defines the logo variants, core colors, typography and usage rules for consistent project materials.</p>
+    </section>
+    <section class="section" aria-labelledby="logo-title">
+      <div class="section-head"><h2 id="logo-title">The mark</h2><p>Use the semicolon as the signature detail. Keep the wordmark intact and give it clear space on every surface.</p></div>
+      <div class="logo-grid">
+        <div class="logo-card light"><img src="logo/relight-wordmark-dark.svg" alt="Dark RE;light wordmark for light backgrounds"><small>Primary · light background</small></div>
+        <div class="logo-card dark"><img src="logo/relight-wordmark-light.svg" alt="Ivory RE;light wordmark for dark backgrounds"><small>Reverse · dark background</small></div>
+      </div>
+      <div class="marks"><img src="logo/relight-mark-path-approved.png" alt="Approved RE;light mark: ivory doorway, winding path and gold point of light"><p><strong>Approved compact mark · doorway and path</strong><br>Use this exact mark for icons and game branding. The empty doorway and winged game mark are rejected and archived; never substitute them.</p></div>
+      <div class="signature-art"><img src="illustrations/relight-future-path-selected.png" alt="Selected RE;light illustration: an ivory doorway opening onto a winding path, with a gold light point"></div>
+      <p class="signature-caption">Selected signature illustration · the same image now anchors the Education homepage hero.</p>
+    </section>
+    <section class="section" aria-labelledby="skyfront-title"><div class="section-head"><h2 id="skyfront-title">Relight Skyfront</h2><p>The game edition shares the parent palette and visual finish, with its own independent aviation logo.</p></div><div class="logo-card dark"><img src="logo/skyfront-game-logo.png" alt="SKYFRONT aviation game logo" style="width:min(560px,100%);height:auto;max-height:240px;object-fit:contain"/><small>Game edition · use alongside the approved RE;light identity</small></div></section>
+    <section class="section" aria-labelledby="color-title">
+      <div class="section-head"><h2 id="color-title">Color system</h2><p>Dark navy carries the brand. Ivory and cream open the page; gold marks the semicolon and key emphasis. Blue is a supporting interaction color.</p></div>
+      <div class="palette">
+        <div class="swatch"><div class="chip" style="--swatch:#070b17"></div><div class="swatch-info"><span class="swatch-name">Navy ink</span><span class="swatch-code">#070B17</span><span class="swatch-role">Primary dark surface and wordmark</span></div></div>
+        <div class="swatch"><div class="chip" style="--swatch:#03050b"></div><div class="swatch-info"><span class="swatch-name">Deep navy</span><span class="swatch-code">#03050B</span><span class="swatch-role">Deep backgrounds and gradients</span></div></div>
+        <div class="swatch"><div class="chip" style="--swatch:#f5f0e7"></div><div class="swatch-info"><span class="swatch-name">Warm cream</span><span class="swatch-code">#F5F0E7</span><span class="swatch-role">Soft page and print surface</span></div></div>
+        <div class="swatch"><div class="chip" style="--swatch:#f8f6f0"></div><div class="swatch-info"><span class="swatch-name">Ivory white</span><span class="swatch-code">#F8F6F0</span><span class="swatch-role">Text and reverse logo</span></div></div>
+        <div class="swatch"><div class="chip" style="--swatch:#f2c978"></div><div class="swatch-info"><span class="swatch-name">Soft gold</span><span class="swatch-code">#F2C978</span><span class="swatch-role">Semicolon, accent and emphasis</span></div></div>
+        <div class="swatch"><div class="chip" style="--swatch:#c79a4d"></div><div class="swatch-info"><span class="swatch-name">Deep gold</span><span class="swatch-code">#C79A4D</span><span class="swatch-role">Gold for small text on light surfaces</span></div></div>
+        <div class="swatch"><div class="chip" style="--swatch:#0f7598"></div><div class="swatch-info"><span class="swatch-name">Education blue</span><span class="swatch-code">#0F7598</span><span class="swatch-role">Links and focus on light surfaces</span></div></div>
+        <div class="swatch"><div class="chip" style="--swatch:#101522"></div><div class="swatch-info"><span class="swatch-name">Text ink</span><span class="swatch-code">#101522</span><span class="swatch-role">Body copy on light surfaces</span></div></div>
+      </div>
+    </section>
+    <section class="section" aria-labelledby="type-title">
+      <div class="section-head"><h2 id="type-title">Typography</h2><p>Use LINE Seed Sans TH across Thai and Latin copy. Keep hierarchy clear, line lengths comfortable and emphasis restrained.</p></div>
+      <div class="type-sample">
+        <div class="type-box"><span class="label">Display · Bold 700/800</span><div class="sample-large">RE<span style="color:#c79a4d">;</span>light</div><p class="sample-body">รู้ทันบุหรี่ไฟฟ้า<br>Thai and English wordmark sample.</p></div>
+        <div class="type-box dark"><span class="label">Reading · Regular 400</span><div class="sample-large" style="font-size:25px">LINE Seed Sans TH</div><p class="sample-body">Designed for clear Thai and Latin text on a dark surface.</p></div>
+      </div>
+    </section>
+    <section class="section" aria-labelledby="use-title">
+      <div class="section-head"><h2 id="use-title">Use it consistently</h2><p>These rules keep the identity recognizable across the film, web, exhibition and project materials.</p></div>
+      <div class="rules">
+        <div class="rule"><strong>Keep the name intact</strong><p>Write the display mark as RE;light. Keep the semicolon gold. Do not substitute punctuation or remove the detail.</p></div>
+        <div class="rule"><strong>Protect contrast</strong><p>Use the navy wordmark on cream or paper, and the ivory wordmark on navy. Use deep gold for small text on light surfaces.</p></div>
+        <div class="rule"><strong>Leave room to breathe</strong><p>Keep clear space around the mark at least equal to the height of its lowercase “l”. Never stretch, outline, shadow or place it over busy imagery.</p></div>
+      </div>
+    </section>
+  </main>
+  <footer class="footer"><p><a href="RElight-Identity-Kit.zip" download>Download the identity kit ZIP</a> · <a href="../">RE;light Hub</a></p>Source of truth: current RE;light Education and Hub design system. Core tokens are mirrored in <a href="tokens.css">tokens.css</a>; editable SVG masters are in <a href="logo/relight-wordmark-dark.svg" download>dark wordmark</a> and <a href="logo/relight-wordmark-light.svg" download>light wordmark</a>.</footer>
+</body>
+</html>

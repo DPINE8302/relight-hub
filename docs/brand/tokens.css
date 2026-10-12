@@ -1,0 +1,14 @@
+:root {
+  --relight-ink: #070b17;
+  --relight-ink-deep: #03050b;
+  --relight-cream: #f5f0e7;
+  --relight-paper: #fbfbfa;
+  --relight-white: #f8f6f0;
+  --relight-gold: #f2c978;
+  --relight-gold-deep: #c79a4d;
+  --relight-blue: #0f7598;
+  --relight-text: #101522;
+  --relight-text-soft: #606878;
+  --relight-font: "LINE Seed Sans TH", -apple-system, BlinkMacSystemFont,
+    "SF Pro Text", "Thonburi", "Noto Sans Thai", "Leelawadee UI", sans-serif;
+}
