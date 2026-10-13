@@ -21,3 +21,5 @@ Accessed 13 October 2026. Direction is synthesized from these references and exi
 - Add outlined SVGs and transparent 2400px PNGs while retaining original live-text editable masters.
 - Distribute unmodified desktop TTF and web WOFF2 copies from the official LINE package, with the OFL license.
 - No claim of universal CMYK equivalence, room acceptance or ten-second human comprehension. Print requires a printer-profile proof; viewing-distance typography requires exhibition testing.
+
+User follow-up: keep Apple-like clarity and remove the unintended split in the wordmark. The previous live-text SVG positioned RE, semicolon and light with independent x coordinates. All active wordmark masters now typeset RE;light continuously with -0.025em Latin tracking; gold remains on the semicolon. Both outlined vectors, transparent PNGs, live-text sources and the ZIP were rebuilt together. Previous editable source wordmarks are preserved only in the canonical source archive outside the public kit.
