@@ -9,6 +9,7 @@ Published guide: https://dpine8302.github.io/relight-hub/brand/
 - Compact mark: `logo/relight-mark-path-approved.png`. Keep this exact approved doorway-and-path mark.
 - Artwork: `illustrations/relight-future-path-selected.png`.
 - Fonts: `downloads/RElight-Font-Pack.zip`. Official LINE Seed Sans TH Regular, Bold and ExtraBold; desktop TTF and web WOFF2, with the SIL Open Font License.
+- Moodboard: `illustrations/relight-color-mood.jpg` (full-resolution image); optimized WebP is used on the website. Atmosphere illustrates the palette; use the hex tokens for exact colors.
 - Colors: navy #070B17, ivory #F8F6F0, gold #F2C978. Supporting colors and reusable typography/spacing roles are in `tokens.css`.
 
 ## Fonts
