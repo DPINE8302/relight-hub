@@ -12,3 +12,18 @@
   --relight-font: "LINE Seed Sans TH", -apple-system, BlinkMacSystemFont,
     "SF Pro Text", "Thonburi", "Noto Sans Thai", "Leelawadee UI", sans-serif;
 }
+
+/* Shared roles; Thai text keeps natural tracking. */
+:root {
+  --relight-weight-body: 400;
+  --relight-weight-heading: 700;
+  --relight-weight-display: 800;
+  --relight-size-body: 1rem;
+  --relight-size-title: 1.5rem;
+  --relight-size-heading: clamp(1.75rem, 3vw, 2.5rem);
+  --relight-size-display: clamp(2rem, 4.4vw, 4rem);
+  --relight-leading-body: 1.75;
+  --relight-leading-heading: 1.5;
+  --relight-tracking-thai: 0;
+  --relight-space-unit: 0.5rem;
+}
