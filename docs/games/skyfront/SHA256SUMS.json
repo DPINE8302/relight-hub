@@ -1,6 +1,8 @@
 {
-  ".DS_Store": "7bebee73169a27164c2155d64229eb2864acd4b83183929ec8ec1f8fd6441189",
   "LICENSES.txt": "22bbf4ca8615ba905222cbbcb6a25f67fd507b66847e8d99a60c019135c73614",
+  "assets/app/icon-180.png": "18f1a5a1460eb218552d3ec1df38f210ffd79859dd48f9c4a45f42e4596ed942",
+  "assets/app/icon-192.png": "6b6495aae36f2b9ac755bae7fc072a8bc463e8498a61ddae44a0168ef3e28f96",
+  "assets/app/icon-512.png": "602c42fd0177ff544a5d24f10058b210cb4a2f5219191d3c171008f00649c3c6",
   "assets/audio/dawn-over-the-ocean.mp3": "c5e00c9cc2e8c5b7da465fa4cf7ee5f29c381d076ccc061224ddb519683e7c96",
   "assets/audio/dialogue/05e2f846b698dfaf08c3.mp3": "05e2f846b698dfaf08c39e35bc0ccfd6f7dd74754ec570eb0d52d4973cba7b19",
   "assets/audio/dialogue/0c8de8c8416793831151.mp3": "0c8de8c84167938311512b5a7d4e7ba2b58315598710b367b65ecad185b2ebb7",
@@ -119,7 +121,8 @@
   "assets/media/ea70ea71aaad1f75d277.jpg": "ea70ea71aaad1f75d2770105b2f16f4853edf78eae4cd3b9c540f03324a005ec",
   "assets/media/f46b8d45f6c87415e6b3.jpg": "f46b8d45f6c87415e6b32bc2cc180a34f0d5ea11a7b041cd6ab1de4fb48c3428",
   "assets/media/f5fd0ebfe9a0eb7f1762.jpg": "f5fd0ebfe9a0eb7f176253e864ffeadc7222d847a38a1e2fc7a1ed3215f1adbc",
-  "index.html": "1b9145a4eddce160ab2e2784fd067d4ca4972f4e24b2826e26d0bf3bd4179362",
+  "index.html": "d6b58203800d286cc1faca8e66d65887441e03e11fc9fe9d94c6c62e164f277d",
+  "manifest.webmanifest": "6d1ad370a3de8034876c1847e70e54a07ff72d941f97a17309f35c3c84533361",
   "versions/airport-illustrations-1.2.2/LICENSES.txt": "22bbf4ca8615ba905222cbbcb6a25f67fd507b66847e8d99a60c019135c73614",
   "versions/airport-illustrations-1.2.2/index.html": "9540e2a36a9130f9fdb7cb87ce4fad556135133948ded263ed6443c7b88f81c0",
   "versions/education-archive-1.2.1/LICENSES.txt": "22bbf4ca8615ba905222cbbcb6a25f67fd507b66847e8d99a60c019135c73614",
@@ -136,6 +139,5 @@
   "versions/mission-stories-1.3.1/index.html": "e20079e4b4ff4dd51cb6ff4f13089f31a637bcb31d7d147009f0919984a07b5e",
   "versions/tater-field-1.2.0/LICENSES.txt": "22bbf4ca8615ba905222cbbcb6a25f67fd507b66847e8d99a60c019135c73614",
   "versions/tater-field-1.2.0/index.html": "e9eeb1f87e3ca808ef75d1adc715c3d9f7a21265f2f427db73bd1d342428d3ab",
-  "assets/game-29e4a4f0ebf2080f52da.js": "ab12c6697de2ab9f020941402e5c66c73589a50520f48857600844805d0b2ca2",
-  "CURRENT-ASSETS.json": "183894bf0e19289d8a69bf95605318250aa5cd7c1e77f3c63f1e539f490ecb72"
+  "CURRENT-ASSETS.json": "7e671c9628ff25aa0799a60570693a59a48b3a9fa0bb071872ec7a9e406e220b"
 }
