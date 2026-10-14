@@ -1,4 +1,5 @@
 {
+  ".DS_Store": "7bebee73169a27164c2155d64229eb2864acd4b83183929ec8ec1f8fd6441189",
   "LICENSES.txt": "22bbf4ca8615ba905222cbbcb6a25f67fd507b66847e8d99a60c019135c73614",
   "assets/audio/dawn-over-the-ocean.mp3": "c5e00c9cc2e8c5b7da465fa4cf7ee5f29c381d076ccc061224ddb519683e7c96",
   "assets/audio/dialogue/05e2f846b698dfaf08c3.mp3": "05e2f846b698dfaf08c39e35bc0ccfd6f7dd74754ec570eb0d52d4973cba7b19",
@@ -134,5 +135,7 @@
   "versions/mission-stories-1.3.1/LICENSES.txt": "22bbf4ca8615ba905222cbbcb6a25f67fd507b66847e8d99a60c019135c73614",
   "versions/mission-stories-1.3.1/index.html": "e20079e4b4ff4dd51cb6ff4f13089f31a637bcb31d7d147009f0919984a07b5e",
   "versions/tater-field-1.2.0/LICENSES.txt": "22bbf4ca8615ba905222cbbcb6a25f67fd507b66847e8d99a60c019135c73614",
-  "versions/tater-field-1.2.0/index.html": "e9eeb1f87e3ca808ef75d1adc715c3d9f7a21265f2f427db73bd1d342428d3ab"
+  "versions/tater-field-1.2.0/index.html": "e9eeb1f87e3ca808ef75d1adc715c3d9f7a21265f2f427db73bd1d342428d3ab",
+  "assets/game-29e4a4f0ebf2080f52da.js": "ab12c6697de2ab9f020941402e5c66c73589a50520f48857600844805d0b2ca2",
+  "CURRENT-ASSETS.json": "183894bf0e19289d8a69bf95605318250aa5cd7c1e77f3c63f1e539f490ecb72"
 }
