@@ -69,6 +69,29 @@ THE SOFTWARE.
 
 MIT License
 
+Copyright (c) 2016-2022 Arseny Kapoulkine
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+MIT License
+
 Copyright (c) 2018 Garrett Johnson
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -236,3 +259,38 @@ lowFrequency_explosion_000.ogg. Original files preserved under
 assets/audio/original/sfx; original license in reference/KENNEY-SFX-LICENSE.txt.
 Adaptation: mono, peak-normalized, brief fades,160kbps MP3 derivatives.
 The recordings remain under CC0 rather than being relicensed under MIT.
+
+
+ADDITIONAL AIRCRAFT GEOMETRY AND MATERIALS
+
+Lockheed Martin F-22 Raptor, by andertan
+Original: https://sketchfab.com/3d-models/lockheed-martin-f-22-raptor-7e7b3c372e374dda98e70208d09cfdcf
+Redistributed glTF conversion: AirframeArchive360, https://airframearchive360.com/aircraft/f-22-raptor
+
+Dassault Rafale, by andertan
+Original: https://sketchfab.com/3d-models/dassault-rafale-fabb8472bc2e413282c80406b13ff1a7
+Redistributed glTF conversion: AirframeArchive360, https://airframearchive360.com/aircraft/dassault-rafale
+
+Both artist source pages identify Creative Commons Attribution 4.0 International:
+https://creativecommons.org/licenses/by/4.0/
+License terms: https://creativecommons.org/licenses/by/4.0/legalcode
+No endorsement by the model creator, aircraft manufacturer or armed forces is implied.
+
+Skyfront modifications: coordinate normalization, reflected triangle winding repair,
+quantized attribute conversion, engine plume removal, entirely authored RE;light
+paint and projected approved wordmarks, instance disposal and game adapters.
+F-22 retains artist-supplied surface/normal maps beneath authored paint.
+Rafale runtime geometry contains NO original images, textures, or photo-derived
+normal maps. Source photo collages carry third-party copyright marks and are
+excluded from the distributed game. Original authored paint replaces them.
+Sources are preserved separately for provenance; rejected/reference assets do not
+form part of the runtime distribution.
+
+Hangar imagery: original AI-assisted Relight Skyfront art, generated from the
+project's own hangar direction and licensed aircraft geometry references.
+Cinematic illustrations are distinct from the actual orbitable playable meshes.
+Flight statistics are authored arcade balance, not manufacturer specifications.
+
+Meshopt decoder (meshoptimizer 0.18), Copyright (c) 2016-2022 Arseny Kapoulkine.
+Bundled through Three.js, MIT. Full permission notice is included in LICENSES.txt.
+Source: https://github.com/zeux/meshoptimizer/tree/v0.18
