@@ -1621,7 +1621,7 @@ body.touch #flight-navigation{width:min(520px,calc(100vw - 32px))!important;top:
  overflow:hidden;
 }
 #opening-art{background-color:#040b13;background-repeat:no-repeat;background-size:cover;transition:none;}
-#opening-pilot svg,#opening-hq svg,.briefing-crew svg,.learning-actor svg{width:100%;height:100%;overflow:visible;}
+#opening-pilot svg,#opening-hq svg,.briefing-crew svg,.learning-actor svg{width:100%;height:100%;overflow:hidden;}
 #opening-pilot,#opening-hq,.briefing-crew,.learning-actor{max-height:70%;}
 #learning-scene .learning-stage{background-color:#040b13;}
 #learning-scene[data-art="sortie"] .learning-stage{background-color:#040b13;}
@@ -1678,6 +1678,13 @@ body.touch #flight-navigation{width:min(520px,calc(100vw - 32px))!important;top:
 }
 @media(prefers-reduced-motion:reduce){
  .campaign-learning-cinema :is(.cinema-context,.cinema-explanation,.cinema-memory,.cinema-team){transition:none;}
+}
+
+/* Return-to-flight beats intentionally reveal the current flight canvas. Every
+   outgoing organ/room is hidden by the scene renderer before this state. */
+#learning-scene[data-cinema="false"][data-art="sortie"],
+#learning-scene[data-cinema="false"][data-art="sortie"] .learning-stage{
+ background:transparent;
 }
 
 </style>
@@ -1924,6 +1931,6 @@ body.touch #flight-navigation{width:min(520px,calc(100vw - 32px))!important;top:
  window.addEventListener('error',e=>{if(e.message)fail('runtime-error', 'เกมหยุดทำงาน ลองเปิดใหม่ ข้อมูลการตั้งค่าและสถิติเดิมยังอยู่');});
 })();
 </script>
-<script id="skyfront-game" src="/relight-hub/games/skyfront/assets/game-561ac266fa96cf9e587a.js" defer onerror="SkyfrontRecovery.fail('bundle-load','โหลดไฟล์เกมไม่สำเร็จ ตรวจการเชื่อมต่อแล้วลองใหม่')"></script>
+<script id="skyfront-game" src="/relight-hub/games/skyfront/assets/game-8c8e862cfc8b29149de0.js" defer onerror="SkyfrontRecovery.fail('bundle-load','โหลดไฟล์เกมไม่สำเร็จ ตรวจการเชื่อมต่อแล้วลองใหม่')"></script>
 </body>
 </html>
