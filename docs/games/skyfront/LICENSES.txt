@@ -846,3 +846,20 @@ Flight statistics are authored arcade balance, not manufacturer specifications.
 Meshopt decoder (meshoptimizer 0.18), Copyright (c) 2016-2022 Arseny Kapoulkine.
 Bundled through Three.js, MIT. Full permission notice is included in LICENSES.txt.
 Source: https://github.com/zeux/meshoptimizer/tree/v0.18
+
+
+REAL-WORLD TERRAIN DATA NOTICES (Kauaʻi region pack)
+======================================================
+
+Elevation source: Mapzen / joerd "terrarium" terrain tiles
+  https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png
+  (free, no key; served by the Mapzen elevation tiles S3 bucket)
+
+Underlying datasets for the Kauaʻi area:
+  - United States: USGS 3DEP (3D Elevation Program) — public domain.
+  - Ocean bathymetry: ETOPO1 (NOAA/NCEI) — public domain.
+
+This project bakes the tiles into a compact metric heightfield at build time
+(tools/bake-kauai.mjs) and does not stream tiles at runtime.
+
+Attribution used in-game: "Terrain: USGS 3DEP / ETOPO1 via Mapzen terrarium (public domain)".

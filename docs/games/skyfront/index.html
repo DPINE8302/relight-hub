@@ -853,6 +853,23 @@ Meshopt decoder (meshoptimizer 0.18), Copyright (c) 2016-2022 Arseny Kapoulkine.
 Bundled through Three.js, MIT. Full permission notice is included in LICENSES.txt.
 Source: https://github.com/zeux/meshoptimizer/tree/v0.18
 
+
+REAL-WORLD TERRAIN DATA NOTICES (Kauaʻi region pack)
+======================================================
+
+Elevation source: Mapzen / joerd "terrarium" terrain tiles
+  https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png
+  (free, no key; served by the Mapzen elevation tiles S3 bucket)
+
+Underlying datasets for the Kauaʻi area:
+  - United States: USGS 3DEP (3D Elevation Program) — public domain.
+  - Ocean bathymetry: ETOPO1 (NOAA/NCEI) — public domain.
+
+This project bakes the tiles into a compact metric heightfield at build time
+(tools/bake-kauai.mjs) and does not stream tiles at runtime.
+
+Attribution used in-game: "Terrain: USGS 3DEP / ETOPO1 via Mapzen terrarium (public domain)".
+
 -->
 <!--
 THESIS: Relight Skyfront invites the pilot into a cinematic coastal command room to one mission and two fights.
@@ -2239,9 +2256,62 @@ body.touch #flight-navigation{width:min(520px,calc(100vw - 32px))!important;top:
  background:transparent;
 }
 
+/* Native top layer also covers the hangar and mission-selection dialogs. */
+#landscape-gate{position:fixed;inset:0;box-sizing:border-box;margin:0;border:0;width:100%;max-width:none;height:100%;height:100dvh;max-height:none;padding:max(24px,env(safe-area-inset-top)) max(24px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(24px,env(safe-area-inset-left));background:#070b17;color:#f8f6f0;font-family:var(--f-jp);text-align:center;overflow:auto;}
+#landscape-gate::backdrop{background:#070b17;}
+#landscape-gate[open]{display:grid;place-content:center;justify-items:center;gap:20px;}
+.landscape-phone{width:100px;height:60px;box-sizing:border-box;border:2px solid #f2c978;border-radius:12px;position:relative;margin:12px;}
+.landscape-phone::after{content:'';position:absolute;right:6px;top:23px;width:3px;height:10px;border-radius:2px;background:#f2c978;}
+#landscape-gate h2{font-size:clamp(24px,6vw,34px);line-height:1.4;margin:0;letter-spacing:-.025em;}
+#landscape-gate p{font-size:15px;line-height:1.7;max-width:34ch;margin:0;color:#d4dfeb;}
+#landscape-start{min-height:48px;padding:12px 24px;font:600 16px/1.5 var(--f-jp);background:#f2c978;color:#070b17;border:0;border-radius:8px;cursor:pointer;}
+#landscape-start:focus-visible{outline:2px solid #f8f6f0;outline-offset:5px;}
+#landscape-gate #landscape-status{min-height:3.4em;font-size:13px;}
+@media(pointer:coarse) and (hover:none) and (orientation:landscape) and (max-height:600px){
+ :root{--mobile-left:max(16px,env(safe-area-inset-left));--mobile-right:max(16px,env(safe-area-inset-right));--mobile-top:max(10px,env(safe-area-inset-top));--mobile-bottom:max(10px,env(safe-area-inset-bottom));}
+ #title .sortie-header{left:var(--mobile-left);top:var(--mobile-top);gap:4px;}
+ #title .parent-brand .skyfront-relight{font-size:18px;}
+ #title .skyfront-wordmark{width:180px;}
+ #title .t-wrap{left:var(--mobile-left);top:90px;width:calc(100% - var(--mobile-left) - var(--mobile-right));max-height:calc(100dvh - 104px - var(--mobile-bottom));padding:0;overflow:auto;}
+ #title #mainmenu{position:absolute;left:var(--mobile-left);right:var(--mobile-right);bottom:var(--mobile-bottom);box-sizing:border-box;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px 12px;width:auto;margin:0;padding:0;}
+ #title #mainmenu>.mi{grid-column:auto;grid-row:auto;min-height:44px;padding:6px;font-size:13px;gap:6px;}
+ #title #mainmenu>.mi[data-act=start]{grid-column:1/4;grid-row:1;min-height:48px;font-size:18px;}
+ #title #mainmenu>.mi[data-act=missions]{grid-column:4/7;grid-row:1;}
+ #title #mainmenu>.mi[data-act=freeflight]{grid-column:1/3;grid-row:2;}
+ #title #mainmenu>.mi[data-act=controls]{grid-column:3/5;grid-row:2;}
+ #title #mainmenu>.mi[data-act=health]{grid-column:5/7;grid-row:2;}
+ #title #mainmenu>.mi::before{font-size:18px;}
+ #title .sortie-top-tools{left:auto;right:var(--mobile-right);top:var(--mobile-top);bottom:auto;gap:6px;}
+ #title .sortie-top-tools .mi{min-height:44px;}
+ #sortie-prep{position:absolute;left:auto;right:var(--mobile-right);top:64px;bottom:auto;box-sizing:border-box;width:280px;max-height:calc(100dvh - 180px);overflow:auto;padding:8px 16px;}
+ :is(#settings,#controls,#pause,#results,#gameover) .panel{box-sizing:border-box;max-height:calc(100dvh - var(--mobile-top) - var(--mobile-bottom));overflow:auto;padding:16px 24px;}
+ :is(#settings,#controls,#pause,#results,#gameover) .p-title{font-size:24px;padding-bottom:8px;margin-bottom:8px;}
+ body.touch #touch .t-stick{left:var(--mobile-left);bottom:var(--mobile-bottom);width:40%;height:56%;touch-action:none;}
+ body.touch #touch .t-pause{top:var(--mobile-top);right:var(--mobile-right);width:44px;height:44px;}
+ body.touch .t-tools{top:calc(var(--mobile-top) + 52px);right:var(--mobile-right);gap:6px;}
+ body.touch .sandbox-flight #sandbox-tools{top:var(--mobile-top);right:calc(var(--mobile-right) + 54px);min-height:44px;}
+ body.touch .t-btns{right:var(--mobile-right);bottom:calc(var(--mobile-bottom) + 4px);}
+ body.touch #radio{left:calc(var(--mobile-left) + 100px);right:calc(var(--mobile-right) + 192px);bottom:32px;top:auto;}
+ body.touch #flight-navigation{max-width:calc(100% - var(--mobile-left) - var(--mobile-right) - 120px);top:var(--mobile-top)!important;}
+ body.touch #tactical-map{left:var(--mobile-left);bottom:var(--mobile-bottom);pointer-events:none;}
+ body.touch .hud-tl{left:var(--mobile-left);top:var(--mobile-top);}
+ body.touch #air-data{right:var(--mobile-right);bottom:148px;}
+ .skyfront-hangar .hangar-header{left:var(--mobile-left);right:var(--mobile-right);top:var(--mobile-top);}
+ .skyfront-hangar .hangar-lower{left:var(--mobile-left);right:var(--mobile-right);bottom:var(--mobile-bottom);}
+ .skyfront-hangar .hangar-back{min-height:44px;}
+ #mission-select .mission-close{min-width:44px;min-height:44px;}
+}
+
 </style>
 </head>
 <body>
+<dialog id="landscape-gate" aria-labelledby="landscape-heading" aria-describedby="landscape-description">
+ <div class="landscape-phone" aria-hidden="true"></div>
+ <h2 id="landscape-heading">หมุนเครื่องเป็นแนวนอน</h2>
+ <p id="landscape-description">SKYFRONT เล่นในแนวนอน · เกมจะรอจนกว่าคุณพร้อม</p>
+ <button id="landscape-start" type="button" autofocus>เปิดเกมแนวนอน</button>
+ <p id="landscape-status" role="status" aria-live="polite"></p>
+</dialog>
 <div id="app">
   <section id="opening" hidden aria-label="เรื่องราวก่อนภารกิจ">
     <div id="opening-art"><svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="storySea" x2="0" y2="1"><stop stop-color="#5a8b95"/><stop offset="1" stop-color="#152d3d"/></linearGradient></defs><path d="M0 340L180 225L310 325L480 210L640 340L790 270L940 345L1170 220L1440 325V900H0Z" fill="#344c59"/><rect y="420" width="1440" height="480" fill="url(#storySea)"/><path d="M0 590H1440V900H0Z" fill="#111c29"/><g id="story-hangar"><path d="M0 0H1440V65H0Z M0 0H75V900H0Z M1365 0H1440V900H1365Z" fill="#070b17"/><path d="M110 0V580M470 0V580M970 0V580M1330 0V580" stroke="#1e2b3a" stroke-width="20"/><path d="M0 115H1440" stroke="#f2c978" stroke-width="3" opacity=".6"/><path d="M290 700L665 560L700 470L740 470L780 560L1150 700L780 650L755 740H685L660 650Z" fill="#d5d5ce" stroke="#070b17" stroke-width="4"/><path d="M695 558Q720 500 745 558L755 612H685Z" fill="#12263a"/><path d="M690 660L675 570H690L710 660M750 660L765 570H750L730 660" fill="#c99e52"/><text x="720" y="80" fill="#f2c978" font-family="sans-serif" text-anchor="middle" font-size="18" letter-spacing="5">Relight Skyfront / LANCER AIRBASE</text><path d="M0 820H1440M0 865H1440M720 740V900" stroke="#f2c978" stroke-width="2" opacity=".25"/></g></svg></div>
@@ -2483,6 +2553,6 @@ body.touch #flight-navigation{width:min(520px,calc(100vw - 32px))!important;top:
  window.addEventListener('error',e=>{if(e.message)fail('runtime-error', 'เกมหยุดทำงาน ลองเปิดใหม่ ข้อมูลการตั้งค่าและสถิติเดิมยังอยู่');});
 })();
 </script>
-<script id="skyfront-game" src="/relight-hub/games/skyfront/assets/game-9b6a0ed749319c26df47.js" defer onerror="SkyfrontRecovery.fail('bundle-load','โหลดไฟล์เกมไม่สำเร็จ ตรวจการเชื่อมต่อแล้วลองใหม่')"></script>
+<script id="skyfront-game" src="/relight-hub/games/skyfront/assets/game-e3b0b4f3cbde70f6328d.js" defer onerror="SkyfrontRecovery.fail('bundle-load','โหลดไฟล์เกมไม่สำเร็จ ตรวจการเชื่อมต่อแล้วลองใหม่')"></script>
 </body>
 </html>
