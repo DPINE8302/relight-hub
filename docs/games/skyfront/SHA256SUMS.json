@@ -124,7 +124,7 @@
   "assets/audio/sfx/explosion-medium.mp3": "39ab5f8694c7890b8fbff0f048a4d0b50ee8adc404c407bf13e3c6cf4b799d4b",
   "assets/audio/sfx/explosion-small.mp3": "28f0512ca1b92842a625d694f6d62f689452dd987b45cbb77919d7f6cf3c8399",
   "assets/audio/sfx/jet-cabin-smidoid.mp3": "88caae8cdc61bae2a1e38a384a23c4575aba5aace4cb77dedb558e1596a7cfaa",
-  "assets/game-c6eb069e7255872b9be4.js": "482d6a98ed9cd0df9e5cee963d4a3b782dbc478d77f917be695273da6834b4fa",
+  "assets/game-e850440481d98b796e05.js": "7ef2ede1e015226fb0d2622907a3d689becb60058726d9e4b1521a7b72cd2999",
   "assets/media/0609414fa68fd47a02ee.webp": "0609414fa68fd47a02ee3ccb6103897ee56b5ee0781efb5a695c8711c0421f48",
   "assets/media/12fbd62096b35eaa7a29.webp": "12fbd62096b35eaa7a2918d0427aa7a6fa7354bfed11d8aed02e464ecab07ec7",
   "assets/media/13bd822e43c73dbdea65.webp": "13bd822e43c73dbdea65fda90cb54f728b9446fd683549751a1820b1b883b6c5",
@@ -182,7 +182,7 @@
   "assets/media/f43570550decf0caba1e.webp": "f43570550decf0caba1ea815c8d68e3ede8d35768bba4adfef35c3ef9212f9eb",
   "assets/media/fd2aba286ed0752f58ba.webp": "fd2aba286ed0752f58ba8ad6429fe876c0d62eef749808f6e5c5e945da156582",
   "assets/media/ff8c7cab57e1dfa363a3.webp": "ff8c7cab57e1dfa363a38dc2726ed7a7fb02df541232d12468c0a95931758e8c",
-  "index.html": "579c1ac6be65773737072063f9f3a63b0ea04758446a715eb2b07f31f67e0af0",
+  "index.html": "eb3742bc97002dab954e7af37e8ab0bafd8030c3f2593311268f7ffe7d6eadbd",
   "manifest.webmanifest": "6d1ad370a3de8034876c1847e70e54a07ff72d941f97a17309f35c3c84533361",
   "versions/airport-illustrations-1.2.2/LICENSES.txt": "9c54abd09d09da3c3e1a406da983a00ea6ec4cc9a81fb6b4baade584ee1912ff",
   "versions/airport-illustrations-1.2.2/index.html": "9540e2a36a9130f9fdb7cb87ce4fad556135133948ded263ed6443c7b88f81c0",
@@ -200,8 +200,6 @@
   "versions/mission-stories-1.3.1/index.html": "e20079e4b4ff4dd51cb6ff4f13089f31a637bcb31d7d147009f0919984a07b5e",
   "versions/tater-field-1.2.0/LICENSES.txt": "9c54abd09d09da3c3e1a406da983a00ea6ec4cc9a81fb6b4baade584ee1912ff",
   "versions/tater-field-1.2.0/index.html": "e9eeb1f87e3ca808ef75d1adc715c3d9f7a21265f2f427db73bd1d342428d3ab",
-  "assets/audio/dialogue/56407f25bd4cbea7d197.mp3": "56407f25bd4cbea7d19778a5543d87e3b7ac9b3072ae8985ea96192c8750932f",
-  "assets/audio/dialogue/d3a10c04fffe92f089cf.mp3": "d3a10c04fffe92f089cf8f4524e84ca88df440529dfa35773c399fc518327d17",
-  "assets/game-e3b0b4f3cbde70f6328d.js": "f0122e7c566e117444503c002ed10560409d364ba12a3d3eafe1cf662090fa9d",
-  "CURRENT-ASSETS.json": "1976dcf605751588a48bf6bd9daeb9942223c7f3cc637116e00fe20d6b8a8092"
+  "assets/game-c6eb069e7255872b9be4.js": "482d6a98ed9cd0df9e5cee963d4a3b782dbc478d77f917be695273da6834b4fa",
+  "CURRENT-ASSETS.json": "05d7d57f65a54f1390de46df30d9c659ad932251fc31e2ad94b63f5b108509f1"
 }

@@ -2953,7 +2953,7 @@ body.touch .no-touch{display:none!important;}
  #mission-select .mission-close{min-width:44px;min-height:44px;}
 }
 
-/* Phone flight surface: sparse instruments, left steering, right weapon arc.
+/* Phone flight surface: sparse instruments, left steering, right throttle and weapon arc.
    These are thumb hit areas over the game world, never menu cards. */
 body.touch #desktop-input{display:none!important;}
 body.touch #touch{--touch-edge:max(16px,env(safe-area-inset-right));--touch-floor:max(18px,env(safe-area-inset-bottom));}
@@ -2972,8 +2972,8 @@ body.touch #touch .t-tools,body.touch #touch .t-btns{display:contents;}
 #app #touch [data-code=TouchFire] svg{width:30px;height:30px;}
 #app #touch [data-code=TouchTarget]{right:calc(var(--touch-edge) + 80px);bottom:calc(var(--touch-floor) + 36px);}
 #app #touch [data-code=TouchBomb]{right:calc(var(--touch-edge) + 8px);bottom:calc(var(--touch-floor) + 88px);}
-#app #touch [data-code=TouchBoost]{left:max(18px,env(safe-area-inset-left));bottom:calc(var(--touch-floor) + 118px);}
-#app #touch [data-code=TouchBrake]{left:max(18px,env(safe-area-inset-left));bottom:calc(var(--touch-floor) + 66px);}
+#app #touch [data-code=TouchBoost]{left:auto;right:calc(var(--touch-edge) + 152px);bottom:calc(var(--touch-floor) + 76px);}
+#app #touch [data-code=TouchBrake]{left:auto;right:calc(var(--touch-edge) + 208px);bottom:calc(var(--touch-floor) + 76px);}
 #app #touch [data-code=TouchRollL]{left:calc(max(18px,env(safe-area-inset-left)) + 164px);bottom:var(--touch-floor);}
 #app #touch [data-code=TouchRollR]{left:calc(max(18px,env(safe-area-inset-left)) + 212px);bottom:var(--touch-floor);}
 body.touch #touch .t-stick{left:max(64px,env(safe-area-inset-left));bottom:0;width:27%;height:55%;}
@@ -3045,7 +3045,16 @@ body.touch #boss .boss-name{font-size:9px;letter-spacing:.08em;margin-bottom:4px
 
 /* Dialogue remains above the independent weapon row and outside the right-edge
    air-data/target controls, including short landscape phones. */
-body.touch #radio{left:max(110px,24%);right:max(170px,26%);bottom:98px;top:auto;width:auto;}
+body.touch #radio{left:max(110px,24%);right:max(170px,26%);bottom:150px;top:auto;width:auto;}
+
+/* Instructions must never intercept either thumb over the flight surface. */
+#training-caption{pointer-events:none;}
+#training-caption button{pointer-events:auto;}
+@media(pointer:coarse) and (orientation:landscape){
+ body.touch #training-caption{top:78px;bottom:auto;width:min(540px,calc(100vw - 224px));}
+ body.touch #training-copy{font-size:13px;line-height:1.45;}
+ body.touch #training-skip{margin-top:6px;}
+}
 
 </style>
 </head>
@@ -3150,7 +3159,7 @@ body.touch #radio{left:max(110px,24%);right:max(170px,26%);bottom:98px;top:auto;
             <div><dt>Gyro</dt><dd>เปิดในตั้งค่า แล้วถือเครื่องในท่าสบายขณะกลับเข้าบิน ใช้ joystick รับช่วงได้</dd></div>
             <div><dt><span class="t-key fire">GUN</span></dt><dd><b>ปืนกล</b>　กดค้างเพื่อยิง ปล่อยเพื่อหยุด</dd></div>
             <div><dt><span class="t-key">MSL</span></dt><dd><b>มิสไซล์</b>　หันเข้าหาเป้า รอ LOCKED แล้วแตะ MSL</dd></div>
-            <div data-capability="bomb"><dt><span class="t-key">BOMB</span></dt><dd><b>ระเบิด</b>　จัดจุดตกให้ตรงเป้าภาคพื้นดิน แล้วแตะ BOMB</dd></div>
+            <div data-capability="bomb"><dt><span class="t-key">BOMB</span></dt><dd><b>ระเบิด</b>　บินเข้าแนวเป้าภาคพื้นดิน เมื่อขึ้น GPS BOMB แล้วแตะ BOMB</dd></div>
             <div><dt><span class="t-key">BOOST</span></dt><dd><b>Afterburner</b>　กดค้างเพื่อเร่งเครื่อง</dd></div>
             <div><dt><span class="t-key">BRAKE</span></dt><dd><b>เบรก</b></dd></div>
             <div><dt><span class="t-key">ROLL◀</span><span class="t-key">▶ROLL</span> </dt><dd><b>หมุนหลบ</b>　เริ่มหมุนเพื่อหลบช่วงสั้น กดค้างเพื่อหมุนอิสระ ปล่อยก่อนหลบครั้งใหม่</dd></div>
@@ -3317,6 +3326,6 @@ body.touch #radio{left:max(110px,24%);right:max(170px,26%);bottom:98px;top:auto;
  window.addEventListener('error',e=>{if(e.message)fail('runtime-error', 'เกมหยุดทำงาน ลองเปิดใหม่ ข้อมูลการตั้งค่าและสถิติเดิมยังอยู่');});
 })();
 </script>
-<script id="skyfront-game" src="/relight-hub/games/skyfront/assets/game-c6eb069e7255872b9be4.js" defer onerror="SkyfrontRecovery.fail('bundle-load','โหลดไฟล์เกมไม่สำเร็จ ตรวจการเชื่อมต่อแล้วลองใหม่')"></script>
+<script id="skyfront-game" src="/relight-hub/games/skyfront/assets/game-e850440481d98b796e05.js" defer onerror="SkyfrontRecovery.fail('bundle-load','โหลดไฟล์เกมไม่สำเร็จ ตรวจการเชื่อมต่อแล้วลองใหม่')"></script>
 </body>
 </html>
