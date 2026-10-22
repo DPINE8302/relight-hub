@@ -1,0 +1,60 @@
+{
+  "draft1" : [
+
+  ],
+  "full" : [
+
+  ],
+  "invalid.automationRange" : [
+    "Narrowing World \/ Hospital: invalid automation points"
+  ],
+  "invalid.blackFrame" : [
+    "Ending black frame lies outside project"
+  ],
+  "invalid.captureWindow" : [
+    "Memory: recording window exceeds scene"
+  ],
+  "invalid.cueExceedsScene" : [
+    "Narrowing World \/ Hospital: voice cue exceeds scene or has invalid trim\/fade"
+  ],
+  "invalid.delayWetRange" : [
+    "Narrowing World \/ Hospital: invalid delayWet"
+  ],
+  "invalid.feedbackInfinity" : [
+    "Narrowing World \/ Hospital: invalid feedback"
+  ],
+  "invalid.hugeCueStart" : [
+    "Voice region or trim exceeds supported limits"
+  ],
+  "invalid.hugeSceneFrames" : [
+    "Scene duration or media in-point exceeds supported limits"
+  ],
+  "invalid.manualAutomatic" : [
+    "Memory: manual recording requires a consent gate"
+  ],
+  "invalid.noScenes" : [
+    "A project needs 1–100 scenes",
+    "Ending black frame lies outside project"
+  ],
+  "invalid.overlap" : [
+    "Narrowing World \/ Hospital: visitor voice cues cannot overlap"
+  ],
+  "invalid.rateDenominator" : [
+    "Frame rate must be between 1 and 240 fps"
+  ],
+  "invalid.repeatCount" : [
+    "Narrowing World \/ Hospital: repeat count must be 1–100"
+  ],
+  "invalid.schema" : [
+    "Unsupported project version"
+  ],
+  "invalid.unknownAutomation" : [
+    "Unknown automation parameter unknown"
+  ],
+  "invalid.voiceWithoutCapture" : [
+    "Narrowing World \/ Hospital: voice needs a completed recording before playback"
+  ],
+  "starter" : [
+
+  ]
+}

@@ -1,0 +1,20 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/RELight.Core/RELight.Core.csproj" />
+    <Project Path="src/RELight.Media/RELight.Media.csproj" />
+    <Project Path="src/RELight.Audio/RELight.Audio.csproj" />
+    <Project Path="src/RELight.Controls/RELight.Controls.csproj" />
+    <Project Path="src/RELight.Show/RELight.Show.csproj" />
+    <Project Path="src/RELight.Studio/RELight.Studio.csproj" />
+    <Project Path="src/RELight.Windows/RELight.Windows.csproj" />
+    <Project Path="src/RELight.App/RELight.App.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/RELight.Core.Tests/RELight.Core.Tests.csproj" />
+    <Project Path="tests/RELight.Media.Tests/RELight.Media.Tests.csproj" />
+    <Project Path="tests/RELight.Audio.Tests/RELight.Audio.Tests.csproj" />
+    <Project Path="tests/RELight.Show.Tests/RELight.Show.Tests.csproj" />
+    <Project Path="tests/RELight.Controls.Tests/RELight.Controls.Tests.csproj" />
+    <Project Path="tests/RELight.Studio.Tests/RELight.Studio.Tests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,168 @@
+{
+  "blackFromFrame" : 2808,
+  "duckLevel" : 0.3,
+  "effectPresets" : {
+    "Custom" : {
+      "delayMs" : 280,
+      "distortion" : 0,
+      "feedback" : 0.22,
+      "level" : 0.8,
+      "lowPassHz" : 5200,
+      "pan" : 0,
+      "reverbWet" : 0.18
+    }
+  },
+  "filmLevel" : 0.7,
+  "outputOffsetMs" : 125.5,
+  "rate" : {
+    "denominator" : 1,
+    "numerator" : 24
+  },
+  "scenes" : [
+    {
+      "capture" : {
+        "durationSeconds" : 6,
+        "gateFrame" : 24,
+        "mode" : "manual",
+        "startFrame" : 0,
+        "trigger" : "gate"
+      },
+      "cues" : [
+        {
+          "automation" : {
+            "level" : [
+              {
+                "frame" : 0,
+                "id" : "8F204BB0-67B0-4BD5-9285-67AFA6C13D9E",
+                "value" : 0.8
+              },
+              {
+                "frame" : 192,
+                "id" : "4598B459-D677-4542-A854-DE6A02462F4D",
+                "value" : 0.2
+              }
+            ],
+            "pan" : [
+              {
+                "frame" : 0,
+                "id" : "9ECF1764-4FD9-4A9C-A9C7-AA67A124F80F",
+                "value" : -0.5
+              },
+              {
+                "frame" : 240,
+                "id" : "D3E5A99F-7478-422B-9AAF-6D4360B452F4",
+                "value" : 0.5
+              }
+            ]
+          },
+          "bypass" : false,
+          "effects" : {
+            "delayMs" : 210,
+            "delayWet" : 0.55,
+            "distortion" : 0.25,
+            "feedback" : 0.16,
+            "level" : 0.8,
+            "lowPassHz" : 2400,
+            "pan" : 0,
+            "reverbWet" : 0
+          },
+          "fadeInFrames" : 2,
+          "fadeOutFrames" : 6,
+          "id" : "7BADA163-A953-4EAC-8662-F81365BA7721",
+          "lengthFrames" : 240,
+          "loopToFill" : true,
+          "name" : "Visitor voice",
+          "repeatCount" : 2,
+          "sourceInFrame" : 0,
+          "startFrame" : 48
+        }
+      ],
+      "draft" : true,
+      "frames" : 432,
+      "id" : "E863E7DF-0624-4EBF-B1BB-5477F4AD5500",
+      "media" : "media\/Scene01_Draft1_480p_v5.mp4",
+      "mediaInFrame" : 0,
+      "name" : "Memory",
+      "thai" : "ความทรงจำ"
+    },
+    {
+      "cues" : [
+
+      ],
+      "draft" : true,
+      "frames" : 648,
+      "id" : "E66B05DD-6686-4BC7-9CA8-5FBA856F9FFA",
+      "mediaInFrame" : 0,
+      "name" : "Possibility",
+      "thai" : "ความเป็นไปได้"
+    },
+    {
+      "cues" : [
+
+      ],
+      "draft" : true,
+      "frames" : 528,
+      "id" : "9D4F3AC1-1DB2-4227-99AC-9BDD47631FCA",
+      "mediaInFrame" : 0,
+      "name" : "The Choice",
+      "thai" : "ทางเลือก"
+    },
+    {
+      "cues" : [
+        {
+          "automation" : {
+            "lowPassHz" : [
+              {
+                "frame" : 0,
+                "id" : "C9803F7A-ACBA-4999-A6D8-980ABC91F372",
+                "value" : 18000
+              },
+              {
+                "frame" : 192,
+                "id" : "F1EA5B81-FF18-457C-881A-B2C3764FDD0C",
+                "value" : 2400
+              }
+            ]
+          },
+          "bypass" : false,
+          "effects" : {
+            "delayMs" : 320,
+            "distortion" : 0,
+            "feedback" : 0.3,
+            "level" : 0.8,
+            "lowPassHz" : 2400,
+            "pan" : 0,
+            "reverbWet" : 0.35
+          },
+          "fadeInFrames" : 2,
+          "fadeOutFrames" : 6,
+          "id" : "97A19DF6-24DE-45E9-A82C-4599D5B0BD2A",
+          "lengthFrames" : 192,
+          "name" : "Visitor voice",
+          "sourceInFrame" : 0,
+          "startFrame" : 744
+        }
+      ],
+      "draft" : true,
+      "frames" : 936,
+      "id" : "DCFD9A0F-1C73-4092-A772-E690F802A25C",
+      "mediaInFrame" : 0,
+      "name" : "Narrowing World \/ Hospital",
+      "thai" : "โลกแคบลง"
+    },
+    {
+      "cues" : [
+
+      ],
+      "draft" : true,
+      "frames" : 336,
+      "id" : "878967F7-34A4-4BC4-8F70-6F32BAD7255F",
+      "mediaInFrame" : 0,
+      "name" : "Wake",
+      "thai" : "ตื่น"
+    }
+  ],
+  "schemaVersion" : 1,
+  "title" : "Full fixture · ทดสอบ",
+  "voiceLevel" : 0.9
+}

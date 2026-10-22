@@ -1,0 +1,103 @@
+{
+  "blackFromFrame" : 2341,
+  "duckLevel" : 0.35,
+  "effectPresets" : {
+
+  },
+  "filmLevel" : 0.75,
+  "outputOffsetMs" : 0,
+  "rate" : {
+    "denominator" : 1,
+    "numerator" : 24
+  },
+  "scenes" : [
+    {
+      "capture" : {
+        "durationSeconds" : 6,
+        "startFrame" : 0,
+        "trigger" : "gate"
+      },
+      "cues" : [
+
+      ],
+      "draft" : true,
+      "frames" : 414,
+      "id" : "219B4078-043F-43CE-8A61-F0781C94786C",
+      "media" : "media\/Draft 1 scene1-4 .mov",
+      "mediaInFrame" : 0,
+      "name" : "Memory",
+      "thai" : "ความทรงจำ"
+    },
+    {
+      "cues" : [
+
+      ],
+      "draft" : true,
+      "frames" : 409,
+      "id" : "3FED3168-5027-4703-AC0E-9C1928BFFD75",
+      "media" : "media\/Draft 1 scene1-4 .mov",
+      "mediaInFrame" : 414,
+      "name" : "Possibility",
+      "thai" : "ความเป็นไปได้"
+    },
+    {
+      "cues" : [
+
+      ],
+      "draft" : true,
+      "frames" : 707,
+      "id" : "F7F0E8D0-6447-47C7-AE6C-E507F6B16852",
+      "media" : "media\/Draft 1 scene1-4 .mov",
+      "mediaInFrame" : 823,
+      "name" : "The Choice",
+      "thai" : "ทางเลือก"
+    },
+    {
+      "cues" : [
+        {
+          "automation" : {
+
+          },
+          "bypass" : false,
+          "effects" : {
+            "delayMs" : 0,
+            "distortion" : 0,
+            "feedback" : 0,
+            "level" : 0.8,
+            "lowPassHz" : 18000,
+            "pan" : 0,
+            "reverbWet" : 0
+          },
+          "fadeInFrames" : 2,
+          "fadeOutFrames" : 6,
+          "id" : "A5907A30-8FF6-4B1E-BF58-19F9E211EA09",
+          "lengthFrames" : 163,
+          "name" : "Draft hospital voice test",
+          "sourceInFrame" : 0,
+          "startFrame" : 384
+        }
+      ],
+      "draft" : true,
+      "frames" : 547,
+      "id" : "0D9CF3F4-2D54-4710-9CCE-05F21DE19200",
+      "media" : "media\/Draft 1 scene1-4 .mov",
+      "mediaInFrame" : 1530,
+      "name" : "Narrowing World \/ Hospital",
+      "thai" : "โลกแคบลง"
+    },
+    {
+      "cues" : [
+
+      ],
+      "draft" : true,
+      "frames" : 336,
+      "id" : "EBF4C710-D839-4084-BAD7-834ED90C1E3F",
+      "mediaInFrame" : 0,
+      "name" : "Wake — film pending",
+      "thai" : "ตื่น"
+    }
+  ],
+  "schemaVersion" : 1,
+  "title" : "Draft 1 · Scenes 1–4 · provisional boundaries",
+  "voiceLevel" : 0.85
+}

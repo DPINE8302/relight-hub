@@ -1,0 +1,106 @@
+{
+  "blackFromFrame" : 2808,
+  "duckLevel" : 0.35,
+  "effectPresets" : {
+
+  },
+  "filmLevel" : 0.75,
+  "outputOffsetMs" : 0,
+  "rate" : {
+    "denominator" : 1,
+    "numerator" : 24
+  },
+  "scenes" : [
+    {
+      "capture" : {
+        "durationSeconds" : 6,
+        "startFrame" : 0,
+        "trigger" : "gate"
+      },
+      "cues" : [
+
+      ],
+      "draft" : true,
+      "frames" : 432,
+      "id" : "1CE4E3C0-5662-4736-B1D7-3C7D67963897",
+      "media" : "media\/Scene01_Draft1_480p_v5.mp4",
+      "mediaInFrame" : 0,
+      "name" : "Memory",
+      "thai" : "ความทรงจำ"
+    },
+    {
+      "cues" : [
+
+      ],
+      "draft" : true,
+      "frames" : 648,
+      "id" : "7BF656A1-EBB5-4B27-94EB-0D36B73EC76D",
+      "mediaInFrame" : 0,
+      "name" : "Possibility",
+      "thai" : "ความเป็นไปได้"
+    },
+    {
+      "cues" : [
+
+      ],
+      "draft" : true,
+      "frames" : 528,
+      "id" : "0A3B10CC-3EE8-420B-8D09-085DF8BA46DE",
+      "mediaInFrame" : 0,
+      "name" : "The Choice",
+      "thai" : "ทางเลือก"
+    },
+    {
+      "cues" : [
+        {
+          "automation" : {
+            "feedback" : [
+              {
+                "frame" : 0,
+                "id" : "6BE03FC5-D266-455A-B387-7F6ADBB616A6",
+                "value" : 0.9
+              }
+            ]
+          },
+          "bypass" : false,
+          "effects" : {
+            "delayMs" : 0,
+            "distortion" : 0,
+            "feedback" : 0,
+            "level" : 0.8,
+            "lowPassHz" : 18000,
+            "pan" : 0,
+            "reverbWet" : 0
+          },
+          "fadeInFrames" : 2,
+          "fadeOutFrames" : 6,
+          "id" : "02B23A88-1124-4C1A-8C29-F0E7A0AA51C9",
+          "lengthFrames" : 192,
+          "name" : "Visitor voice",
+          "sourceInFrame" : 0,
+          "startFrame" : 744
+        }
+      ],
+      "draft" : true,
+      "frames" : 936,
+      "id" : "4D706874-4038-44FF-B08C-2473FD061CA1",
+      "mediaInFrame" : 0,
+      "name" : "Narrowing World \/ Hospital",
+      "thai" : "โลกแคบลง"
+    },
+    {
+      "cues" : [
+
+      ],
+      "draft" : true,
+      "frames" : 336,
+      "id" : "CCD8FFCE-B110-4F2C-B22F-B96FEC717079",
+      "mediaInFrame" : 0,
+      "name" : "Wake",
+      "thai" : "ตื่น"
+    }
+  ],
+  "schemaVersion" : 1,
+  "title" : "RE:Light",
+  "voiceLevel" : 0.85
+}

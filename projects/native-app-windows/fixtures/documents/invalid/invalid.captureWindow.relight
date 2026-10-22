@@ -1,0 +1,100 @@
+{
+  "blackFromFrame" : 2808,
+  "duckLevel" : 0.35,
+  "effectPresets" : {
+
+  },
+  "filmLevel" : 0.75,
+  "outputOffsetMs" : 0,
+  "rate" : {
+    "denominator" : 1,
+    "numerator" : 24
+  },
+  "scenes" : [
+    {
+      "capture" : {
+        "durationSeconds" : 30,
+        "startFrame" : 0,
+        "trigger" : "automatic"
+      },
+      "cues" : [
+
+      ],
+      "draft" : true,
+      "frames" : 432,
+      "id" : "8C81B174-7813-4866-AC49-B85974F8A4F3",
+      "media" : "media\/Scene01_Draft1_480p_v5.mp4",
+      "mediaInFrame" : 0,
+      "name" : "Memory",
+      "thai" : "ความทรงจำ"
+    },
+    {
+      "cues" : [
+
+      ],
+      "draft" : true,
+      "frames" : 648,
+      "id" : "C5AC72B6-AB98-4A40-B510-9CE05904502F",
+      "mediaInFrame" : 0,
+      "name" : "Possibility",
+      "thai" : "ความเป็นไปได้"
+    },
+    {
+      "cues" : [
+
+      ],
+      "draft" : true,
+      "frames" : 528,
+      "id" : "BB4D9D98-DDAF-4484-94D5-3ECF01DDED25",
+      "mediaInFrame" : 0,
+      "name" : "The Choice",
+      "thai" : "ทางเลือก"
+    },
+    {
+      "cues" : [
+        {
+          "automation" : {
+
+          },
+          "bypass" : false,
+          "effects" : {
+            "delayMs" : 0,
+            "distortion" : 0,
+            "feedback" : 0,
+            "level" : 0.8,
+            "lowPassHz" : 18000,
+            "pan" : 0,
+            "reverbWet" : 0
+          },
+          "fadeInFrames" : 2,
+          "fadeOutFrames" : 6,
+          "id" : "96CD3B6C-0D75-459C-B44F-4FBD368F0DFB",
+          "lengthFrames" : 192,
+          "name" : "Visitor voice",
+          "sourceInFrame" : 0,
+          "startFrame" : 744
+        }
+      ],
+      "draft" : true,
+      "frames" : 936,
+      "id" : "CA1DDA9F-888D-4298-91FE-C804AEC4117E",
+      "mediaInFrame" : 0,
+      "name" : "Narrowing World \/ Hospital",
+      "thai" : "โลกแคบลง"
+    },
+    {
+      "cues" : [
+
+      ],
+      "draft" : true,
+      "frames" : 336,
+      "id" : "C29494CC-BFCD-4906-AE02-D63292A6E731",
+      "mediaInFrame" : 0,
+      "name" : "Wake",
+      "thai" : "ตื่น"
+    }
+  ],
+  "schemaVersion" : 1,
+  "title" : "RE:Light",
+  "voiceLevel" : 0.85
+}
