@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>RELight.Studio</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RELight.Core\RELight.Core.csproj" />
+    <ProjectReference Include="..\RELight.Media\RELight.Media.csproj" />
+    <ProjectReference Include="..\RELight.Show\RELight.Show.csproj" />
+    <ProjectReference Include="..\RELight.Controls\RELight.Controls.csproj" />
+  </ItemGroup>
+
+</Project>

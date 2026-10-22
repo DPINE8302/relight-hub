@@ -1,0 +1,9 @@
+bin/
+obj/
+artifacts/
+.vs/
+TestResults/
+*.user
+*.suo
+.DS_Store
+tools/fixture-gen/fixture-gen

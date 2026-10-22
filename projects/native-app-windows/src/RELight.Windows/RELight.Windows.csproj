@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <!-- This is managed IL and must be loadable by both the x64 and ARM64
+         WinUI hosts. Architecture-specific apphosts belong in RELight.App. -->
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <RootNamespace>RELight.Windows</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HidSharp" Version="2.1.0" />
+    <PackageReference Include="NAudio" Version="2.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RELight.Core\RELight.Core.csproj" />
+    <ProjectReference Include="..\RELight.Controls\RELight.Controls.csproj" />
+    <ProjectReference Include="..\RELight.Audio\RELight.Audio.csproj" />
+    <ProjectReference Include="..\RELight.Show\RELight.Show.csproj" />
+    <ProjectReference Include="..\RELight.Studio\RELight.Studio.csproj" />
+  </ItemGroup>
+
+</Project>

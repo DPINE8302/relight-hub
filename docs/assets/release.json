@@ -2,5 +2,23 @@
   "version": "2.1.1",
   "bytes": 125580078,
   "megabytes": 125.6,
-  "sha256": "fcb81e0399d6878b5e629a3d4471e9e6a2c1d70e9129a7cb70daa7fb4d6c2c95"
+  "sha256": "fcb81e0399d6878b5e629a3d4471e9e6a2c1d70e9129a7cb70daa7fb4d6c2c95",
+  "windows": {
+    "version": "2.2.0-alpha.1",
+    "tag": "windows-v2.2.0-alpha.1",
+    "assets": {
+      "arm64": {
+        "file": "RELightNative-2.2.0-alpha.1-win-arm64.exe",
+        "bytes": 66974585,
+        "megabytes": 67.0,
+        "sha256": "f23fce4427eafea0b2afe3123871e9986ca9d87a426dbde14d9a12a6717ad18f"
+      },
+      "x64": {
+        "file": "RELightNative-2.2.0-alpha.1-win-x64.exe",
+        "bytes": 71173946,
+        "megabytes": 71.2,
+        "sha256": "3830fe0cb192591e13c38475f957f9cdf38fd2453ee49b4ee410e0c1fb777337"
+      }
+    }
+  }
 }

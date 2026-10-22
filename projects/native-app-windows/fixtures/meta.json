@@ -1,0 +1,14 @@
+{
+  "documents" : [
+    "draft1.relight",
+    "starter.relight",
+    "full.relight"
+  ],
+  "encoder" : "Foundation JSONEncoder, outputFormatting [.prettyPrinted, .sortedKeys]",
+  "source" : "native-app\/Sources\/RELightCore\/Project.swift",
+  "validationDocuments" : "documents\/invalid\/<case>.relight",
+  "validationOnly" : [
+    "invalid.feedbackInfinity"
+  ],
+  "validationOrder" : "sorted"
+}
