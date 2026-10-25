@@ -3335,7 +3335,8 @@ body.touch #radio{left:max(110px,24%);right:max(170px,26%);bottom:150px;top:auto
   window.dispatchEvent(new Event('skyfront-failure'));
   window.dispatchEvent(new CustomEvent('skyfront:failure',{detail:code}));
   document.getElementById('recovery-message').textContent=message;
-  document.getElementById('recovery-detail').textContent=code+'\n'+navigator.userAgent+'\n'+(document.getElementById('loadmsg')?.textContent||'');
+  const receipt=window.SkyfrontFlightTrace?.();
+  document.getElementById('recovery-detail').textContent=(receipt?'Local session: '+JSON.stringify(receipt)+'\n':'')+code+'\n'+navigator.userAgent+'\n'+(document.getElementById('loadmsg')?.textContent||'');
   document.getElementById('retry-low').focus();
  }
  window.SkyfrontRecovery={fail,ready(){ready=true;clearTimeout(timer);if(!failed)panel.hidden=true;}};
@@ -3345,6 +3346,6 @@ body.touch #radio{left:max(110px,24%);right:max(170px,26%);bottom:150px;top:auto
  window.addEventListener('unhandledrejection',()=>fail('unhandled-rejection','เกมทำงานต่อไม่ได้ ลองเปิดใหม่ หากมีจุดตรวจที่บันทึกไว้ ให้เลือกเล่นต่อจากหน้าแรก'));
 })();
 </script>
-<script id="skyfront-game" src="/relight-hub/games/skyfront/assets/game-e5472716afbdf8b2ebd8.js" defer onerror="SkyfrontRecovery.fail('bundle-load','โหลดไฟล์เกมไม่สำเร็จ ตรวจการเชื่อมต่อแล้วลองใหม่')"></script>
+<script id="skyfront-game" src="/relight-hub/games/skyfront/assets/game-055f3aefea4905f16cb4.js" defer onerror="SkyfrontRecovery.fail('bundle-load','โหลดไฟล์เกมไม่สำเร็จ ตรวจการเชื่อมต่อแล้วลองใหม่')"></script>
 </body>
 </html>

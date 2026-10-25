@@ -21,7 +21,7 @@
       "action": "เล่น SKYFRONT",
       "href": "https://dpine8302.github.io/relight-hub/games/skyfront/",
       "external": true,
-      "version": "1.5.5",
+      "version": "1.5.6",
       "source": "relight-fighter/src",
       "posterSource": "production/relight-web/public/games/skyfront-poster.webp"
     },
