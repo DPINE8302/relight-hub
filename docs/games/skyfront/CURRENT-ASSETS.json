@@ -124,8 +124,9 @@
   "assets/audio/sfx/explosion-medium.mp3": "39ab5f8694c7890b8fbff0f048a4d0b50ee8adc404c407bf13e3c6cf4b799d4b",
   "assets/audio/sfx/explosion-small.mp3": "28f0512ca1b92842a625d694f6d62f689452dd987b45cbb77919d7f6cf3c8399",
   "assets/audio/sfx/jet-cabin-smidoid.mp3": "88caae8cdc61bae2a1e38a384a23c4575aba5aace4cb77dedb558e1596a7cfaa",
-  "assets/game-055f3aefea4905f16cb4.js": "3ffe3a8378ef037927a4c2c1b03a53c7eb447c8979a0eae8587357b62696c10f",
+  "assets/game-0197b4964a89142288a1.js": "24a898dccac484d19181197ad4db43fde9ab1fde2a9017249d6013fdc4f53e49",
   "assets/media/0609414fa68fd47a02ee.webp": "0609414fa68fd47a02ee3ccb6103897ee56b5ee0781efb5a695c8711c0421f48",
+  "assets/media/0dc364b0a3217aa12668.glb": "0dc364b0a3217aa1266866ae9782b6a39eb716cae88f307aff3e1ed548d3e34c",
   "assets/media/12fbd62096b35eaa7a29.webp": "12fbd62096b35eaa7a2918d0427aa7a6fa7354bfed11d8aed02e464ecab07ec7",
   "assets/media/13bd822e43c73dbdea65.webp": "13bd822e43c73dbdea65fda90cb54f728b9446fd683549751a1820b1b883b6c5",
   "assets/media/15d2088d046caa21ddda.webp": "15d2088d046caa21ddda2b47fdfac17ce5e1446fcf3cd3a438cea274bde8fa37",
@@ -173,6 +174,7 @@
   "assets/media/d0d51866be2bb7a01daa.webp": "d0d51866be2bb7a01daae6a1340e6f84fe7b2b1f86c55e71d582e9d545af69a7",
   "assets/media/d24d41cc1f587538bae5.webp": "d24d41cc1f587538bae517d8d75a1d1e4b9439f4df6843abc29bc81360c45474",
   "assets/media/d3650b99c0ba298365c7.woff2": "d3650b99c0ba298365c7a8a95fcc628421d5a8e23fc99484a23a52f3c855c99b",
+  "assets/media/d438fbe94cd6f0c704f1.glb": "d438fbe94cd6f0c704f1cd8dbe750e29eb982b28054bd081b307c2a899798571",
   "assets/media/e129720c7519ba885643.glb": "e129720c7519ba885643e85eb0f20dce192bfb07b36b4696a388415ef6eb9d42",
   "assets/media/e3ddc2e037d7a267a69b.webp": "e3ddc2e037d7a267a69bd5421597a3ffa1e1a3ece9116d15bfb6f1f3caa3d3e6",
   "assets/media/e9f8c7ca4b94df20ba89.webp": "e9f8c7ca4b94df20ba8983c463647136cc514841d8927e5eebfc9aaab02ae837",
@@ -182,6 +184,6 @@
   "assets/media/f43570550decf0caba1e.webp": "f43570550decf0caba1ea815c8d68e3ede8d35768bba4adfef35c3ef9212f9eb",
   "assets/media/fd2aba286ed0752f58ba.webp": "fd2aba286ed0752f58ba8ad6429fe876c0d62eef749808f6e5c5e945da156582",
   "assets/media/ff8c7cab57e1dfa363a3.webp": "ff8c7cab57e1dfa363a38dc2726ed7a7fb02df541232d12468c0a95931758e8c",
-  "index.html": "cffe50696af9529f41f91307c156417ec1524e6ffa069e76fecc8bad5e89528d",
+  "index.html": "41de9d97edeb5739878c380854ca266d13dfa7732fce7f7e9f6cdbaf65c613b4",
   "manifest.webmanifest": "6d1ad370a3de8034876c1847e70e54a07ff72d941f97a17309f35c3c84533361"
 }
