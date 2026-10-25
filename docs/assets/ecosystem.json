@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "brand": "RE;light",
+  "language": "th",
+  "education": "https://relight-web-two.vercel.app",
+  "hub": "https://dpine8302.github.io/relight-hub/",
+  "film": {
+    "status": "editing",
+    "finalMedia": null,
+    "authority": "production/RELight_Master_Shot_List_v5.md",
+    "note": "Later expanded scripts and boards are separate proposals; no final cut is supplied."
+  },
+  "games": [
+    {
+      "id": "skyfront",
+      "title": "SKYFRONT",
+      "cover": "/games/skyfront-poster.webp",
+      "backdrop": "/games/skyfront-backdrop.webp",
+      "description": "ขึ้นบิน คุ้มกันทีม แล้วพาทุกคนกลับบ้าน",
+      "platform": "เกมแอ็กชันการบิน · คอมพิวเตอร์และมือถือแนวนอน",
+      "action": "เล่น SKYFRONT",
+      "href": "https://dpine8302.github.io/relight-hub/games/skyfront/",
+      "external": true,
+      "version": "1.5.5",
+      "source": "relight-fighter/src",
+      "posterSource": "production/relight-web/public/games/skyfront-poster.webp"
+    },
+    {
+      "id": "puff",
+      "title": "Puff World: Inside",
+      "cover": "/games/puff-world-poster.webp",
+      "backdrop": "/games/puff-world-poster.webp",
+      "description": "พา Airy ผ่านโลกข้างใน กลับสู่อากาศใส",
+      "platform": "เกมผจญภัย 3 มิติ · คอมพิวเตอร์",
+      "action": "เข้าสู่โลกของ Airy",
+      "href": "/puff-world",
+      "external": false,
+      "source": "relight-hub/projects/puff-world",
+      "posterSource": "production/relight-web/public/games/puff-world-poster.webp"
+    }
+  ],
+  "native": {
+    "mac": {
+      "publishedVersion": "2.1.1",
+      "localReferenceVersion": "2.1.2 build 7",
+      "platform": "Apple silicon · macOS 14+",
+      "url": "https://github.com/DPINE8302/relight-hub/releases/download/v2.1.1/RELight-Native-2.1.1-Mac.dmg"
+    },
+    "windows": {
+      "version": "2.2.0-alpha.1",
+      "sourceRevision": "848e616",
+      "status": "alpha",
+      "platforms": [
+        "Windows 11 ARM64",
+        "Windows 11 x64"
+      ],
+      "release": "https://github.com/DPINE8302/relight-hub/releases/tag/windows-v2.2.0-alpha.1",
+      "verifiedEvidence": "Published source reports Windows 11 ARM64 installation, playback, association and smoke tests. Native x64, audio, physical HID and projector acceptance remain pending."
+    }
+  }
+}

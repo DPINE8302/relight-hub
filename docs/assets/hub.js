@@ -1,3 +1,5 @@
+import {observeWebHealth} from './web-health.js';
+import {createEcosystemCollector} from './telemetry.js';
 'use strict';
 fetch('assets/release.json').then(response=>response.ok?response.json():null).then(release=>{
   if(!release) return;
@@ -13,3 +15,35 @@ fetch('assets/release.json').then(response=>response.ok?response.json():null).th
     });
   });
 }).catch(()=>{});
+
+// One anonymous session across this Hub and its Skyfront game on GitHub Pages.
+let metrics;
+try { metrics=createEcosystemCollector(globalThis,{page:'/hub',queueKey:'relight-hub-queue'}); } catch {}
+if(metrics){
+ const privacy=document.getElementById('hub-statistics');
+ const updatePrivacy=()=>{privacy.hidden=false;const enabled=!metrics.disabled();privacy.setAttribute('aria-pressed',String(enabled));privacy.textContent='สถิติการใช้งาน: '+(enabled?'เปิด':'ปิด');};
+ updatePrivacy();privacy.addEventListener('click',()=>{metrics.setEnabled(metrics.disabled());updatePrivacy();});
+ window.addEventListener('storage',()=>updatePrivacy());
+ metrics.record('page_view');
+ let stopHealth;
+ const health=()=>{stopHealth?.();stopHealth=undefined;if(!metrics.disabled())stopHealth=observeWebHealth((type,detail)=>metrics.record(type,detail));};
+ health();
+ privacy.addEventListener('click',health);window.addEventListener('storage',health);
+ let since=document.hidden?null:performance.now();
+ const engagement=()=>{if(since!==null)metrics.record('engagement',{seconds:(performance.now()-since)/1000});since=document.hidden?null:performance.now();};
+ document.addEventListener('visibilitychange',()=>{engagement();if(!document.hidden)since=performance.now();void metrics.flush();});
+ window.addEventListener('pagehide',()=>{engagement();void metrics.flush();});
+ window.addEventListener('online',()=>void metrics.flush());
+ setInterval(()=>{engagement();void metrics.flush();},15000);
+ document.addEventListener('click',event=>{
+  const link=event.target.closest('a');if(!link)return;
+  const url=new URL(link.href,location.href);let section;
+  if(link.dataset.windowsAsset)section='win-'+link.dataset.windowsAsset;
+  else if(link.id==='app-download')section='mac';
+  else if(url.pathname.includes('/games/skyfront/'))section='skyfront';
+  else if(url.origin==='https://relight-web-two.vercel.app')section=({'/puff-world':'puff','/play':'scenario','/wall':'wall','/light-trail':'light-trail'})[url.pathname]||(url.hash==='#help'?'help':'education');
+  if(!section)return;
+  metrics.record(section==='mac'||section.startsWith('win-')?'hub_download':'hub_launch',{section});void metrics.flush();
+ });
+ void metrics.flush();
+}

@@ -45,14 +45,16 @@ function localDb() {
   return sqlite;
 }
 
-export async function postgres() {
+export async function postgres(initialize = true) {
   if (!pool) {
     const connection = new URL(process.env.DATABASE_URL!);
     connection.searchParams.set("sslmode", "verify-full");
     pool = new Pool({ connectionString: connection.toString(), max: 3, connectionTimeoutMillis: 8000 });
   }
-  if (!ready) ready = pool.query(schema).then(() => undefined).catch((error) => { ready = undefined; throw error; });
-  await ready;
+  if (initialize) {
+    if (!ready) ready = pool.query(schema).then(() => undefined).catch((error) => { ready = undefined; throw error; });
+    await ready;
+  }
   return pool;
 }
 

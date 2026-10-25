@@ -1,6 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { observeWebHealth } from "./web-health.js";
 import { metricTypes, type MetricType } from "./events";
 
 const queueKey="relight-metrics-queue", visitorKey="relight-metrics-visitor", sessionKey="relight-metrics-session";
@@ -48,8 +49,13 @@ export default function Collector() {
         value.at=Date.now(); try{sessionStorage.setItem(sessionKey,JSON.stringify(value));}catch{}
         return {id:value.id as string,fresh};
       };
+      const errorCounts = new Map<string, number>();
       const record=(type:MetricType,detail:Partial<EventData>={})=>{
         if(ended||analyticsDisabled())return;
+        if(type === "site_error") {
+          const code=detail.section || ""; const count=errorCounts.get(code) || 0;
+          if(count>=5)return; errorCounts.set(code,count+1);
+        }
         const visit=session();
         const base={visitor,session:visit.id,page,at:new Date().toISOString(),device,referrer};
         if(visit.fresh&&type!=="page_view")queue.push({...base,id:crypto.randomUUID(),type:"page_view"});
@@ -71,10 +77,11 @@ export default function Collector() {
       const visibility=()=>{engagement();if(document.visibilityState==="visible"&&activeSince===null)activeSince=performance.now();void flush();};
       const leave=()=>{engagement();void flush();};
       record("page_view");void flush();
+      const stopHealth = observeWebHealth((type, detail) => record(type as MetricType, detail));
       const heartbeat=setInterval(()=>{engagement();void flush();},30000);
       const retry=setInterval(()=>void flush(),10000);
       window.addEventListener("relight:metric",metric);window.addEventListener("online",flush);window.addEventListener("pagehide",leave);document.addEventListener("visibilitychange",visibility);
-      stop=()=>{engagement();void flush();ended=true;clearInterval(heartbeat);clearInterval(retry);window.removeEventListener("relight:metric",metric);window.removeEventListener("online",flush);window.removeEventListener("pagehide",leave);document.removeEventListener("visibilitychange",visibility);};
+      stop=()=>{stopHealth();engagement();void flush();ended=true;clearInterval(heartbeat);clearInterval(retry);window.removeEventListener("relight:metric",metric);window.removeEventListener("online",flush);window.removeEventListener("pagehide",leave);document.removeEventListener("visibilitychange",visibility);};
     }
     begin();window.addEventListener("relight:privacy",begin);
     return()=>{stop?.();window.removeEventListener("relight:privacy",begin);};

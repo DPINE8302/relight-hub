@@ -18,6 +18,6 @@ npm run build
 npm start
 ```
 
-The application uses Next.js for development, tests, and Vercel deployment. Earlier Cloudflare scaffold files are retained as reference, but the active build is Next.js.
+The application uses Next.js for development, tests, and Vercel deployment. The unused Cloudflare/Vinext/D1 starter was retired after verifying that active routes do not import it. The real Postgres schemas and access policies live in `app/api/wall/store.ts` and `app/api/analytics/store.ts`; no data migration was performed. A recoverable copy of the old starter remains in the ecosystem maintenance directory outside this application.
 
 Configure `DATABASE_URL` and `WALL_ADMIN_TOKEN` in ignored `.env.local` and Vercel. See [EXHIBITION.md](EXHIBITION.md) for offline preparation, QR files, moderation, database behavior, and exhibition operation. No secrets belong in source control.

@@ -52,7 +52,7 @@ Run `npx next dev`, `npm run lint`, `npx tsc --noEmit`, `npm run build:vercel`, 
 
 ## Private usage statistics
 
-`/analytics` is the admin dashboard; `/api/analytics` returns statistics only with the existing `WALL_ADMIN_TOKEN` as a bearer key. Use the same moderator key stored in ignored `.env.local` and the Vercel server environment. The key stays in memory while viewing the dashboard; it is not saved in the browser. The public navigation does not link to the dashboard.
+`/analytics` is the admin dashboard; `/api/analytics` returns statistics only with the existing `WALL_ADMIN_TOKEN` as a bearer key. Use the same moderator key stored in ignored `.env.local` and the Vercel server environment. The browser now signs in once through `/api/admin/session` for both analytics and wall moderation. The entered key is cleared after login; an eight-hour signed HttpOnly, SameSite=Strict cookie carries the operator session. Sign-out clears it across the open admin tabs. The key is never saved in localStorage/sessionStorage. Existing bearer scripts remain compatible. See [identity and analytics contract](docs/IDENTITY_AND_ANALYTICS.md) for boundaries, session security, telemetry definitions and verification. The public navigation does not link to the dashboard.
 
 Statistics start when this feature is deployed. They include page views, approximate unique browser identifiers, 30-minute inactivity sessions, returning sessions, recently active browsers, visible-page time, pages, screen categories, referring domains, game starts/completions, last fictional game choices per scene/session, education interactions, and successful wall submission actions. Game completion rate uses sessions that both started and completed within the selected reporting period; it is not a measurement of learning improvement. Wall submission actions include edits and are different from the wall's contribution count.
 
@@ -67,3 +67,10 @@ Verify the running API using `node --env-file=.env.local --test tests/analytics-
 ## Health content
 
 The new game uses [WHO e-cigarette facts](https://www.who.int/news-room/questions-and-answers/item/tobacco-e-cigarettes) for the aerosol scene and [official Thai Quitline services](https://www.thailandquitline.or.th/site/about/service) for help access. Checked 4 October 2026. The fictional situations are educational prompts, not official assessment questions or medical predictions. Existing education/legal copy is retained; this change does not represent a full re-audit of every older claim.
+
+
+### Ecosystem telemetry update — 24 October 2026
+
+The dashboard supports All / Education / Skyfront / Hub filters, matching-elapsed-time comparison windows, explicit coverage, and CSV exports of the displayed aggregates. Skyfront telemetry requires the newly instrumented game and updated API; no historical starts, tutorial progression, missions, errors or exits are backfilled. Player and watch modes are separate, and observed exits are best-effort. Light Trail counts are restricted to `/light-trail`; older Puff events remain separately identifiable. Dashboard GETs are SELECT-only and never run schema/retention work.
+
+The chatbot is an external Quitline service; RE;light cannot merge its accounts or retrieve its conversations without a supported provider integration. Public learning, games and the Digital Wall continue to work without a visitor account. Windows, registrations and performance data are marked unavailable or not applicable until real collection exists. Hub has allowlisted traffic/referral/download-click events and awaits its first instrumented event; download clicks are not completed installs or app usage.

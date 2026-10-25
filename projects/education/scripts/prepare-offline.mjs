@@ -5,7 +5,7 @@ async function visit(path) {
   for (const entry of (await readdir(path, { withFileTypes: true })).sort((a, b) => a.name.localeCompare(b.name))) {
     const file = `${path}/${entry.name}`;
     if (entry.isDirectory()) await visit(file);
-    else if (/\.(tsx?|css)$/.test(file)) hash.update(await readFile(file));
+    else if (/\.([cm]?js|tsx?|css|json)$/.test(file)) hash.update(await readFile(file));
   }
 }
 await visit("app");

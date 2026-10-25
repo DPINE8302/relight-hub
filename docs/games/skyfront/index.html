@@ -2967,6 +2967,19 @@ body.touch #touch .t-tools,body.touch #touch .t-btns{display:contents;}
 #app #touch #touch-autopilot::before{content:'';width:4px;height:4px;border-radius:50%;background:currentColor;position:absolute;left:4px;opacity:.35;}
 #app #touch #touch-autopilot[aria-pressed=true]{color:#f2c978!important;}
 #app #touch #touch-autopilot[aria-pressed=true]::before{opacity:1;}
+#app #touch #touch-camera{top:max(8px,env(safe-area-inset-top));right:calc(var(--touch-edge) + 148px);width:76px;height:48px;border-radius:8px!important;gap:2px;align-content:center;background:#07111f70!important;}
+#app #touch #touch-camera svg{width:21px;height:21px;}
+#app #touch #touch-camera span{font:600 8px/1 var(--f-hud);letter-spacing:.02em;}
+#app #touch #touch-camera:focus-visible{outline:2px solid #f2c978;outline-offset:3px;}
+#app #touch #touch-camera:disabled{opacity:.4;}
+.skyfront-privacy{display:flex;align-items:center;gap:10px;font:400 12px/1.6 var(--f-jp);margin:16px 0 0;color:#d4dfeb;}
+.skyfront-privacy input{width:20px;height:20px;accent-color:#f2c978;}
+#mainmenu .sortie-restore{font-size:14px;color:#f2c978;grid-column:1/-1;min-height:44px;}
+#mainmenu .sortie-restore[hidden]{display:none!important;}
+.ecosystem-return{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 24px;margin-top:16px;font:400 12px/1.6 var(--f-jp);}
+.ecosystem-return a{display:inline-flex;align-items:center;min-height:44px;color:#d4dfeb;text-decoration:none;}
+.ecosystem-return a:hover{color:#f2c978;}
+.ecosystem-return a:focus-visible,.parent-brand:focus-visible{outline:2px solid #f2c978;outline-offset:4px;}
 /* A primary trigger and two contextual actions follow the right thumb's arc. */
 #app #touch [data-code=TouchFire]{right:var(--touch-edge);bottom:var(--touch-floor);width:72px;height:72px;border:1px solid #f2c97899!important;background:radial-gradient(circle,#07111f38,transparent 76%)!important;}
 #app #touch [data-code=TouchFire] svg{width:30px;height:30px;}
@@ -3113,6 +3126,7 @@ body.touch #radio{left:max(110px,24%);right:max(170px,26%);bottom:150px;top:auto
   <div id="touch" class="layer">
     <div class="t-stick" id="tstick"><div class="t-stick-hint" aria-hidden="true"></div><div class="t-knob" id="tknob"><i></i></div></div>
     <div class="t-tools"><button class="t-btn" id="touch-autopilot" data-code="TouchAutopilot" aria-label="บินอัตโนมัติ" aria-pressed="false">AUTOPILOT</button></div>
+    <button class="t-btn" id="touch-camera" data-code="TouchView" aria-label="เปลี่ยนมุมกล้อง" title="เปลี่ยนมุมกล้อง"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h4l2-3h4l2 3h4v13H4Z"/><circle cx="12" cy="13" r="4"/></svg><span class="touch-camera-name">CHASE</span></button>
     <div class="t-btns">
       <button class="t-btn" data-code="TouchTarget" data-label="TARGET" aria-label="เลือกเป้าหมายถัดไป"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 4H4v4m12-4h4v4M4 16v4h4m12-4v4h-4"/><circle cx="12" cy="12" r="3"/></svg></button>
       <button class="t-btn fire" data-code="TouchFire" data-label="GUN" aria-label="ปืนกล กดค้างเพื่อยิง"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2v4m0 12v4M2 12h4m12 0h4"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="1"/></svg></button>
@@ -3129,11 +3143,12 @@ body.touch #radio{left:max(110px,24%);right:max(170px,26%);bottom:150px;top:auto
   <section id="title" class="screen" aria-label="Relight Skyfront main menu">
     <div class="command-room-art" aria-hidden="true"></div>
     <div class="scrim"></div>
-    <header class="sortie-header"><div class="parent-brand"><span class="skyfront-relight">RE<span class="mark">;</span>light</span></div></header>
+    <header class="sortie-header"><a class="parent-brand" href="https://dpine8302.github.io/relight-hub/" aria-label="กลับ RE;light Hub"><span class="skyfront-relight">RE<span class="mark">;</span>light</span></a></header>
     <div class="t-wrap">
       <div class="press" id="press" hidden></div>
       <div class="menu" id="mainmenu" aria-label="Mission and flight options">
         <button class="mi sortie-primary" data-act="start"><span>เริ่มภารกิจ</span></button>
+        <button class="mi sortie-restore" data-act="restore" hidden>เล่นต่อจากจุดตรวจ</button>
         <button class="mi sortie-utility" data-act="controls"><span>วิธีเล่น</span></button>
         <button class="mi sortie-prep-toggle" data-act="prep" aria-expanded="false" aria-controls="sortie-prep"><span>เตรียมการบิน</span><span class="en">＋</span></button>
         <div id="sortie-prep" hidden><button class="mi" data-act="diff"><span>ความยาก</span><span class="val" id="diffval">EASY</span></button><p>เลือกจังหวะการบินที่เหมาะกับคุณ</p></div>
@@ -3248,6 +3263,7 @@ body.touch #radio{left:max(110px,24%);right:max(170px,26%);bottom:150px;top:auto
         <button class="mi" data-act="settings"><span>ตั้งค่า</span></button>
         <button class="mi" data-act="quit"><span>กลับหน้าหลัก</span></button>
       </div>
+      <nav class="ecosystem-return" aria-label="RE;light"><a href="https://relight-web-two.vercel.app/#activities">Education ↗</a><a href="https://dpine8302.github.io/relight-hub/">RE;light Hub ↗</a></nav>
     </div>
   </section>
 
@@ -3313,9 +3329,11 @@ body.touch #radio{left:max(110px,24%);right:max(170px,26%);bottom:150px;top:auto
  let ready=false,failed=false;
  const timer=setTimeout(()=>{if(!ready&&!document.hidden)fail('startup-timeout','การโหลดใช้เวลานานกว่าปกติ ลองเปิดอีกครั้งด้วยกราฟิกประหยัด');},45000);
  function fail(code,message){
+  if(failed)return;
   failed=true;clearTimeout(timer);panel.hidden=false;
   document.getElementById('app').inert=true;
   window.dispatchEvent(new Event('skyfront-failure'));
+  window.dispatchEvent(new CustomEvent('skyfront:failure',{detail:code}));
   document.getElementById('recovery-message').textContent=message;
   document.getElementById('recovery-detail').textContent=code+'\n'+navigator.userAgent+'\n'+(document.getElementById('loadmsg')?.textContent||'');
   document.getElementById('retry-low').focus();
@@ -3324,8 +3342,9 @@ body.touch #radio{left:max(110px,24%);right:max(170px,26%);bottom:150px;top:auto
  document.getElementById('retry-low').onclick=()=>{const url=new URL(location.href);url.searchParams.set('graphics','low');location.replace(url.href);};
  document.getElementById('retry-game').onclick=()=>location.reload();
  window.addEventListener('error',e=>{if(e.message)fail('runtime-error', 'เกมหยุดทำงาน ลองเปิดใหม่ ข้อมูลการตั้งค่าและสถิติเดิมยังอยู่');});
+ window.addEventListener('unhandledrejection',()=>fail('unhandled-rejection','เกมทำงานต่อไม่ได้ ลองเปิดใหม่ หากมีจุดตรวจที่บันทึกไว้ ให้เลือกเล่นต่อจากหน้าแรก'));
 })();
 </script>
-<script id="skyfront-game" src="/relight-hub/games/skyfront/assets/game-e850440481d98b796e05.js" defer onerror="SkyfrontRecovery.fail('bundle-load','โหลดไฟล์เกมไม่สำเร็จ ตรวจการเชื่อมต่อแล้วลองใหม่')"></script>
+<script id="skyfront-game" src="/relight-hub/games/skyfront/assets/game-e5472716afbdf8b2ebd8.js" defer onerror="SkyfrontRecovery.fail('bundle-load','โหลดไฟล์เกมไม่สำเร็จ ตรวจการเชื่อมต่อแล้วลองใหม่')"></script>
 </body>
 </html>
