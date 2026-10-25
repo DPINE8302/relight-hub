@@ -185,3 +185,5 @@ No input, search, chip system, film player or gallery belongs to this homepage.
 - Don't restore Teacher Storyboard to the listing, hosted sites or release assets.
 - Don't describe Education Source ZIP as a ready-to-open static website package.
 - Don't add film playback, galleries or unrelated editorial sections to the portal.
+
+Native platform images use matching navy-and-amber promotional artwork generated from the existing app layouts. Keep the full window visible with contain sizing. These images are not runtime verification screenshots; the original source references remain in docs/assets/covers/native.webp and docs/assets/covers/windows-native.jpg.
