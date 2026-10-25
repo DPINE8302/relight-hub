@@ -1,11 +1,12 @@
-const VERSION = "relight-offline-63f6dd9a0e12";
+const VERSION = "relight-offline-4e5e65061fe5";
 const ROUTES = ["/", "/play", "/after", "/wall", "/privacy", "/puff-world", "/light-trail", "/games/puff-world-inside/index.html"];
 const FONTS = ["/fonts/LINESeedSansTH_W_Rg.woff2", "/fonts/LINESeedSansTH_W_Bd.woff2", "/fonts/LINESeedSansTH_W_XBd.woff2", "/favicon.svg"];
+const POSTERS = ["/games/skyfront-poster.webp", "/games/skyfront-backdrop.webp", "/games/puff-world-poster.webp"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(VERSION);
-    const assets = new Set(FONTS);
+    const assets = new Set([...FONTS, ...POSTERS]);
     for (const path of ROUTES) {
       const response = await fetch(path, { cache: "reload", headers: { Accept: "text/html" } });
       if (!response.ok) throw new Error("Offline page unavailable");

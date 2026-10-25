@@ -1,0 +1,10 @@
+.env*
+.wall-data/
+.agents/
+skills-lock.json
+.wrangler/
+dist/
+.next/
+tests/
+*.tsbuildinfo
+design/

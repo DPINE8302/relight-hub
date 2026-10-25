@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import CommunityWall from "./wall/CommunityWall";
 import HelpSection from "./HelpSection";
+import GameSelector from "./GameSelector";
 import { trackMetric } from "./analytics/events";
 
 const sources = {
@@ -323,16 +324,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="activities" className="activities-section" aria-labelledby="activities-title">
-          <div className="activities-heading"><h2 id="activities-title">เลือกวิธีเรียนรู้ของคุณ</h2></div>
-          <div className="activities-layout">
-            <a className="activity-feature" href="/puff-world"><div className="activity-preview" role="img" aria-label="โปสเตอร์ Airy จากเกม Puff World: Inside" /><div className="activity-feature-copy"><span className="activity-meta">เกมผจญภัย 3 มิติ · คอมพิวเตอร์</span><h3>Puff World: Inside</h3><p>พา Airy ผ่านโลกข้างใน กลับสู่อากาศใส</p><span className="activity-link">เข้าสู่โลกของ Airy <ArrowRightIcon /></span></div></a>
-            <div className="activity-options">
-              <a href="/play"><span className="activity-meta">มือถือและคอมพิวเตอร์ · 2–3 นาที</span><h3>ถ้าเป็นคุณ จะเลือกอย่างไร?</h3><p>สามสถานการณ์ใกล้ตัว ลองเช็กความเชื่อ เตรียมคำตอบ และอยู่ข้างคนที่อยากเลิก</p><span className="activity-link">ลองเลือก 3 สถานการณ์ <ArrowRightIcon /></span></a>
-              <a href="/light-trail"><span className="activity-meta">มือถือและคอมพิวเตอร์</span><h3>Light Trail</h3><p>สำรวจสามเมือง เก็บแสง แล้วเลือกเส้นทางของคุณ</p><span className="activity-link">เริ่มสำรวจ <ArrowRightIcon /></span></a>
-            </div>
-          </div>
-        </section>
+        <GameSelector />
 
         <section className="highlights-strip" aria-labelledby="highlights-title">
           <div className="highlights-inner">
@@ -399,7 +391,7 @@ export default function Home() {
               ))}
             </div>
             <article className="particle-detail" aria-live="polite">
-              
+
               <h3>{activeParticle.title}</h3>
               <p>{activeParticle.body}</p>
               <small>{activeParticle.note}</small>
@@ -448,7 +440,7 @@ export default function Home() {
                 <i /><i /><i /><i />
               </div>
               <div className="loop-active-copy">
-                
+
                 <strong>{activeLoop.title}</strong>
                 <p>{activeLoop.body}</p>
               </div>
@@ -486,7 +478,7 @@ export default function Home() {
               ))}
             </div>
             <article className="body-detail" aria-live="polite">
-              
+
               <h3>{activeBody.title}</h3>
               <p>{activeBody.body}</p>
               <SourceLink href={sources.ddcGuide}>ข้อมูลสุขภาพจากกรมควบคุมโรค</SourceLink>
@@ -664,7 +656,7 @@ export default function Home() {
 
       <footer>
         <a className="brand" href="#top">RE<span>;</span>light</a>
-        <p><button type="button" className="footer-motto" onClick={openAdmin}>พรุ่งนี้ดีได้ เพราะฉันเลือกเอง</button></p><nav aria-label="เมนูท้ายเว็บไซต์"><a href="#truth">เรียนรู้</a><a href="#activities">กิจกรรม</a><a href="/wall">ผนังคำตอบ</a><a href="/privacy">ความเป็นส่วนตัว</a></nav>
+        <p><button type="button" className="footer-motto" onClick={openAdmin}>พรุ่งนี้ดีได้ เพราะฉันเลือกเอง</button></p><nav aria-label="เมนูท้ายเว็บไซต์"><a href="#truth">เรียนรู้</a><a href="#activities">กิจกรรม</a><a href="/wall">ผนังคำตอบ</a><a href="https://dpine8302.github.io/relight-hub/">RE;light Hub ↗</a><a href="https://dpine8302.github.io/relight-hub/#download">แอป Mac และ Windows ↗</a><a href="/privacy">ความเป็นส่วนตัว</a></nav>
         <p>Team RE;light · NoNic-Smart Gen Media Innovation Hackathon 2026</p>
       </footer>
     </>

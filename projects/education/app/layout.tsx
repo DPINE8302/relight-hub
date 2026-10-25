@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
 import "./globals.css";
+import "./ecosystem-tokens.css";
 import OfflineReady from "./OfflineReady";
 import Collector from "./analytics/Collector";
 import Notice from "./analytics/Notice";

@@ -6,8 +6,8 @@ import type { Stats } from "./Dashboard";
 const format = (n: number) => new Intl.NumberFormat("th-TH").format(n);
 const dateLabel = (day: string) => new Date(`${day}T12:00:00+07:00`).toLocaleDateString("th-TH", { day: "numeric", month: "short", timeZone: "Asia/Bangkok" });
 const thaiDay = (date: string) => new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Bangkok", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(date));
-const pageNames: Record<string, string> = { "/": "เว็บไซต์หลัก", "/play": "เกมสถานการณ์", "/after": "หลัง immersive", "/wall": "ผนังคำตอบ", "/puff-world": "Puff World: Inside", "/light-trail": "Light Trail" };
-const deviceNames: Record<string, string> = { mobile: "มือถือ", tablet: "แท็บเล็ต", desktop: "เดสก์ท็อป", unknown: "อื่น ๆ" };
+const pageNames: Record<string, string> = { "/": "เว็บไซต์หลัก", "/play": "เกมสถานการณ์", "/after": "หลัง immersive", "/wall": "ผนังคำตอบ", "/puff-world": "Puff World: Inside", "/light-trail": "Light Trail", "/skyfront": "Skyfront", "/hub": "RE;light Hub" };
+const deviceNames: Record<string, string> = { mobile: "จอเล็ก", tablet: "จอกลาง", desktop: "จอใหญ่", unknown: "อื่น ๆ" };
 const colors = ["#e7c47b", "#94bdf0", "#d7a3ca", "#b7c898"];
 
 function dailyRows(data: Stats) {
@@ -83,6 +83,7 @@ export function RankedBars({ rows, unit = "ครั้ง" }: { rows: BarRow[];
 }
 
 function Games({ data }: { data: Stats }) {
+  if (!["all", "education"].includes(data.source)) return null;
   const games = [
     { label: "Puff World: Inside", starts: data.totals.inside_starts, ends: data.totals.inside_completions },
     { label: "Light Trail", starts: data.totals.puff_starts, ends: data.totals.puff_completions },
@@ -107,7 +108,7 @@ function Devices({ data }: { data: Stats }) {
 export default function Charts({ data }: { data: Stats }) {
   return <div className="stats-visuals">
     <Traffic key={`${data.days}-${data.updatedAt}`} data={data} />
-    <div className="stats-pair"><section className="stats-panel"><h2>หน้าที่มีคนเปิดมากที่สุด</h2><p>เปรียบเทียบจำนวนเปิดหน้าเว็บ รวมการกลับมาและรีโหลด</p><RankedBars rows={data.pages.map(r => ({ label: pageNames[String(r.page)] || String(r.page), value: Number(r.views) })).sort((a, b) => b.value - a.value)} /></section><Games data={data} /></div>
+    <div className={!["all", "education"].includes(data.source) ? undefined : "stats-pair"}><section className="stats-panel"><h2>หน้าที่มีคนเปิดมากที่สุด</h2><p>เปรียบเทียบจำนวนเปิดหน้าเว็บ รวมการกลับมาและรีโหลด</p><RankedBars rows={data.pages.map(r => ({ label: pageNames[String(r.page)] || String(r.page), value: Number(r.views) })).sort((a, b) => b.value - a.value)} /></section><Games data={data} /></div>
     <div className="stats-pair"><Devices data={data} /><section className="stats-panel"><h2>ที่มาของการเข้าชม</h2><p>โดเมนต้นทางของแต่ละเซสชัน</p><RankedBars rows={data.referrers.map(r => ({ label: r.referrer === "direct" ? "เปิดตรง / ไม่มีข้อมูล" : r.referrer === "internal" ? "ลิงก์ภายในเว็บ" : String(r.referrer), value: Number(r.visits) }))} /></section></div>
   </div>;
 }

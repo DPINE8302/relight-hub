@@ -13,23 +13,39 @@ export default function CommunityWall({ initialPrompt = "response", showQuestion
   const [sending, setSending] = useState(false);
   const participant = useRef("");
   const controller = useRef<AbortController | null>(null);
+  const revision = useRef(0);
+  const mutating = useRef(false);
   const id = useId();
+  const invalidateRead = useCallback(() => {
+    revision.current++;
+    controller.current?.abort();
+    controller.current = null;
+  }, []);
   const active = wallPrompts.find((item) => item.id === prompt)!;
 
   const refresh = useCallback(async () => {
-    controller.current?.abort();
+    // Keep a slow request alive across automatic refresh ticks.
+    if (controller.current || mutating.current) return;
     const request = new AbortController();
+    const startedAtRevision = revision.current;
     controller.current = request;
+    const timeout = window.setTimeout(() => request.abort(), 30000);
     try {
       const response = await fetch(`/api/wall?prompt=${prompt}`, { cache: "no-store", signal: request.signal });
       if (!response.ok) throw new Error("unavailable");
       const next = await response.json() as WallData;
-      if (request.signal.aborted) return;
+      if (request.signal.aborted || startedAtRevision !== revision.current) return;
       setData(next);
       setConnection("live");
       try { localStorage.setItem(`relight-wall-snapshot-${prompt}`, JSON.stringify(next)); } catch { /* Readable without storage. */ }
     } catch {
-      if (!request.signal.aborted) setConnection(navigator.onLine ? "error" : "offline");
+      if (controller.current === request && startedAtRevision === revision.current) {
+        setConnection(navigator.onLine ? "error" : "offline");
+        if (navigator.onLine) trackMetric("site_error", {section:"wall-read-failed"});
+      }
+    } finally {
+      window.clearTimeout(timeout);
+      if (controller.current === request) controller.current = null;
     }
   }, [prompt]);
 
@@ -54,12 +70,12 @@ export default function CommunityWall({ initialPrompt = "response", showQuestion
     document.addEventListener("visibilitychange", tick);
     return () => {
       window.clearInterval(timer);
-      controller.current?.abort();
+      invalidateRead();
       window.removeEventListener("online", tick);
       window.removeEventListener("offline", offline);
       document.removeEventListener("visibilitychange", tick);
     };
-  }, [prompt, refresh]);
+  }, [prompt, refresh, invalidateRead]);
 
   function updateDraft(value: string) {
     setText(value);
@@ -70,6 +86,9 @@ export default function CommunityWall({ initialPrompt = "response", showQuestion
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!navigator.onLine) { setMessage("ยังไม่ได้เผยแพร่ เก็บข้อความไว้แล้ว กดส่งอีกครั้งเมื่อออนไลน์"); return; }
+    if (mutating.current) return;
+    mutating.current = true;
+    invalidateRead();
     setSending(true);
     setMessage("");
     try {
@@ -87,8 +106,9 @@ export default function CommunityWall({ initialPrompt = "response", showQuestion
       setText("");
     } catch (error) {
       setConnection(navigator.onLine ? "error" : "offline");
+      if (navigator.onLine) trackMetric("site_error", {section:"wall-write-failed"});
       setMessage(error instanceof Error ? error.message : "ยังส่งไม่ได้ ข้อความยังอยู่ ลองอีกครั้ง");
-    } finally { setSending(false); }
+    } finally { mutating.current = false; setSending(false); }
   }
 
   return (
@@ -101,7 +121,7 @@ export default function CommunityWall({ initialPrompt = "response", showQuestion
         <p className="wall-notice" id={`${id}-notice`}>ข้อความเป็นสาธารณะ ไม่ใส่ข้อมูลส่วนตัว ใช้ข้อความที่เคารพกัน ส่งซ้ำจากอุปกรณ์เดิมจะอัปเดตคำตอบเดิม</p>
         <p className="wall-message" role="status">{message}</p>
       </form>
-      <div className="wall-cloud-header"><p>{data ? `${data.total} คำตอบจากทุกคน` : "คำตอบจากทุกคน"}</p><button onClick={refresh} type="button">รีเฟรช</button></div>
+      <div className="wall-cloud-header"><p>{data ? `${data.total} คำตอบจากทุกคน` : "คำตอบจากทุกคน"}</p><button onClick={() => void refresh()} type="button" disabled={sending}>รีเฟรช</button></div>
       <p className="wall-connection" role="status">{connection === "live" ? "ออนไลน์ · อัปเดตอัตโนมัติ" : connection === "loading" ? "กำลังเชื่อมต่อผนัง…" : data ? "แสดงข้อมูลที่บันทึกไว้ล่าสุด · ยังเชื่อมต่อผนังไม่ได้" : "ยังเชื่อมต่อผนังไม่ได้ · เขียนเก็บไว้แล้วส่งเมื่อออนไลน์ได้"}</p>
       <div className={`wall-cloud wall-cloud-${prompt}`} aria-label="ข้อความจากผู้ร่วมตอบ">
         {data?.groups.map((group) => <span key={group.text} className="wall-word" aria-label={`${group.text} · ${group.count} คำตอบ`} title={`${group.count} คำตอบ`} style={{ fontSize: `${Math.min(64, 20 + Math.log2(Math.max(1, group.count)) * 10)}px`, fontWeight: group.count > 1 ? 700 : 400 }}><span>{group.text}</span></span>)}

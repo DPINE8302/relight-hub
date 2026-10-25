@@ -1,4 +1,4 @@
-import { timingSafeEqual } from "node:crypto";
+import { adminAllowed, sameOrigin } from "../admin-auth";
 import { wallPrompts, normalizeAnswer, type PromptId } from "../../wall/prompts";
 import { readWall, writeWall, hideAnswer, clearWall, fingerprint } from "./store";
 
@@ -15,15 +15,6 @@ function failure(error: unknown) {
   return Response.json({ error: limited ? "ส่งหลายครั้งเกินไป ลองใหม่ในอีกหนึ่งนาที" : "เชื่อมต่อผนังไม่ได้ ข้อความของคุณยังอยู่ในช่องเขียน ลองใหม่อีกครั้ง" }, { status: limited ? 429 : 503, headers });
 }
 
-function originAllowed(request: Request) {
-  const origin = request.headers.get("origin");
-  if (!origin) return false;
-  try {
-    const url = new URL(origin);
-    return ["https:", "http:"].includes(url.protocol) && url.host === request.headers.get("host");
-  } catch { return false; }
-}
-
 export async function GET(request: Request) {
   const prompt = new URL(request.url).searchParams.get("prompt");
   if (!validPrompt(prompt)) return Response.json({ error: "เลือกคำถามก่อน" }, { status: 400, headers });
@@ -32,7 +23,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  if (!originAllowed(request)) return Response.json({ error: "ไม่สามารถส่งจากแหล่งนี้ได้" }, { status: 403, headers });
+  if (!sameOrigin(request)) return Response.json({ error: "ไม่สามารถส่งจากแหล่งนี้ได้" }, { status: 403, headers });
   try {
     const raw = await request.text();
     if (raw.length > 2000) return Response.json({ error: "ข้อความยาวเกินไป" }, { status: 413, headers });
@@ -51,9 +42,7 @@ export async function POST(request: Request) {
 }
 
 export async function DELETE(request: Request) {
-  const expected = process.env.WALL_ADMIN_TOKEN;
-  const supplied = request.headers.get("authorization")?.replace(/^Bearer /, "");
-  if (!expected || !supplied || Buffer.byteLength(expected) !== Buffer.byteLength(supplied) || !timingSafeEqual(Buffer.from(expected), Buffer.from(supplied))) return Response.json({ error: "ไม่มีสิทธิ์จัดการผนัง" }, { status: 401, headers });
+  if (!adminAllowed(request)) return Response.json({ error: "ไม่มีสิทธิ์จัดการผนัง กรุณาเข้าสู่ระบบผู้ดูแลอีกครั้ง" }, { status: 401, headers });
   try {
     const body = await request.json();
     if (!validPrompt(body.prompt)) return Response.json({ error: "ข้อมูลไม่ถูกต้อง" }, { status: 400, headers });
