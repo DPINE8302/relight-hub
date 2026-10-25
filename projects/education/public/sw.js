@@ -1,4 +1,4 @@
-const VERSION = "relight-offline-bb019a8e15ca";
+const VERSION = "relight-offline-4ead5bc18841";
 const ROUTES = ["/", "/play", "/after", "/wall", "/privacy", "/puff-world", "/light-trail", "/games/puff-world-inside/index.html"];
 const FONTS = ["/fonts/LINESeedSansTH_W_Rg.woff2", "/fonts/LINESeedSansTH_W_Bd.woff2", "/fonts/LINESeedSansTH_W_XBd.woff2", "/favicon.svg"];
 const POSTERS = ["/games/skyfront-poster.webp", "/games/skyfront-backdrop.webp", "/games/puff-world-poster.webp"];
