@@ -187,3 +187,5 @@ No input, search, chip system, film player or gallery belongs to this homepage.
 - Don't add film playback, galleries or unrelated editorial sections to the portal.
 
 Native platform images use matching navy-and-amber promotional artwork generated from the existing app layouts. Keep the full window visible with contain sizing. These images are not runtime verification screenshots; the original source references remain in docs/assets/covers/native.webp and docs/assets/covers/windows-native.jpg.
+
+The Hub uses Education’s signature fixed translucent pill navigation, with the same compact mobile contents menu and ivory primary action. Typeset the continuous RE;light wordmark with RE and the gold semicolon at 700 and lowercase light at 400, including headings and the footer; do not inherit a uniformly bold heading weight.

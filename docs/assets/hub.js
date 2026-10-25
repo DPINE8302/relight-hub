@@ -47,3 +47,13 @@ if(metrics){
  });
  void metrics.flush();
 }
+
+// The same compact contents-menu behavior as the Education signature header.
+const mobileIndex=document.querySelector('.mobile-index');
+if(mobileIndex){
+ const close=()=>{mobileIndex.open=false;};
+ mobileIndex.addEventListener('click',event=>{if(event.target.closest('a'))close();});
+ document.addEventListener('pointerdown',event=>{if(!mobileIndex.contains(event.target))close();});
+ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&mobileIndex.open){close();mobileIndex.querySelector('summary').focus();}});
+ window.matchMedia('(min-width:651px)').addEventListener('change',close);
+}
