@@ -8,14 +8,13 @@
 
 #hub-statistics{border:0;padding:0;background:none;color:#bec6d3;min-height:44px;cursor:pointer;font:inherit;}#hub-statistics:hover{color:var(--gold)}#hub-statistics:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
 
-/* RE;light signature: Education's floating navigation and mixed-weight wordmark. */
+/* RE;light signature: Education's navigation and the original outlined identity masters. */
 body{padding-top:88px}
 .hub-skip{z-index:100}
-.wordmark{font-weight:400;letter-spacing:-.025em;white-space:nowrap}
-.wordmark-re,.wordmark-separator{font-weight:700}
-.wordmark-separator{color:var(--gold)}
-.wordmark-light{font-weight:400}
-.learning-section .wordmark-separator,.native-section .wordmark-separator{color:#9b6b20}
+
+
+
+
 .site-header{position:fixed;z-index:90;top:18px;left:50%;width:min(calc(100% - 32px),1180px);min-height:58px;transform:translateX(-50%);display:flex;align-items:center;justify-content:space-between;gap:24px;padding:6px 12px 6px 22px;border:1px solid rgba(255,255,255,.13);border-radius:999px;background:rgba(5,9,19,.72);box-shadow:0 14px 50px rgba(0,0,0,.22);-webkit-backdrop-filter:blur(22px) saturate(145%);backdrop-filter:blur(22px) saturate(145%)}
 .site-header .brand{display:inline-flex;align-items:center;min-height:44px;font-size:20px}
 .site-header .brand-topic{font-size:13px;color:rgba(255,255,255,.62);padding-left:13px;margin-left:13px;line-height:1.2}
@@ -36,3 +35,7 @@ body{padding-top:88px}
 @media(max-width:900px){.site-header{top:10px;width:min(calc(100% - 28px),1180px);gap:10px;padding-left:18px}.site-header nav{gap:1px}.site-header nav a{padding-inline:9px;font-size:12px}}
 @media(max-width:650px){html{scroll-padding-top:96px}.site-header{width:calc(100% - 20px);padding:7px;gap:8px}.site-header .brand{padding-left:8px;font-size:18px}.site-header .brand-topic{display:none}.site-header nav{margin-left:auto;gap:0}.nav-sections{display:none}.mobile-index{display:block}.site-header .header-education{min-height:44px;padding:9px 12px;font-size:12px}.mobile-index-panel{position:fixed;top:calc(100% + 12px);left:0;right:0;width:auto}.mobile-index summary{font-size:12px;padding-inline:10px}}
 @media(prefers-reduced-transparency:reduce){.site-header,.mobile-index-panel{background:var(--ink);-webkit-backdrop-filter:none;backdrop-filter:none}}
+
+/* The logo is the supplied vector, never reconstructed with page typography. */
+.wordmark{display:inline-block;height:1em;width:auto;max-width:none;vertical-align:-.23em;object-fit:contain}
+.brand .wordmark{display:block;vertical-align:middle}
