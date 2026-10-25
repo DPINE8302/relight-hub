@@ -14,6 +14,7 @@ export default function CommunityWall({ initialPrompt = "response", showQuestion
   const participant = useRef("");
   const controller = useRef<AbortController | null>(null);
   const revision = useRef(0);
+  const submission = useRef<AbortController | null>(null);
   const mutating = useRef(false);
   const id = useId();
   const invalidateRead = useCallback(() => {
@@ -71,6 +72,10 @@ export default function CommunityWall({ initialPrompt = "response", showQuestion
     return () => {
       window.clearInterval(timer);
       invalidateRead();
+      submission.current?.abort();
+      submission.current = null;
+      mutating.current = false;
+      setSending(false);
       window.removeEventListener("online", tick);
       window.removeEventListener("offline", offline);
       document.removeEventListener("visibilitychange", tick);
@@ -91,12 +96,16 @@ export default function CommunityWall({ initialPrompt = "response", showQuestion
     invalidateRead();
     setSending(true);
     setMessage("");
+    const request = new AbortController();
+    submission.current = request;
+    const timeout = window.setTimeout(() => request.abort(), 30000);
     try {
       const response = await fetch("/api/wall", {
-        method: "POST", headers: { "Content-Type": "application/json" },
+        signal: request.signal, method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt, text, participant: participant.current }),
       });
       const result = await response.json();
+      if (submission.current !== request || request.signal.aborted) return;
       if (!response.ok) throw new Error(result.error || "ส่งไม่ได้ ลองใหม่อีกครั้ง");
       trackMetric("wall_submit");
       setData(result);
@@ -105,10 +114,14 @@ export default function CommunityWall({ initialPrompt = "response", showQuestion
       try { localStorage.setItem(`relight-wall-snapshot-${prompt}`, JSON.stringify(result)); localStorage.removeItem(`relight-wall-draft-${prompt}`); } catch { /* Publication still succeeded. */ }
       setText("");
     } catch (error) {
+      if (submission.current !== request) return;
       setConnection(navigator.onLine ? "error" : "offline");
       if (navigator.onLine) trackMetric("site_error", {section:"wall-write-failed"});
-      setMessage(error instanceof Error ? error.message : "ยังส่งไม่ได้ ข้อความยังอยู่ ลองอีกครั้ง");
-    } finally { mutating.current = false; setSending(false); }
+      setMessage(request.signal.aborted ? "ยังยืนยันการส่งไม่ได้ ข้อความยังอยู่ กดส่งอีกครั้งเมื่อเชื่อมต่อได้" : error instanceof Error ? error.message : "ยังส่งไม่ได้ ข้อความยังอยู่ ลองอีกครั้ง");
+    } finally {
+      window.clearTimeout(timeout);
+      if (submission.current === request) { submission.current = null; mutating.current = false; setSending(false); }
+    }
   }
 
   return (

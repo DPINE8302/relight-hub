@@ -22,16 +22,16 @@ try { metrics=createEcosystemCollector(globalThis,{page:'/hub',queueKey:'relight
 if(metrics){
  const privacy=document.getElementById('hub-statistics');
  const updatePrivacy=()=>{privacy.hidden=false;const enabled=!metrics.disabled();privacy.setAttribute('aria-pressed',String(enabled));privacy.textContent='สถิติการใช้งาน: '+(enabled?'เปิด':'ปิด');};
- updatePrivacy();privacy.addEventListener('click',()=>{metrics.setEnabled(metrics.disabled());updatePrivacy();});
- window.addEventListener('storage',()=>updatePrivacy());
  metrics.record('page_view');
  let stopHealth;
+ let since=null;
  const health=()=>{stopHealth?.();stopHealth=undefined;if(!metrics.disabled())stopHealth=observeWebHealth((type,detail)=>metrics.record(type,detail));};
- health();
- privacy.addEventListener('click',health);window.addEventListener('storage',health);
- let since=document.hidden?null:performance.now();
- const engagement=()=>{if(since!==null)metrics.record('engagement',{seconds:(performance.now()-since)/1000});since=document.hidden?null:performance.now();};
- document.addEventListener('visibilitychange',()=>{engagement();if(!document.hidden)since=performance.now();void metrics.flush();});
+ const resetPrivacy=()=>{since=document.hidden||metrics.disabled()?null:performance.now();updatePrivacy();health();if(metrics.disabled())void metrics.flush();};
+ resetPrivacy();
+ privacy.addEventListener('click',()=>{metrics.setEnabled(metrics.disabled());resetPrivacy();});
+ window.addEventListener('storage',event=>{if(event.key==='relight-statistics-disabled'||event.key===null)resetPrivacy();});
+ const engagement=()=>{if(since!==null&&!metrics.disabled())metrics.record('engagement',{seconds:(performance.now()-since)/1000});since=document.hidden||metrics.disabled()?null:performance.now();};
+ document.addEventListener('visibilitychange',()=>{engagement();void metrics.flush();});
  window.addEventListener('pagehide',()=>{engagement();void metrics.flush();});
  window.addEventListener('online',()=>void metrics.flush());
  setInterval(()=>{engagement();void metrics.flush();},15000);
