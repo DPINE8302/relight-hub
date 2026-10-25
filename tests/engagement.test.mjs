@@ -8,7 +8,7 @@ function fixture(){
  const privacy={hidden:true,setAttribute(){},addEventListener(type,fn){(buttonHandlers[type]??=[]).push(fn);}};
  const document={hidden:false,getElementById:()=>privacy,addEventListener(type,fn){documentHandlers[type]=fn;}};
  const metrics={disabled:()=>!enabled,setEnabled:value=>{enabled=value;},record:(type,detail={})=>{if(enabled)events.push({type,...detail});},flush(){}};
- vm.runInNewContext(source.slice(source.indexOf('if(metrics){')),{metrics,document,window:{addEventListener(type,fn){(handlers[type]??=[]).push(fn);}},performance:{now:()=>now},observeWebHealth(){healthStarts++;return ()=>{};},setInterval:fn=>timers.push(fn),URL,location:{href:'https://example.org/relight-hub/'}});
+ vm.runInNewContext(source.slice(source.indexOf('if(metrics){'),source.indexOf('// The same compact contents-menu')),{metrics,document,window:{addEventListener(type,fn){(handlers[type]??=[]).push(fn);}},performance:{now:()=>now},observeWebHealth(){healthStarts++;return ()=>{};},setInterval:fn=>timers.push(fn),URL,location:{href:'https://example.org/relight-hub/'}});
  return {events,document,setTime:seconds=>{now=seconds*1000;},toggle:()=>buttonHandlers.click.forEach(fn=>fn()),storage:(on,key='relight-statistics-disabled')=>{enabled=on;handlers.storage.forEach(fn=>fn({key}));},tick:()=>timers[0](),visibility:hide=>{document.hidden=hide;documentHandlers.visibilitychange();},healthStarts:()=>healthStarts};
 }
 test('re-enabling statistics cannot include the disabled interval',()=>{
