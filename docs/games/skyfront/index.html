@@ -2636,7 +2636,8 @@ button{touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
 @media(prefers-reduced-transparency:reduce),(prefers-contrast:more){#title .sortie-top-tools,#sortie-prep,#health-intel .intel-reader{background:#070b17;backdrop-filter:none;}#mission-select .mission-choice[aria-pressed=true]{background:#14283a;}#title #mainmenu>.mi[data-act=start],#mission-select .mission-launch{background:#f2c978;color:#070b17;}}
 /* Parent identity is distinct from the independent game-edition title. */
 #title .sortie-header{display:flex;flex-direction:column;align-items:flex-start;gap:8px;}
-.parent-brand{display:flex;align-items:center;gap:10px;}
+.parent-brand{display:flex;align-items:center;gap:10px;color:inherit;text-decoration:none;}
+.parent-brand:is(:hover,:focus,:active,:visited){text-decoration:none;}
 .relight-brand-mark{width:30px;height:30px;object-fit:contain;}
 #title .parent-brand .skyfront-relight{font-size:22px;line-height:1;margin:0;}
 .skyfront-wordmark{width:clamp(280px,32vw,460px);height:auto;display:block;}
@@ -3346,6 +3347,6 @@ body.touch #radio{left:max(110px,24%);right:max(170px,26%);bottom:150px;top:auto
  window.addEventListener('unhandledrejection',()=>fail('unhandled-rejection','เกมทำงานต่อไม่ได้ ลองเปิดใหม่ หากมีจุดตรวจที่บันทึกไว้ ให้เลือกเล่นต่อจากหน้าแรก'));
 })();
 </script>
-<script id="skyfront-game" src="/relight-hub/games/skyfront/assets/game-055f3aefea4905f16cb4.js" defer onerror="SkyfrontRecovery.fail('bundle-load','โหลดไฟล์เกมไม่สำเร็จ ตรวจการเชื่อมต่อแล้วลองใหม่')"></script>
+<script id="skyfront-game" src="/relight-hub/games/skyfront/assets/game-0197b4964a89142288a1.js" defer onerror="SkyfrontRecovery.fail('bundle-load','โหลดไฟล์เกมไม่สำเร็จ ตรวจการเชื่อมต่อแล้วลองใหม่')"></script>
 </body>
 </html>
