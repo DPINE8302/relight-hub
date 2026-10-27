@@ -890,9 +890,24 @@ private struct MediaIdentity: Equatable {
             else { consent = false; state = .playing }
         }
     }
+    func boostLimitForCapture(test: Bool) -> Double {
+        if test { return selectedVoice?.boostLimit ?? 1 }
+        var result: Double = 1
+        for index in selectedScene..<activeProject.scenes.count {
+            let s = activeProject.scenes[index]
+            let nextCapture = index > selectedScene ? s.capture : nil
+            let cutoff = nextCapture.map { $0.trigger == .gate ? ($0.gateFrame ?? s.frames) : $0.startFrame } ?? s.frames
+            for cue in s.cues where cue.startFrame < cutoff && (index != selectedScene || (cue.startFrame >= frame && !ledger.hasFired(cue.id))) {
+                result = max(result, cue.boostLimit)
+            }
+            if nextCapture != nil { break }
+        }
+        return result
+    }
     func finishRecording() {
         guard state == .recording else { return }
-        do { try audio.finishCapture(); takeSeconds = audio.takeSeconds; note = "\(String(format: "%.1f", takeSeconds)) seconds captured · ready for voice cues"; log(note) }
+        let boost = boostLimitForCapture(test: captureForTest)
+        do { try audio.finishCapture(boostLimit: boost); takeSeconds = audio.takeSeconds; note = "\(String(format: "%.1f", takeSeconds)) seconds captured · ready for voice cues"; log(note) }
         catch { audio.clearTake(); takeSeconds = 0; issue = error.localizedDescription; log(error.localizedDescription) }
         audio.releaseMicrophone()
         if captureForTest { state = .idle; captureForTest = false; return }

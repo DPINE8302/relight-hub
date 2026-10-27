@@ -1,4 +1,4 @@
-# RE:Light Native for Mac 2.3.0
+# RE:Light Native for Mac 2.3.1
 
 Download, unzip, open **RELight Native.app**, then press **Start Exhibition**. Film 02, the selected Ainsley narration, recording rules and dream effects are included. No media import, project selection, server or internet connection is needed to play.
 
@@ -15,6 +15,7 @@ Apple silicon · macOS 14 or later. This build is locally signed, not Apple-nota
 | Recording start | Ainsley narrator, then six-second timed capture |
 | Narrator | Selected original MP3; audible by default, can be muted |
 | Dream playback | 01:04:25:20, frame 6,380; 163-frame region |
+| Dream boost | Up to 400× for quiet takes, with a 0.9 PCM peak ceiling before effects |
 | Voice effects | Saved echo, reverb, low-pass, level, pan and repeat settings |
 | Required USB controls | Off |
 | Device setup on a new Mac | This Mac, system microphone and system output |
@@ -22,6 +23,12 @@ Apple silicon · macOS 14 or later. This build is locally signed, not Apple-nota
 The film pauses at the recording point throughout narration and capture, then resumes from the same film frame. Mute preserves the narrator's timing. Skip recording, silence, denied permission or a failed capture continues without visitor voice (DREAM-00). Captured voice stays in memory and is cleared when the run ends or **Stop & Clear** is pressed. It is never included in project files or exports. There is no application consent dialog.
 
 A newly supplied included experience is selected once on upgrade. Previous projects and their edits remain on disk. Relaunches retain the operator's current project and changes. **File → Open Included Experience** returns to the included working copy. Missing included media is repaired without replacing saved settings.
+
+## Dream recording loudness
+
+Film 02 uses a 400× maximum dream boost by default. Quiet recordings receive the requested gain; stronger takes use a smaller constant gain so their waveform peaks stay below 0.9 before the existing effects/output limiter. This is an amplification limit, not a promise of 400 times perceived loudness. Film audio, narrator audio and the speaker test tone keep their existing levels. **Voice & effects → Dream boost limit** adjusts 1–400×. Legacy projects default to 1×.
+
+The same gain is used across repeats and pause/resume, preserving dynamics. Silence and nonfinite microphone data are rejected; the quiet-capture threshold accounts for the intended boost.
 
 ## Playback
 

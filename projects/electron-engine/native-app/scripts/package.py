@@ -13,8 +13,8 @@ import atexit
 import fcntl
 import os
 
-VERSION = '2.3.0'
-BUILD = '12'
+VERSION = '2.3.1'
+BUILD = '13'
 parser = argparse.ArgumentParser()
 parser.add_argument('--project', type=Path, help='Saved experience.relight; defaults to Resources/Release/experience.relight')
 parser.add_argument('--output-dir', type=Path)

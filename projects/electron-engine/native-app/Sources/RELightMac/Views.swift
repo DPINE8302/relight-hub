@@ -329,6 +329,9 @@ struct InspectorView: View {
         VStack(alignment: .leading, spacing: 12) {
             TextField("Cue name", text: Binding(get: { cue.name }, set: { name in studio.mutateCue { $0.name = name } })).textFieldStyle(.roundedBorder)
             Text("Source: current participant recording").font(.caption).foregroundStyle(.secondary)
+            Text("Dream boost limit: \(Int(cue.boostLimit))×").font(.subheadline).monospacedDigit()
+            Slider(value: Binding(get: { cue.boostLimit }, set: { value in studio.mutateCue { $0.gainBoost = value } }), in: 1...400, step: 1).accessibilityLabel("Dream recording boost")
+            Text("Raises quiet recordings up to this limit. Stronger takes use less gain to preserve the voice and avoid clipping.").font(.caption).foregroundStyle(.secondary)
             intField("Start frame", value: cueInt(\.startFrame)); Text(studio.project.rate.timecode(cue.startFrame)).monospacedDigit().font(.caption).foregroundStyle(.secondary)
             intField("Length frames", value: cueInt(\.lengthFrames)); intField("Source in frame", value: cueInt(\.sourceInFrame))
             Picker("Voice playback", selection: Binding(get: { cue.loopToFill == true ? 2 : (cue.repeatCount ?? 1) > 1 ? 1 : 0 }, set: { mode in studio.mutateCue { $0.loopToFill = mode == 2; $0.repeatCount = mode == 1 ? max(2, $0.repeatCount ?? 3) : 1 } })) { Text("Once").tag(0); Text("Repeat").tag(1); Text("Fill region").tag(2) }.pickerStyle(.segmented)

@@ -217,11 +217,12 @@ final class MicrophoneCapture {
     func beginCapture(seconds: Double) throws {
         try prepareMicrophone(); clearTake(); store.begin(seconds: seconds, sampleRate: inputRate)
     }
-    func finishCapture() throws {
+    func finishCapture(boostLimit: Double = 1) throws {
         let result = store.finish()
+        guard boostLimit.isFinite, (1...400).contains(boostLimit) else { clearTake(); throw AudioFailure("Dream recording boost must be between 1 and 400.") }
         guard !result.samples.isEmpty else { throw AudioFailure("No recording was captured. Continuing without voice (DREAM-00).") }
         let rms = sqrt(result.samples.reduce(Double(0)) { $0 + Double($1 * $1) } / Double(result.samples.count))
-        guard rms > 0.001 else { clearTake(); throw AudioFailure("Recording was silent. Continuing without voice (DREAM-00).") }
+        guard rms.isFinite, rms > 0.001 / boostLimit else { clearTake(); throw AudioFailure("Recording was silent. Continuing without voice (DREAM-00).") }
         let inputFormat = AVAudioFormat(standardFormatWithSampleRate: result.rate, channels: 1)!
         let original = AVAudioPCMBuffer(pcmFormat: inputFormat, frameCapacity: AVAudioFrameCount(result.samples.count))!
         original.frameLength = original.frameCapacity
@@ -264,11 +265,23 @@ final class MicrophoneCapture {
         let resumeOffset = Int(rate.seconds(offsetFrames) * 48000)
         let sourceCount = Int(take.frameLength) - sourceOffset
         guard sourceOffset >= 0, sourceCount > 0 else { throw AudioFailure("Voice trim is outside the captured recording") }
+        guard cue.boostLimit.isFinite, (1...400).contains(cue.boostLimit) else { throw AudioFailure("Dream recording boost must be between 1 and 400.") }
         let regionCount = Int(rate.seconds(cue.lengthFrames) * 48000)
         let fullCount = cue.loopToFill == true ? regionCount : min(regionCount, sourceCount * (cue.repeatCount ?? 1))
         guard fullCount <= 48000 * 600 else { throw AudioFailure("Voice region exceeds the 10-minute memory limit") }
         let count = fullCount - resumeOffset
         guard sourceOffset >= 0, count > 0 else { throw AudioFailure("Voice trim is outside the captured recording") }
+        // A single gain for the entire source preserves dynamics and stays identical
+        // across repeats and pause/resume. Strong takes need less than the requested boost.
+        var sourcePeak: Float = 0
+        if cue.boostLimit > 1 {
+            for channel in 0..<Int(format.channelCount) {
+                for i in 0..<min(sourceCount, fullCount) {
+                    sourcePeak = max(sourcePeak, abs(take.floatChannelData![channel][sourceOffset + i]))
+                }
+            }
+        }
+        let boost = cue.boostLimit > 1 && sourcePeak > 0 ? Float(min(cue.boostLimit, 0.9 / Double(sourcePeak))) : Float(1)
         let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(count))!
         buffer.frameLength = AVAudioFrameCount(count)
         let fadeIn = min(fullCount, Int(rate.seconds(cue.fadeInFrames) * 48000))
@@ -286,7 +299,7 @@ final class MicrophoneCapture {
                     let spliceOut = position - loopPosition + sourceCount < fullCount && edge > 0 ? min(1, Float(sourceCount - 1 - loopPosition) / Float(edge)) : 1
                     buffer.floatChannelData![channel][i] = take.floatChannelData![channel][sourceOffset + loopPosition] * spliceIn * spliceOut
                 }
-                buffer.floatChannelData![channel][i] *= incoming * outgoing
+                buffer.floatChannelData![channel][i] *= incoming * outgoing * boost
             }
         }
         return buffer

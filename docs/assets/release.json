@@ -1,8 +1,8 @@
 {
-  "version": "2.3.0",
-  "bytes": 471297865,
+  "version": "2.3.1",
+  "bytes": 471302784,
   "megabytes": 471.3,
-  "sha256": "ac1ff8f3a6f6e9ec4a59340e060b74372f49c80a6d5353961975e5dd4aeb4b4d",
+  "sha256": "8fe52b6c19e677443fabc17284cea3f436cc0f6c59cb6f592280ede9e669e0cd",
   "windows": {
     "version": "2.2.0-alpha.1",
     "tag": "windows-v2.2.0-alpha.1",
@@ -21,15 +21,15 @@
       }
     }
   },
-  "build": "12",
-  "file": "RELight-Native-2.3.0-Mac.zip",
-  "tag": "mac-v2.3.0",
-  "url": "https://github.com/DPINE8302/relight-hub/releases/download/mac-v2.3.0/RELight-Native-2.3.0-Mac.zip",
+  "build": "13",
+  "file": "RELight-Native-2.3.1-Mac.zip",
+  "tag": "mac-v2.3.1",
+  "url": "https://github.com/DPINE8302/relight-hub/releases/download/mac-v2.3.1/RELight-Native-2.3.1-Mac.zip",
   "includedExperience": {
     "schemaVersion": 1,
-    "id": "experience-ac1ac830c6b8158964339990",
+    "id": "experience-348aae01c330bf1fc7b17569",
     "title": "RE:Light · Film 02 · Exhibition",
-    "projectSHA256": "144fcda07fa6af065a89b74c6f623f4ab100560c980224a933e59bcfde74f726",
+    "projectSHA256": "788c0995428354184e298f72510ed049e0beb2e75df51bd675337e0d6d2e6a2c",
     "files": [
       {
         "path": "media/RE;light film 02.mov",

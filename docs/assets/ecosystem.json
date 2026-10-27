@@ -41,13 +41,13 @@
   ],
   "native": {
     "mac": {
-      "publishedVersion": "2.3.0",
-      "localReferenceVersion": "2.3.0 build 12",
+      "publishedVersion": "2.3.1",
+      "localReferenceVersion": "2.3.1 build 13",
       "platform": "Apple silicon · macOS 14+",
-      "url": "https://github.com/DPINE8302/relight-hub/releases/download/mac-v2.3.0/RELight-Native-2.3.0-Mac.zip",
-      "release": "https://github.com/DPINE8302/relight-hub/releases/tag/mac-v2.3.0",
+      "url": "https://github.com/DPINE8302/relight-hub/releases/download/mac-v2.3.1/RELight-Native-2.3.1-Mac.zip",
+      "release": "https://github.com/DPINE8302/relight-hub/releases/tag/mac-v2.3.1",
       "format": "zip",
-      "includedExperience": "Film 02 · 24 fps · Ainsley · saved recording and dream cues"
+      "includedExperience": "Film 02 · Ainsley · dream boost up to 400×"
     },
     "windows": {
       "version": "2.2.0-alpha.1",

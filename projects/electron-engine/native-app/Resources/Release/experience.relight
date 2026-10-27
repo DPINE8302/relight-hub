@@ -1,5 +1,4 @@
 {
-  "blackFromFrame": null,
   "duckLevel": 0.35,
   "effectPresets": {},
   "filmLevel": 0.75,
@@ -8,16 +7,17 @@
     "denominator": 1,
     "numerator": 24
   },
+  "requiresPhysicalControls": false,
   "scenes": [
     {
       "capture": {
         "durationSeconds": 6,
+        "gateFrame": 452,
         "narrator": "media/RELight-Ainsley-Thai-Countdown.mp3",
         "narratorMuted": false,
         "startFrame": 0,
         "startMethod": "narrator",
-        "trigger": "gate",
-        "gateFrame": 452
+        "trigger": "gate"
       },
       "cues": [
         {
@@ -27,7 +27,7 @@
             "delayMs": 280,
             "distortion": 0,
             "feedback": 0.22,
-            "level": 0.8,
+            "level": 1,
             "lowPassHz": 5200,
             "pan": 0,
             "reverbWet": 0.18
@@ -40,7 +40,8 @@
           "name": "Dream · 01:04:25:20",
           "repeatCount": 3,
           "sourceInFrame": 0,
-          "startFrame": 6380
+          "startFrame": 6380,
+          "gainBoost": 400
         }
       ],
       "draft": false,
@@ -53,8 +54,7 @@
     }
   ],
   "schemaVersion": 1,
-  "title": "RE:Light · Film 02 · Exhibition",
-  "voiceLevel": 0.85,
   "timecodeStartFrame": 86400,
-  "requiresPhysicalControls": false
+  "title": "RE:Light · Film 02 · Exhibition",
+  "voiceLevel": 0.85
 }

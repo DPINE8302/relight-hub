@@ -171,3 +171,25 @@ import Testing
     p.timecodeStartFrame = Int.max
     #expect(p.validation().contains { $0.contains("Source timecode") })
 }
+
+@Test func dreamBoostRoundTripsAndRejectsInvalidLimits() throws {
+    var p = Project.starter
+    #expect(p.scenes[3].cues[0].boostLimit == 1)
+    p.scenes[3].cues[0].gainBoost = 400
+    #expect(p.validation().isEmpty)
+    #expect(try JSONDecoder().decode(Project.self, from: JSONEncoder().encode(p)).scenes[3].cues[0].boostLimit == 400)
+    for value in [0.0, 401, .infinity, .nan] {
+        p.scenes[3].cues[0].gainBoost = value
+        #expect(!p.validation().isEmpty)
+    }
+}
+
+@Test func voiceLedgerExposesOnlyActuallyConsumedCueIdentities() {
+    var ledger = CueLedger()
+    let cue = VoiceCue(startFrame: 120, lengthFrames: 240)
+    #expect(!ledger.hasFired(cue.id))
+    #expect(ledger.due(through: 120, cues: [cue]).count == 1)
+    #expect(ledger.hasFired(cue.id))
+    ledger.reset()
+    #expect(!ledger.hasFired(cue.id))
+}

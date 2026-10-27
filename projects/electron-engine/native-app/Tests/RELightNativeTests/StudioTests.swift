@@ -880,3 +880,37 @@ private func writeNarratorFixture(_ url: URL, seconds: Double = 0.25) throws {
     #expect(studio.audio.configuredInputUID == originalMic.uid)
     #expect(studio.playbackOutputUID == originalOutput.uid)
 }
+
+@Test @MainActor func captureAcceptanceBoostStopsAtTheNextCaptureAndUsesTheAuditionSelection() {
+    let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    let studio = makeTestStudio(storageRoot: root)
+    defer { studio.shutdown(); try? FileManager.default.removeItem(at: root) }
+    var first = VoiceCue(startFrame: 200, lengthFrames: 100); first.gainBoost = 1
+    studio.project.scenes[0].cues = [first]
+    studio.project.scenes[1].capture = CaptureCue()
+    studio.project.scenes[1].capture?.gateFrame = 100
+    var before = VoiceCue(startFrame: 20, lengthFrames: 50); before.gainBoost = 5
+    var after = VoiceCue(startFrame: 200, lengthFrames: 100); after.gainBoost = 400
+    studio.project.scenes[1].cues = [before, after]
+    #expect(studio.boostLimitForCapture(test: false) == 5)
+    studio.project.scenes[1].capture?.gateFrame = 0
+    #expect(studio.boostLimitForCapture(test: false) == 1)
+    studio.selectedCue = first.id
+    #expect(studio.boostLimitForCapture(test: true) == 1)
+    studio.selectedScene = 1; studio.selectedCue = after.id
+    #expect(studio.boostLimitForCapture(test: true) == 400)
+}
+
+@Test @MainActor func interruptedEarlierVoiceDoesNotLowerNextTakeAcceptance() {
+    let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    let studio = makeTestStudio(storageRoot: root)
+    defer { studio.shutdown(); try? FileManager.default.removeItem(at: root) }
+    var old = VoiceCue(startFrame: 120, lengthFrames: 240); old.gainBoost = 400
+    var next = VoiceCue(startFrame: 400, lengthFrames: 100); next.gainBoost = 1
+    studio.project.scenes[0].frames = 600
+    studio.project.scenes[0].capture?.gateFrame = 240
+    studio.project.scenes[0].cues = [old, next]
+    studio.project.scenes = [studio.project.scenes[0]]
+    studio.frame = 240
+    #expect(studio.boostLimitForCapture(test: false) == 1)
+}

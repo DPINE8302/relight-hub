@@ -61,6 +61,8 @@ public struct VoiceCue: Codable, Identifiable, Equatable, Sendable {
     public var fadeInFrames: Int = 2
     public var fadeOutFrames: Int = 6
     public var bypass = false
+    public var gainBoost: Double?
+    public var boostLimit: Double { gainBoost ?? 1 }
     public var repeatCount: Int?
     public var loopToFill: Bool?
     public var repeatsSource: Bool { loopToFill == true || (repeatCount ?? 1) > 1 }
@@ -183,6 +185,7 @@ public struct Project: Codable, Equatable, Sendable {
             if Set(ids).count != ids.count { issues.append("\(scene.name): cue identifiers must be unique") }
             let sorted = scene.cues.sorted { $0.startFrame < $1.startFrame }
             for (i, cue) in sorted.enumerated() {
+                if !cue.boostLimit.isFinite || !(1...400).contains(cue.boostLimit) { issues.append("\(scene.name): voice boost must be between 1 and 400") }
                 if let count = cue.repeatCount, !(1...100).contains(count) { issues.append("\(scene.name): repeat count must be 1–100") }
                 if cue.repeatsSource && rate.seconds(cue.lengthFrames) > CaptureCue.manualLimitSeconds { issues.append("\(scene.name): repeated voice regions must be at most 10 minutes") }
                 if cue.startFrame < 0 || cue.lengthFrames <= 0 || cue.startFrame + cue.lengthFrames > scene.frames || cue.sourceInFrame < 0 || cue.fadeInFrames < 0 || cue.fadeOutFrames < 0 { issues.append("\(scene.name): voice cue exceeds scene or has invalid trim/fade") }
@@ -219,6 +222,7 @@ public struct CueLedger: Sendable {
     private var fired = Set<UUID>()
     public init() {}
     public mutating func reset() { fired.removeAll() }
+    public func hasFired(_ id: UUID) -> Bool { fired.contains(id) }
     public mutating func skip(through frame: Int, cues: [VoiceCue]) { for cue in cues where cue.startFrame <= frame { fired.insert(cue.id) } }
     public mutating func due(through frame: Int, cues: [VoiceCue]) -> [VoiceCue] {
         cues.filter { cue in

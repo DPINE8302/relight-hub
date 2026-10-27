@@ -159,3 +159,86 @@ import RELightCore
     #expect(throws: (any Error).self) { try audio.configure(input: "missing-microphone", output: "", inventory: [], validateInput: true, preserveTake: true) }
     #expect(audio.take != nil)
 }
+
+@MainActor @Test func dreamBoostRaisesQuietTakesAndPreservesResumeAndRepeats() throws {
+    let audio = NativeAudio(), inputFormat = AVAudioFormat(standardFormatWithSampleRate: 48000, channels: 1)!
+    let input = AVAudioPCMBuffer(pcmFormat: inputFormat, frameCapacity: 48000)!
+    input.frameLength = 48000
+    for i in 0..<48000 { input.floatChannelData![0][i] = Float(sin(Double(i) * 2 * .pi * 440 / 48000) * 0.0016) }
+    audio.store.begin(seconds: 1, sampleRate: 48000); audio.store.consume(input); try audio.finishCapture()
+    var cue = VoiceCue(lengthFrames: 72); cue.repeatCount = 3; cue.fadeInFrames = 0; cue.fadeOutFrames = 0
+    let legacy = try audio.preparedBuffer(for: cue, rate: FrameRate())
+    cue.gainBoost = 400
+    let boosted = try audio.preparedBuffer(for: cue, rate: FrameRate())
+    #expect(abs(boosted.floatChannelData![0][12017] - legacy.floatChannelData![0][12017] * 400) < 0.000001)
+    #expect(abs(boosted.floatChannelData![0][12017] - boosted.floatChannelData![0][60017]) < 0.000001)
+    let resumed = try audio.preparedBuffer(for: cue, rate: FrameRate(), offsetFrames: 3)
+    #expect(abs(resumed.floatChannelData![0][6017] - boosted.floatChannelData![0][12017]) < 0.000001)
+    let samples = UnsafeBufferPointer(start: boosted.floatChannelData![0], count: Int(boosted.frameLength))
+    #expect(samples.allSatisfy { $0.isFinite && abs($0) <= 0.900001 })
+    audio.clearTake()
+}
+
+@MainActor @Test func dreamBoostUsesConstantPeakLimitedGainOnStrongTakes() throws {
+    let audio = NativeAudio(), format = AVAudioFormat(standardFormatWithSampleRate: 48000, channels: 1)!
+    let input = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: 48000)!
+    input.frameLength = 48000
+    for i in 0..<48000 { input.floatChannelData![0][i] = Float(sin(Double(i) * 2 * .pi * 440 / 48000) * 0.4) }
+    audio.store.begin(seconds: 1, sampleRate: 48000); audio.store.consume(input); try audio.finishCapture()
+    var cue = VoiceCue(lengthFrames: 24); cue.fadeInFrames = 0; cue.fadeOutFrames = 0
+    let legacy = try audio.preparedBuffer(for: cue, rate: FrameRate())
+    cue.gainBoost = 400
+    let boosted = try audio.preparedBuffer(for: cue, rate: FrameRate())
+    let gain1 = boosted.floatChannelData![0][17] / legacy.floatChannelData![0][17]
+    let gain2 = boosted.floatChannelData![0][83] / legacy.floatChannelData![0][83]
+    #expect(gain1 > 1 && gain1 < 3)
+    #expect(abs(gain1 - gain2) < 0.00001)
+    #expect(UnsafeBufferPointer(start: boosted.floatChannelData![0], count: Int(boosted.frameLength)).allSatisfy { $0.isFinite && abs($0) <= 0.900001 })
+    cue.gainBoost = .infinity
+    #expect(throws: (any Error).self) { try audio.preparedBuffer(for: cue, rate: FrameRate()) }
+    audio.clearTake()
+}
+
+@MainActor @Test func quietCaptureCanBeRescuedByBoostButSilenceAndInvalidSamplesCannot() throws {
+    let audio = NativeAudio(), format = AVAudioFormat(standardFormatWithSampleRate: 48000, channels: 1)!
+    let input = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: 48000)!
+    input.frameLength = 48000
+    for i in 0..<48000 { input.floatChannelData![0][i] = Float(sin(Double(i) * 2 * .pi * 440 / 48000) * 0.0008) }
+    audio.store.begin(seconds: 1, sampleRate: 48000); audio.store.consume(input)
+    #expect(throws: (any Error).self) { try audio.finishCapture() }
+    audio.store.begin(seconds: 1, sampleRate: 48000); audio.store.consume(input)
+    try audio.finishCapture(boostLimit: 400)
+    var cue = VoiceCue(lengthFrames: 24); cue.gainBoost = 400; cue.fadeInFrames = 0; cue.fadeOutFrames = 0
+    let boosted = try audio.preparedBuffer(for: cue, rate: FrameRate())
+    #expect(abs(boosted.floatChannelData![0][17]) > 0.1)
+    for value: Float in [0, .infinity, .nan] {
+        for i in 0..<48000 { input.floatChannelData![0][i] = value }
+        audio.store.begin(seconds: 1, sampleRate: 48000); audio.store.consume(input)
+        #expect(throws: (any Error).self) { try audio.finishCapture(boostLimit: 400) }
+        #expect(audio.take == nil)
+    }
+}
+
+@MainActor @Test func boostedDreamRendersThroughSavedEffectsWithoutClipping() throws {
+    let audio = NativeAudio(), format = AVAudioFormat(standardFormatWithSampleRate: 48000, channels: 2)!
+    try audio.configure(input: "", output: "")
+    try audio.engine.enableManualRenderingMode(.offline, format: format, maximumFrameCount: 1024)
+    defer { audio.stopAll(); audio.engine.disableManualRenderingMode() }
+    let source = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: 48000)!
+    source.frameLength = 48000
+    for c in 0..<2 { for i in 0..<48000 { source.floatChannelData![c][i] = Float(sin(Double(i) * 2 * .pi * 440 / 48000) * 0.0016) } }
+    audio.store.begin(seconds: 1, sampleRate: 48000); audio.store.consume(source); try audio.finishCapture(boostLimit: 400)
+    var cue = VoiceCue(lengthFrames: 48); cue.gainBoost = 400; cue.effects = .preset("Echo"); cue.effects.level = 1; cue.fadeInFrames = 0; cue.fadeOutFrames = 0
+    let boosted = try audio.preparedBuffer(for: cue, rate: FrameRate())
+    audio.apply(cue, localFrame: 1, bus: 0.85)
+    audio.voice.scheduleBuffer(boosted); try audio.engine.start(); audio.voice.play()
+    let rendered = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: 1024)!
+    var samples: [Float] = []
+    for _ in 0..<60 {
+        if try audio.engine.renderOffline(1024, to: rendered) == .success { samples.append(contentsOf: UnsafeBufferPointer(start: rendered.floatChannelData![0], count: Int(rendered.frameLength))) }
+    }
+    #expect(samples.count > 48000)
+    #expect(samples.allSatisfy { $0.isFinite && abs($0) <= 1 })
+    let rms = sqrt(samples.reduce(0.0) { $0 + Double($1 * $1) } / Double(samples.count))
+    #expect(rms > 0.05)
+}
