@@ -1,8 +1,8 @@
 {
-  "version": "2.1.1",
-  "bytes": 125580078,
-  "megabytes": 125.6,
-  "sha256": "fcb81e0399d6878b5e629a3d4471e9e6a2c1d70e9129a7cb70daa7fb4d6c2c95",
+  "version": "2.3.0",
+  "bytes": 471297865,
+  "megabytes": 471.3,
+  "sha256": "ac1ff8f3a6f6e9ec4a59340e060b74372f49c80a6d5353961975e5dd4aeb4b4d",
   "windows": {
     "version": "2.2.0-alpha.1",
     "tag": "windows-v2.2.0-alpha.1",
@@ -20,5 +20,27 @@
         "sha256": "3830fe0cb192591e13c38475f957f9cdf38fd2453ee49b4ee410e0c1fb777337"
       }
     }
+  },
+  "build": "12",
+  "file": "RELight-Native-2.3.0-Mac.zip",
+  "tag": "mac-v2.3.0",
+  "url": "https://github.com/DPINE8302/relight-hub/releases/download/mac-v2.3.0/RELight-Native-2.3.0-Mac.zip",
+  "includedExperience": {
+    "schemaVersion": 1,
+    "id": "experience-ac1ac830c6b8158964339990",
+    "title": "RE:Light · Film 02 · Exhibition",
+    "projectSHA256": "144fcda07fa6af065a89b74c6f623f4ab100560c980224a933e59bcfde74f726",
+    "files": [
+      {
+        "path": "media/RE;light film 02.mov",
+        "bytes": 470486697,
+        "sha256": "d93c14cb3f83873912b7faed4394809d6cadcbd426e98829b946d8bc3089ce17"
+      },
+      {
+        "path": "media/RELight-Ainsley-Thai-Countdown.mp3",
+        "bytes": 99100,
+        "sha256": "c0834a30ecd21188c0bc3a2fee83d69b71ae91063af991e44485b5a50c033137"
+      }
+    ]
   }
 }

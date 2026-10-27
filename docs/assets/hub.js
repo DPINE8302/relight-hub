@@ -5,6 +5,9 @@ fetch('assets/release.json').then(response=>response.ok?response.json():null).th
   if(!release) return;
   const set=(id,value)=>{const el=document.getElementById(id);if(el&&value!=null)el.textContent=value;};
   set('app-size',release.megabytes+' MB');
+  set('mac-version',release.version);
+  const macDownload=document.getElementById('app-download');
+  if(macDownload&&release.url)macDownload.href=release.url;
   if(!release.windows) return;
   const windows=release.windows;
   set('windows-version',windows.version);

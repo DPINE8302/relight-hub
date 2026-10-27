@@ -1,0 +1,15 @@
+{
+  "archiveURL": "https://github.com/DPINE8302/relight-hub/releases/download/mac-v2.3.0/RELight-Native-2.3.0-Mac.zip",
+  "files": [
+    {
+      "path": "media/RE;light film 02.mov",
+      "bytes": 470486697,
+      "sha256": "d93c14cb3f83873912b7faed4394809d6cadcbd426e98829b946d8bc3089ce17"
+    },
+    {
+      "path": "media/RELight-Ainsley-Thai-Countdown.mp3",
+      "bytes": 99100,
+      "sha256": "c0834a30ecd21188c0bc3a2fee83d69b71ae91063af991e44485b5a50c033137"
+    }
+  ]
+}

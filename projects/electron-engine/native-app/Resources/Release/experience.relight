@@ -1,0 +1,60 @@
+{
+  "blackFromFrame": null,
+  "duckLevel": 0.35,
+  "effectPresets": {},
+  "filmLevel": 0.75,
+  "outputOffsetMs": 0,
+  "rate": {
+    "denominator": 1,
+    "numerator": 24
+  },
+  "scenes": [
+    {
+      "capture": {
+        "durationSeconds": 6,
+        "narrator": "media/RELight-Ainsley-Thai-Countdown.mp3",
+        "narratorMuted": false,
+        "startFrame": 0,
+        "startMethod": "narrator",
+        "trigger": "gate",
+        "gateFrame": 452
+      },
+      "cues": [
+        {
+          "automation": {},
+          "bypass": false,
+          "effects": {
+            "delayMs": 280,
+            "distortion": 0,
+            "feedback": 0.22,
+            "level": 0.8,
+            "lowPassHz": 5200,
+            "pan": 0,
+            "reverbWet": 0.18
+          },
+          "fadeInFrames": 2,
+          "fadeOutFrames": 6,
+          "id": "A5907A30-8FF6-4B1E-BF58-19F9E211EA09",
+          "lengthFrames": 163,
+          "loopToFill": false,
+          "name": "Dream · 01:04:25:20",
+          "repeatCount": 3,
+          "sourceInFrame": 0,
+          "startFrame": 6380
+        }
+      ],
+      "draft": false,
+      "frames": 7200,
+      "id": "219B4078-043F-43CE-8A61-F0781C94786C",
+      "media": "media/RE;light film 02.mov",
+      "mediaInFrame": 0,
+      "name": "Film 02",
+      "thai": "ภาพยนตร์เต็ม"
+    }
+  ],
+  "schemaVersion": 1,
+  "title": "RE:Light · Film 02 · Exhibition",
+  "voiceLevel": 0.85,
+  "timecodeStartFrame": 86400,
+  "requiresPhysicalControls": false
+}

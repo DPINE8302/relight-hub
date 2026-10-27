@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "title": "Draft 1 · Scenes 1–4 · provisional boundaries",
+  "rate": {
+    "numerator": 24,
+    "denominator": 1
+  },
+  "filmLevel": 0.75,
+  "voiceLevel": 0.85,
+  "duckLevel": 0.35,
+  "outputOffsetMs": 0,
+  "effectPresets": {},
+  "blackFromFrame": 2341,
+  "scenes": [
+    {
+      "id": "219B4078-043F-43CE-8A61-F0781C94786C",
+      "name": "Memory",
+      "thai": "ความทรงจำ",
+      "frames": 414,
+      "mediaInFrame": 0,
+      "draft": true,
+      "cues": [],
+      "media": "media/Draft 1 scene1-4 .mov",
+      "capture": {
+        "trigger": "gate",
+        "startFrame": 0,
+        "durationSeconds": 6,
+        "startMethod": "narrator",
+        "narrator": "media/RELight-Ainsley-Thai-Countdown.mp3",
+        "narratorMuted": false
+      }
+    },
+    {
+      "id": "3FED3168-5027-4703-AC0E-9C1928BFFD75",
+      "name": "Possibility",
+      "thai": "ความเป็นไปได้",
+      "frames": 409,
+      "mediaInFrame": 414,
+      "draft": true,
+      "cues": [],
+      "media": "media/Draft 1 scene1-4 .mov"
+    },
+    {
+      "id": "F7F0E8D0-6447-47C7-AE6C-E507F6B16852",
+      "name": "The Choice",
+      "thai": "ทางเลือก",
+      "frames": 707,
+      "mediaInFrame": 823,
+      "draft": true,
+      "cues": [],
+      "media": "media/Draft 1 scene1-4 .mov"
+    },
+    {
+      "id": "0D9CF3F4-2D54-4710-9CCE-05F21DE19200",
+      "name": "Narrowing World / Hospital",
+      "thai": "โลกแคบลง",
+      "frames": 547,
+      "mediaInFrame": 1530,
+      "draft": true,
+      "cues": [
+        {
+          "id": "A5907A30-8FF6-4B1E-BF58-19F9E211EA09",
+          "name": "Draft hospital voice test",
+          "startFrame": 384,
+          "lengthFrames": 163,
+          "sourceInFrame": 0,
+          "fadeInFrames": 2,
+          "fadeOutFrames": 6,
+          "bypass": false,
+          "effects": {
+            "level": 0.8,
+            "lowPassHz": 18000,
+            "delayMs": 0,
+            "feedback": 0,
+            "reverbWet": 0,
+            "distortion": 0,
+            "pan": 0
+          },
+          "automation": {}
+        }
+      ],
+      "media": "media/Draft 1 scene1-4 .mov"
+    },
+    {
+      "id": "EBF4C710-D839-4084-BAD7-834ED90C1E3F",
+      "name": "Wake — film pending",
+      "thai": "ตื่น",
+      "frames": 336,
+      "mediaInFrame": 0,
+      "draft": true,
+      "cues": []
+    }
+  ]
+}
