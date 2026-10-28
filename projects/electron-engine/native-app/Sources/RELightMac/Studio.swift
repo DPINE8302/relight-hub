@@ -22,7 +22,7 @@ private struct MediaIdentity: Equatable {
     @Published var setup: SetupKind = .mac
     @Published var selectedScene = 0
     @Published var selectedCue: UUID?
-    @Published var state: RunState = .idle
+    @Published var state: RunState = .idle { didSet { refreshAwakeProtection() } }
     @Published var frame = 0
     @Published var meter: Double = 0
     @Published var peak: Double = 0
@@ -50,7 +50,7 @@ private struct MediaIdentity: Equatable {
     @Published private(set) var importingMedia = false
     @Published private(set) var exportingProject = false
     private var importGeneration = UUID()
-    @Published var auditioning = false
+    @Published var auditioning = false { didSet { refreshAwakeProtection() } }
     @Published private(set) var previewingFilm = false
     private var previewReachedEnd = false
     private var seekInProgress = false
@@ -60,7 +60,7 @@ private struct MediaIdentity: Equatable {
     @Published var narratorMuted = false {
         didSet { narratorPlayer?.volume = narratorMuted ? 0 : 1 }
     }
-    @Published var previewingNarrator = false
+    @Published var previewingNarrator = false { didSet { refreshAwakeProtection() } }
     private var narratorPlayer: AVAudioPlayer?
     private var countdownDeadline: Double?
     private var narratorStarted: Double?
@@ -100,6 +100,15 @@ private struct MediaIdentity: Equatable {
     private var auditionStart = ProcessInfo.processInfo.systemUptime
     private var generation = 0
     private var audience: NSWindow?
+    private var audienceDisplayID: String?
+    private var audienceCloseObserver: NSObjectProtocol?
+    private var screenChangeObserver: NSObjectProtocol?
+    private var audienceExitMonitor: Any?
+    private var shuttingDown = false
+    private var handlingAwakeFailure = false
+    private let keepAwake: ExhibitionAwake
+    var awakeProtectionActive: Bool { keepAwake.isActive }
+    var audienceOutputVisible: Bool { audience?.isVisible == true }
     private var meterTestStart: Date?
     private var meterTestPeak: Double = 0
     @Published private(set) var tonePlayed = false
@@ -154,7 +163,8 @@ private struct MediaIdentity: Equatable {
         return source as String == kIOPSACPowerValue
     }
 
-    init(storageRoot: URL? = nil, startHardware: Bool = true, preferences suppliedPreferences: UserDefaults? = nil, scanDevices: Bool = true) {
+    init(storageRoot: URL? = nil, startHardware: Bool = true, preferences suppliedPreferences: UserDefaults? = nil, scanDevices: Bool = true, awakeProtection: ExhibitionAwake? = nil) {
+        self.keepAwake = awakeProtection ?? ExhibitionAwake()
         let isolatedDomain = storageRoot != nil && suppliedPreferences == nil ? "RELightNative-Test-" + UUID().uuidString : nil
         ephemeralPreferenceDomain = isolatedDomain
         self.preferences = suppliedPreferences ?? isolatedDomain.flatMap { UserDefaults(suiteName: $0) } ?? .standard
@@ -189,6 +199,9 @@ private struct MediaIdentity: Equatable {
         previousInputUID = inputUID; previousOutputUID = outputUID; previousScreenID = screenID
         if !FileManager.default.fileExists(atPath: file.path), let data = try? JSONEncoder().encode(project) { try? data.write(to: file, options: .atomic) }
         if scanDevices { refreshDevices() }
+        screenChangeObserver = NotificationCenter.default.addObserver(forName: NSApplication.didChangeScreenParametersNotification, object: nil, queue: .main) { [weak self] _ in
+            Task { @MainActor in self?.refreshAudienceFrame(screens: NSScreen.screens) }
+        }
         if startHardware { hardware.start() }
         hardware.onInput = { [weak self] role in
             guard let self else { return }
@@ -244,7 +257,8 @@ private struct MediaIdentity: Equatable {
             if meterTestStart != nil { meterTestStart = nil; meterTestPeak = 0; audio.releaseMicrophone(); note = "Microphone changed or disconnected during the signal test. Choose the intended input and test again." }
         }
         if outputLost { speakersPassed = false; tonePlayed = false }
-        if screenLost { projectorPassed = false; audience?.close(); audience = nil }
+        if screenLost { projectorPassed = false; closeAudience() }
+        refreshAudienceFrame(screens: newScreens)
         if outputLost && previewingNarrator { stopNarrator(); issue = "Narrator speakers changed or disconnected. Choose and test the intended output." }
         if locked && (outputLost || (screenLost && setup == .exhibition && !previewingFilm)) {
             if previewingFilm { stopFilmPreview(); issue = "The selected output disconnected. Preview stopped at the playhead; choose a connected output in Devices." }
@@ -422,6 +436,7 @@ private struct MediaIdentity: Equatable {
         ledger.reset(); ledger.skip(through: frame, cues: scene.cues.filter { $0.startFrame + $0.lengthFrames <= frame })
         clockPosition = project.rate.seconds(frame); preparationStarted = ProcessInfo.processInfo.systemUptime
         state = .preparing; mediaSeekReady = false
+        guard awakeProtectionActive else { return }
         let token = UUID(); previewToken = token
         player.seek(to: CMTime(seconds: project.rate.seconds(scene.mediaInFrame + frame), preferredTimescale: 60000), toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] completed in
             Task { @MainActor in
@@ -621,7 +636,7 @@ private struct MediaIdentity: Equatable {
     func previewNarrator() {
         guard !locked else { return }
         do {
-            stopNarrator(); narratorMuted = scene.capture?.narratorMuted == true; narratorPlayer = try makeNarratorPlayer()
+            stopNarrator(); try keepAwake.start(); narratorMuted = scene.capture?.narratorMuted == true; narratorPlayer = try makeNarratorPlayer()
             guard narratorPlayer?.play() == true else { throw AudioFailure("Narrator playback could not start") }
             previewingNarrator = true; note = "Previewing narrator only; microphone is not recording."
         } catch { stopNarrator(); issue = error.localizedDescription }
@@ -742,6 +757,7 @@ private struct MediaIdentity: Equatable {
         liveInputUID = nil; liveOutputUID = nil; captureRouteInterrupted = false
         if setup == .exhibition { speed = 1 }
         meterTestStart = nil; stopNarrator(); consent = consented; identifyingDisplay = false; issue = nil; selectedScene = 0; frame = 0; liveProject = project; gateResolved = []; generation += 1
+        guard refreshAwakeProtection() else { return }
         audio.stopAll(); takeSeconds = 0
         do { try configureAudio(requireInput: activeProject.scenes.contains { $0.capture != nil }) } catch { fail(error.localizedDescription); return }
         if setup == .exhibition { openAudience(identify: false) }
@@ -787,7 +803,9 @@ private struct MediaIdentity: Equatable {
                     }
                 }
             } catch { fail(error.localizedDescription); return }
-            clockStart = ProcessInfo.processInfo.systemUptime; state = .playing; if player.currentItem != nil { player.rate = Float(speed) }; note = "Running"
+            clockStart = ProcessInfo.processInfo.systemUptime; state = .playing
+            guard awakeProtectionActive && state == .playing else { return }
+            if player.currentItem != nil { player.rate = Float(speed) }; note = "Running"
         }
     }
     func voicePlaybackFrame(_ cue: VoiceCue) -> Int {
@@ -881,6 +899,7 @@ private struct MediaIdentity: Equatable {
     }
     private func beginRecording(duration: Double, test: Bool, manual: Bool = false) {
         do {
+            try keepAwake.start()
             try audio.beginCapture(seconds: duration); takeSeconds = 0; captureStarted = Date(); captureDuration = duration; captureForTest = test; captureManual = manual; recordingSeconds = 0
             state = .recording; note = test ? (manual ? "Recording test take · press Stop & Continue when finished" : "Recording your test take. It stays in memory.") : isManualRecording ? "Recording participant voice · press Stop & Continue when finished" : "Recording participant voice"; log(note)
         } catch {
@@ -926,11 +945,12 @@ private struct MediaIdentity: Equatable {
         stopNarrator()
         if dry { cue.bypass = true }
         do {
+            try keepAwake.start()
             try configureAudio(requireInput: false, preserveTake: true)
             try audio.play(cue, rate: project.rate, bus: project.voiceLevel)
             auditioning = true; activeCue = cue; auditionStart = ProcessInfo.processInfo.systemUptime
             note = "Auditioning \(dry ? "dry" : "processed") voice · no projector playback"
-        } catch { issue = error.localizedDescription }
+        } catch { issue = error.localizedDescription; refreshAwakeProtection() }
     }
     private func releaseRunRoutes() {
         if inputUID.isEmpty, let activeInput = liveInputUID, devices.first(where: \.systemInput)?.uid != activeInput { microphonePassed = false }
@@ -971,9 +991,11 @@ private struct MediaIdentity: Equatable {
             if let item = player.currentItem {
                 if item.status == .failed { fail("Scene could not decode: \(scene.name)"); return }
                 guard item.status == .readyToPlay && mediaSeekReady else { return }
-                player.rate = Float(speed)
             }
-            clockStart = ProcessInfo.processInfo.systemUptime; state = .playing; note = previewingFilm ? "Previewing \(scene.name) · recording screens skipped" : "Running \(scene.name)"; log(note)
+            clockStart = ProcessInfo.processInfo.systemUptime; state = .playing
+            guard awakeProtectionActive && state == .playing else { return }
+            if player.currentItem != nil { player.rate = Float(speed) }
+            note = previewingFilm ? "Previewing \(scene.name) · recording screens skipped" : "Running \(scene.name)"; log(note)
         }
         if state == .recording {
             recordingSeconds = Date().timeIntervalSince(captureStarted)
@@ -1020,25 +1042,88 @@ private struct MediaIdentity: Equatable {
         }
     }
 
-    func openAudience(identify: Bool? = nil) {
-        identifyingDisplay = identify ?? (state == .idle && !previewingFilm)
-        if audience != nil { audience?.orderFront(nil); return }
-        let target = externalScreen ?? NSScreen.main
-        let onProjector = externalScreen.map { CGDisplayIsBuiltin(UInt32(Self.id($0)) ?? 0) == 0 } ?? false
-        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 960, height: 540), styleMask: setup == .exhibition || onProjector ? [.borderless] : [.titled, .closable, .resizable, .miniaturizable], backing: .buffered, defer: false)
+    @discardableResult func refreshAwakeProtection() -> Bool {
+        guard !shuttingDown && !handlingAwakeFailure else { keepAwake.stop(); return false }
+        let needed = liveProject != nil || ![.idle, .finished].contains(state) || auditioning || previewingNarrator || audience != nil
+        if needed {
+            do { try keepAwake.start(); return true }
+            catch {
+                handlingAwakeFailure = true
+                closeAudience(); stop(clearMessage: false); keepAwake.stop()
+                issue = error.localizedDescription; note = error.localizedDescription; log(note)
+                handlingAwakeFailure = false
+                return false
+            }
+        } else { keepAwake.stop() }
+        return true
+    }
+    func refreshAudienceFrame(screens: [NSScreen]) {
+        guard let window = audience, let id = audienceDisplayID else { return }
+        guard let target = screens.first(where: { Self.id($0) == id }) else {
+            closeAudience(); issue = "The audience display disconnected. Reconnect it and reopen audience output."; return
+        }
+        if window is CleanAudiencePanel && window.frame != target.frame { window.setFrame(target.frame, display: true) }
+    }
+    func openAudience(identify: Bool = false) {
+        guard !shuttingDown else { return }
+        guard !identify || !locked else { note = "Stop playback before opening the display check."; return }
+        identifyingDisplay = identify
+        if audience != nil { if refreshAwakeProtection() { audience?.orderFrontRegardless() }; return }
+        let availableScreens = NSScreen.screens
+        let selectedDisplay = availableScreens.first(where: { Self.id($0) == screenID })
+        guard screenID.isEmpty || selectedDisplay != nil else { issue = "The selected display is disconnected. Choose a connected display or Automatic in Devices."; return }
+        let target = selectedDisplay ?? availableScreens.first(where: { CGDisplayIsBuiltin(UInt32(Self.id($0)) ?? 0) == 0 }) ?? NSScreen.main
+        guard let target else { issue = "No display is available for audience output."; return }
+        let window = CleanAudiencePanel(frame: target.frame)
         window.title = "RE:Light — Audience"; window.isReleasedWhenClosed = false; window.backgroundColor = .black
-        window.contentView = NSHostingView(rootView: AudienceView(studio: self))
-        if setup == .exhibition || onProjector, let target { window.setFrame(target.frame, display: true); window.level = .floating }
-        else { window.center() }
-        audience = window; window.orderFront(nil)
-        log("Audience output opened on \(target?.localizedName ?? "Mac display")")
+        window.contentView = CleanAudienceSurface(studio: self)
+        window.setFrame(target.frame, display: true)
+        audience = window; audienceDisplayID = Self.id(target)
+        audienceCloseObserver = NotificationCenter.default.addObserver(forName: NSWindow.willCloseNotification, object: window, queue: .main) { [weak self, weak window] _ in
+            Task { @MainActor in if let self, self.audience === window { self.closeAudience() } }
+        }
+        audienceExitMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
+            if Self.isAudienceExitEvent(event) {
+                Task { @MainActor in self?.closeAudience() }; return nil
+            }
+            if Self.isAudienceConfirmEvent(event) {
+                Task { @MainActor in if let self, !self.locked { self.confirmPicture() } }; return nil
+            }
+            return event
+        }
+        guard refreshAwakeProtection() else { return }
+        window.orderFrontRegardless()
+        log("Audience output opened on \(target.localizedName)")
     }
     var canConfirmPicture: Bool { audience?.isVisible == true && identifyingDisplay }
+    func prepareOperatorModal() -> () -> Void {
+        guard let window = audience, let operatorScreen = NSApp.keyWindow?.screen ?? NSScreen.main, window.screen == operatorScreen else { return {} }
+        let previous = window.level
+        window.level = .normal
+        (window.contentView as? CleanAudienceSurface)?.restoreCursor()
+        return { [weak self, weak window] in
+            guard let self, let window, self.audience === window else { return }
+            window.level = previous
+            (window.contentView as? CleanAudienceSurface)?.restoreMediaCursorIfInside()
+        }
+    }
+    nonisolated static func isAudienceExitEvent(_ event: NSEvent) -> Bool {
+        event.keyCode == 53 && event.modifierFlags.intersection([.command, .option, .control, .shift]) == [.command]
+    }
+    nonisolated static func isAudienceConfirmEvent(_ event: NSEvent) -> Bool {
+        event.keyCode == 36 && event.modifierFlags.intersection([.command, .option, .control, .shift]) == [.command, .shift]
+    }
     func confirmPicture() {
         guard canConfirmPicture else { note = "Open audience output before confirming the picture"; return }
-        projectorPassed = true; note = "Display picture confirmed"; log(note)
+        projectorPassed = true; identifyingDisplay = false; note = "Display picture confirmed"; log(note)
     }
-    func closeAudience() { audience?.close(); audience = nil; projectorPassed = false; identifyingDisplay = false }
+    func closeAudience() {
+        if let audienceCloseObserver { NotificationCenter.default.removeObserver(audienceCloseObserver); self.audienceCloseObserver = nil }
+        if let audienceExitMonitor { NSEvent.removeMonitor(audienceExitMonitor); self.audienceExitMonitor = nil }
+        (audience?.contentView as? CleanAudienceSurface)?.restoreCursor()
+        audience?.close(); audience = nil; audienceDisplayID = nil; projectorPassed = false; identifyingDisplay = false
+        refreshAwakeProtection()
+    }
     var supportText: String {
         let checks = project.scenes.map { "\($0.name): \(mediaChecks[$0.id]?.detail ?? "Not checked")" }.joined(separator: "\n")
         let eventsText = events.prefix(35).map { "\($0.time.formatted(date: .omitted, time: .standard))  \($0.text)" }.joined(separator: "\n")
@@ -1084,5 +1169,5 @@ private struct MediaIdentity: Equatable {
         let text = supportText
         do { try text.write(to: url, atomically: true, encoding: .utf8); note = "Support report saved locally. No audio included." } catch { issue = error.localizedDescription }
     }
-    func shutdown() { if let domain = ephemeralPreferenceDomain { preferences.removePersistentDomain(forName: domain) }; deviceRefreshTask?.cancel(); validationTask?.cancel(); mediaValidationToken = UUID(); stopNarrator(); audio.stopAll(); player.pause(); hardware.shutdown(); timer?.invalidate(); topologyTimer?.invalidate() }
+    func shutdown() { shuttingDown = true; if let domain = ephemeralPreferenceDomain { preferences.removePersistentDomain(forName: domain) }; deviceRefreshTask?.cancel(); validationTask?.cancel(); mediaValidationToken = UUID(); stopNarrator(); closeAudience(); keepAwake.stop(); if let screenChangeObserver { NotificationCenter.default.removeObserver(screenChangeObserver); self.screenChangeObserver = nil }; audio.stopAll(); player.pause(); hardware.shutdown(); timer?.invalidate(); topologyTimer?.invalidate() }
 }

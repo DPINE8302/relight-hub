@@ -1,4 +1,4 @@
-# RE:Light Native for Mac 2.3.1
+# RE:Light Native for Mac 2.3.2
 
 Download, unzip, open **RELight Native.app**, then press **Start Exhibition**. Film 02, the selected Ainsley narration, recording rules and dream effects are included. No media import, project selection, server or internet connection is needed to play.
 
@@ -36,6 +36,14 @@ The same gain is used across repeats and pause/resume, preserving dynamics. Sile
 - **Play Preview** starts at the playhead and skips recording screens. It never records the microphone.
 - Drag the timeline, step one frame or five seconds, use **Recording point** / **Dream voice**, or enter a source timecode and press **Go**.
 - Run and Edit scroll so all controls remain reachable on smaller Mac displays.
+
+## Clean projector output and keeping awake
+
+The audience screen shows the film and authored recording instructions. On a single or mirrored display, audience output is also fullscreen; use ⌘Escape to return to the Mac controls. It has no app toolbar, title bar, rehearsal badge or diagnostic text. A full-frame nonactivating panel sits above the Mac menu bar and Dock, stays on its assigned display across Spaces and app switching, and tracks display resolution changes. Aspect-fit preserves the whole film without cropping. The cursor is transparent over audience content and restores on exit/close. **⌘Escape** closes audience output; the operator keeps normal Mac controls. Use an extended display for independent operator and audience screens.
+
+Normal Audience opens clean. **Devices → Check audience output** explicitly shows a framing check; **Picture is correct** removes that check overlay. With Automatic display selected, a connected external display is preferred. A disconnected assigned display reports an error instead of silently selecting another one.
+
+While the show, preview, recording, pause or an open audience window is active, an app-owned display-sleep assertion and activity keep the Mac awake. The guard is released when the session/output closes and on quit. It does not change global power preferences or override manual sleep, closing the lid, shutdown or loss of power. Keep the Mac plugged in with its lid open.
 
 ## Devices and projectors
 

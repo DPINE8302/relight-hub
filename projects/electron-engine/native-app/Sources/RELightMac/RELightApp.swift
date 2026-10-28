@@ -6,6 +6,8 @@ import SwiftUI
     var studio: Studio?
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         if studio?.dirty == true {
+            let restorePresentation = studio?.prepareOperatorModal()
+            defer { restorePresentation?() }
             let alert = NSAlert(); alert.messageText = "Save project changes before quitting?"; alert.addButton(withTitle: "Save"); alert.addButton(withTitle: "Cancel"); alert.addButton(withTitle: "Discard Changes")
             switch alert.runModal() {
             case .alertFirstButtonReturn:
@@ -47,7 +49,7 @@ import SwiftUI
                     Divider(); Button("Record") { studio.recordAtGate() }.disabled(studio.state != .gate)
                     Button("Continue without recording") { studio.declineAtGate() }.disabled(studio.state != .gate && studio.state != .countdown)
                     Toggle("Mute Narrator", isOn: Binding(get: { studio.narratorMuted }, set: { studio.setNarratorMuted($0) }))
-                    Divider(); Button("Open Audience Output") { studio.openAudience() }; Button("Devices…") { studio.showDevices = true }
+                    Divider(); Button("Open Audience Output") { studio.openAudience() }; Button("Close Audience Output") { studio.closeAudience() }.keyboardShortcut(.escape, modifiers: .command); Button("Devices…") { studio.showDevices = true }
                 }
                 CommandGroup(replacing: .help) { Button("RE:Light Help & Troubleshooting") { studio.showHelp = true } }
             }

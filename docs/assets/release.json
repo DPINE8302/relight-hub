@@ -1,8 +1,8 @@
 {
-  "version": "2.3.1",
-  "bytes": 471302784,
+  "version": "2.3.2",
+  "bytes": 471320380,
   "megabytes": 471.3,
-  "sha256": "8fe52b6c19e677443fabc17284cea3f436cc0f6c59cb6f592280ede9e669e0cd",
+  "sha256": "b90952231be1d88e632554be2a39a2eacff18321843812bb481dd465e3df36b9",
   "windows": {
     "version": "2.2.0-alpha.1",
     "tag": "windows-v2.2.0-alpha.1",
@@ -21,10 +21,10 @@
       }
     }
   },
-  "build": "13",
-  "file": "RELight-Native-2.3.1-Mac.zip",
-  "tag": "mac-v2.3.1",
-  "url": "https://github.com/DPINE8302/relight-hub/releases/download/mac-v2.3.1/RELight-Native-2.3.1-Mac.zip",
+  "build": "14",
+  "file": "RELight-Native-2.3.2-Mac.zip",
+  "tag": "mac-v2.3.2",
+  "url": "https://github.com/DPINE8302/relight-hub/releases/download/mac-v2.3.2/RELight-Native-2.3.2-Mac.zip",
   "includedExperience": {
     "schemaVersion": 1,
     "id": "experience-348aae01c330bf1fc7b17569",

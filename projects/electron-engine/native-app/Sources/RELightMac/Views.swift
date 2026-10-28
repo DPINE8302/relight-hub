@@ -23,16 +23,16 @@ struct AudienceView: View {
             Color.black
             if !studio.isBlack && (isPreview || ![.idle, .finished, .preparing].contains(studio.state)) {
                 if studio.hasVideo { PlayerSurface(player: studio.player) }
-                else { VStack(spacing: 14) { Text(studio.scene.thai).font(.system(size: 44, weight: .medium)); Text("SCENE FILM NOT SUPPLIED").font(.system(size: 12, weight: .semibold)).tracking(2).foregroundStyle(.gray) }.foregroundStyle(.white) }
+                else if isPreview { VStack(spacing: 14) { Text(studio.scene.thai).font(.system(size: 44, weight: .medium)); Text("SCENE FILM NOT SUPPLIED").font(.system(size: 12, weight: .semibold)).tracking(2).foregroundStyle(.gray) }.foregroundStyle(.white) }
             }
             if !isPreview && studio.identifyingDisplay {
-                VStack(spacing: 20) { Image(systemName: "videoprojector").font(.system(size: 52)); Text("RE:Light").font(.system(size: 48, weight: .semibold)); Text("DISPLAY CHECK · \(studio.externalScreen?.localizedName ?? "Mac display")").font(.system(size: 16, weight: .medium)); Text("Confirm picture, framing, and placement in Devices.").font(.system(size: 18)) }.foregroundStyle(.white)
+                VStack(spacing: 20) { Image(systemName: "videoprojector").font(.system(size: 52)); Text("RE:Light").font(.system(size: 48, weight: .semibold)); Text("DISPLAY CHECK · \(studio.externalScreen?.localizedName ?? "Mac display")").font(.system(size: 16, weight: .medium)); Text("Confirm picture, framing, and placement in Devices.").font(.system(size: 18)); Text("⌘⇧Return confirms the picture · ⌘Escape closes output").font(.system(size: 15)) }.foregroundStyle(.white)
                 Rectangle().stroke(.white, lineWidth: 3).padding(24)
             }
             if studio.state == .gate || studio.state == .countdown || studio.state == .recording && studio.scene.capture?.trigger == .gate {
                 DreamCaptureScreen(studio: studio)
             }
-            if studio.setup == .mac && !studio.isBlack {
+            if isPreview && studio.setup == .mac && !studio.isBlack {
                 VStack { HStack { Label("REHEARSAL\(studio.scene.draft ? " · DRAFT" : "")", systemImage: "circle.dashed").font(.system(size: 11, weight: .semibold)).padding(10).background(.black.opacity(0.7), in: Capsule()); Spacer() }; Spacer() }.padding(16).foregroundStyle(.white.opacity(0.8))
             }
         }.ignoresSafeArea().accessibilityElement(children: .contain).accessibilityLabel("Audience output: \(studio.scene.name)")
@@ -442,8 +442,8 @@ struct DevicesView: View {
                     GroupBox {
                         VStack(alignment: .leading, spacing: 12) {
                             HStack { Label("Display / projector", systemImage: "videoprojector").font(.headline); Spacer(); status(studio.projectorPassed ? "Confirmed" : "Not confirmed", passed: studio.projectorPassed) }
-                            Picker("Display", selection: $studio.screenID) { Text("Mac display").tag(""); ForEach(studio.screens, id: \.self) { Text($0.localizedName).tag(Studio.id($0)) } }.disabled(studio.locked).onChange(of: studio.screenID) { _, _ in studio.deviceChanged(); studio.closeAudience() }
-                            HStack { Button("Open audience output") { studio.openAudience() }; Button("Picture is correct") { studio.confirmPicture() }.disabled(studio.locked || !studio.canConfirmPicture) }
+                            Picker("Display", selection: $studio.screenID) { Text("Automatic · external display if connected").tag(""); ForEach(studio.screens, id: \.self) { Text($0.localizedName).tag(Studio.id($0)) } }.disabled(studio.locked).onChange(of: studio.screenID) { _, _ in studio.deviceChanged(); studio.closeAudience() }
+                            HStack { Button("Check audience output") { studio.openAudience(identify: true) }.disabled(studio.locked); Button("Picture is correct") { studio.confirmPicture() }.disabled(studio.locked || !studio.canConfirmPicture); Button("Close output") { studio.closeAudience() } }
                             Text("Use an extended display for exhibition. Confirm the actual picture, aspect ratio, and physical placement.").font(.caption).foregroundStyle(.secondary)
                         }.padding(10)
                     }

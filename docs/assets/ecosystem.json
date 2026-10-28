@@ -41,13 +41,13 @@
   ],
   "native": {
     "mac": {
-      "publishedVersion": "2.3.1",
-      "localReferenceVersion": "2.3.1 build 13",
+      "publishedVersion": "2.3.2",
+      "localReferenceVersion": "2.3.2 build 14",
       "platform": "Apple silicon · macOS 14+",
-      "url": "https://github.com/DPINE8302/relight-hub/releases/download/mac-v2.3.1/RELight-Native-2.3.1-Mac.zip",
-      "release": "https://github.com/DPINE8302/relight-hub/releases/tag/mac-v2.3.1",
+      "url": "https://github.com/DPINE8302/relight-hub/releases/download/mac-v2.3.2/RELight-Native-2.3.2-Mac.zip",
+      "release": "https://github.com/DPINE8302/relight-hub/releases/tag/mac-v2.3.2",
       "format": "zip",
-      "includedExperience": "Film 02 · Ainsley · dream boost up to 400×"
+      "includedExperience": "Film 02 · Ainsley · 400× dream boost · clean projector output · awake protection"
     },
     "windows": {
       "version": "2.2.0-alpha.1",
