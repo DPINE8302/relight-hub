@@ -18,7 +18,7 @@ using FontWeight = Windows.UI.Text.FontWeight;
 
 namespace RELight.App;
 
-public sealed class MainWindow
+public sealed partial class MainWindow
 {
     private readonly Window _window;
     private readonly WinUIShowHost _host;
@@ -49,6 +49,8 @@ public sealed class MainWindow
     private readonly Button _recordButton;
     private readonly Button _continueButton;
     private readonly Button _finishButton;
+    private readonly Button _sceneSettingsButton;
+    private readonly Button _voiceSettingsButton;
     private readonly Button _addCueButton;
     private readonly Button _removeCueButton;
     private readonly Button _undoButton;
@@ -256,6 +258,8 @@ public sealed class MainWindow
         _recordButton = MakeButton("Record", Record_Click);
         _continueButton = MakeButton("Continue without voice", ContinueWithoutVoice_Click);
         _finishButton = MakeButton("Stop & continue", FinishRecording_Click);
+        _sceneSettingsButton = MakeButton("Scene settings", EditScene_Click);
+        _voiceSettingsButton = MakeButton("Edit voice cue", EditVoice_Click);
         _addCueButton = MakeButton("Add cue", AddCue_Click);
         _removeCueButton = MakeButton("Remove", RemoveCue_Click);
         _undoButton = MakeButton("Undo", (_, _) => { _studio.Undo(); UpdateUi(); });
@@ -487,6 +491,7 @@ public sealed class MainWindow
         controlRow.Children.Add(_assignChoiceButton);
         content.Children.Add(controlRow);
         content.Children.Add(_refreshControlsButton);
+        content.Children.Add(_sceneSettingsButton);
         content.Children.Add(SectionHeader("Voice cues"));
         var editRow = new StackPanel
         {
@@ -497,6 +502,7 @@ public sealed class MainWindow
         editRow.Children.Add(_removeCueButton);
         content.Children.Add(editRow);
         content.Children.Add(_cueCombo);
+        content.Children.Add(_voiceSettingsButton);
         var undoRow = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -788,6 +794,8 @@ public sealed class MainWindow
             _saveButton.IsEnabled = !_studio.Locked && _studio.Dirty;
             _exportButton.IsEnabled = !_studio.Locked;
             _devicesButton.IsEnabled = !_studio.Locked;
+            _sceneSettingsButton.IsEnabled = !_studio.Locked;
+            _voiceSettingsButton.IsEnabled = !_studio.Locked && _studio.SelectedCue is not null;
             _addCueButton.IsEnabled = !_studio.Locked;
             _removeCueButton.IsEnabled = !_studio.Locked && _studio.SelectedCueId is not null;
             _undoButton.IsEnabled = !_studio.Locked;
@@ -1238,7 +1246,7 @@ public sealed class MainWindow
     {
         _window.DispatcherQueue.TryEnqueue(() =>
         {
-            if (_closed || _studio.Setup != ShowSetup.Exhibition)
+            if (_closed || _studio.Setup != ShowSetup.Exhibition || _studio.Project.RequiresPhysicalControls == false)
             {
                 return;
             }
@@ -1262,7 +1270,7 @@ public sealed class MainWindow
                 return;
             }
 
-            if (_studio.Setup == ShowSetup.Exhibition && _studio.Locked)
+            if (_studio.Setup == ShowSetup.Exhibition && _studio.Locked && _studio.Project.RequiresPhysicalControls != false)
             {
                 foreach (var role in new[] { ControlRole.Record, ControlRole.Choice })
                 {
@@ -1331,7 +1339,7 @@ public sealed class MainWindow
                 : "Assign Continue";
         _controlStatus.Text = string.Join("\n", lines);
 
-        if (_studio.Setup == ShowSetup.Exhibition && _studio.Locked)
+        if (_studio.Setup == ShowSetup.Exhibition && _studio.Locked && _studio.Project.RequiresPhysicalControls != false)
         {
             foreach (var role in new[] { ControlRole.Record, ControlRole.Choice })
             {
@@ -1801,6 +1809,11 @@ public sealed class MainWindow
         }
 
         WindowsPower.AddExhibitionBlocker(issues);
+        if (_studio.Project.RequiresPhysicalControls == false)
+        {
+            return issues;
+        }
+
         var controlStatus = _controls.Status;
         if (!controlStatus.Devices.Any(device => device.Assignable))
         {
