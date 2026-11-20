@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using RELight.Core;
+using RELight.Show;
 using RELight.Windows;
 using Windows.Graphics;
 using Windows.Media.Playback;
@@ -132,10 +133,12 @@ public sealed class AudienceWindow
         _window.Activate();
     }
 
-    public void Update(Scene scene, bool hasVideo, bool black, bool gate, bool recording, bool rehearsal)
+    public void Update(Scene scene, bool hasVideo, bool black, ShowState state, int countdown, bool rehearsal)
     {
+        var recording = state == ShowState.Recording;
+        var gate = state is ShowState.Gate or ShowState.Countdown;
         var recordingScreen = recording && scene.Capture?.Trigger == CaptureTrigger.Gate;
-        var signature = $"{scene.Id}|{scene.Draft}|{hasVideo}|{black}|{gate}|{recording}|{rehearsal}";
+        var signature = $"{scene.Id}|{scene.Draft}|{hasVideo}|{black}|{state}|{countdown}|{rehearsal}";
         if (_signature == signature)
         {
             return;
@@ -154,9 +157,13 @@ public sealed class AudienceWindow
         };
 
         var captureScreen = gate || recordingScreen;
-        _gate.Text = recordingScreen
-            ? "RECORDING\nVoice is being captured in memory only."
-            : "RECORDING IS OPTIONAL\nAsk the participant to consent or continue without voice.";
+        _gate.Text = state switch
+        {
+            ShowState.Recording => "กำลังบันทึกเสียงความฝันของคุณ\nRECORDING",
+            ShowState.Countdown when countdown > 0 => $"เริ่มบันทึกใน {countdown}\nRECORDING IN {countdown}",
+            ShowState.Countdown => "เตรียมเล่าความฝันของคุณ\nGET READY",
+            _ => "กดปุ่มบันทึกเสียงสีแดง แล้วบอกความฝันของคุณ\nPRESS RECORD TO SHARE YOUR DREAM"
+        };
         _gate.Visibility = captureScreen ? Visibility.Visible : Visibility.Collapsed;
         if (captureScreen)
         {

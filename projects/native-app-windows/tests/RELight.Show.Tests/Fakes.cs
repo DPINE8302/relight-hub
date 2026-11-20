@@ -202,6 +202,8 @@ internal sealed class FakeAudioHost : IShowAudioHost
         Calls.Add($"capture:{seconds}");
     }
 
+    public double FinishedBoostLimit { get; private set; }
+
     public void FinishCapture(double boostLimit)
     {
         if (FailFinish)
@@ -209,6 +211,7 @@ internal sealed class FakeAudioHost : IShowAudioHost
             throw new ShowHostException("Recording was silent.");
         }
 
+        FinishedBoostLimit = boostLimit;
         TakeSeconds = FinishedTakeSeconds;
         CaptureFinished = true;
         IsCapturing = false;

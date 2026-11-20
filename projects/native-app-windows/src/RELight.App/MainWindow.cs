@@ -513,6 +513,7 @@ public sealed partial class MainWindow
         content.Children.Add(undoRow);
         content.Children.Add(SectionHeader("Event log"));
         content.Children.Add(_eventList);
+        content.Children.Add(MakeButton("Save support report", SaveSupportReport_Click));
 
         return new Border
         {
@@ -963,17 +964,18 @@ public sealed partial class MainWindow
             }
         }
 
+        var mediaChecks = _studio.MediaChecks;
         var mediaSignature = string.Join(
             "|",
             _studio.Project.Scenes.Select(scene =>
-                $"{scene.Id}:{(_studio.MediaChecks.TryGetValue(scene.Id, out var check) ? check.Valid + check.Detail : "unchecked")}"));
+                $"{scene.Id}:{(mediaChecks.TryGetValue(scene.Id, out var check) ? check.Valid + check.Detail : "unchecked")}"));
         if (mediaSignature != _mediaSignature)
         {
             _mediaSignature = mediaSignature;
             _mediaList.Children.Clear();
             foreach (var scene in _studio.Project.Scenes)
             {
-                var hasCheck = _studio.MediaChecks.TryGetValue(scene.Id, out var check);
+                var hasCheck = mediaChecks.TryGetValue(scene.Id, out var check);
                 var detail = hasCheck ? check.Detail : "Not checked yet";
                 var color = hasCheck && check.Valid ? Rgb(0x6AD6A0) : Rgb(0xFFB27A);
                 var line = TextBlock($"{scene.Name}: {detail}", 11, FontWeights.Normal, color);
@@ -1026,8 +1028,8 @@ public sealed partial class MainWindow
             scene,
             hasVideo,
             black,
-            state is ShowState.Gate or ShowState.Countdown,
-            state == ShowState.Recording,
+            state,
+            _studio.CountdownRemaining,
             _studio.Setup == ShowSetup.Rehearsal);
     }
 

@@ -432,6 +432,19 @@ public sealed class ShowRunner
 
         if (_state == ShowState.Countdown)
         {
+            if (_narratorStarted is double narratorStart &&
+                now - narratorStart > _narratorDuration + 5 &&
+                _host.Audio.NarratorPlaying)
+            {
+                _host.Audio.StopNarrator();
+                _narratorStarted = null;
+                _state = ShowState.Gate;
+                _issue = "Narrator playback timed out. Press Record to start manually, or skip recording.";
+                Log(_issue);
+                Notify();
+                return;
+            }
+
             var finished = _narratorStarted is double started
                 ? now - started >= _narratorDuration &&
                   !_host.Audio.NarratorPlaying

@@ -56,6 +56,22 @@ public sealed class StudioViewModelTests : IDisposable
     }
 
     [Fact]
+    public async Task MediaEditsInvalidateChecksUntilTheCurrentSourceIsValidated()
+    {
+        var (studio, _, _) = CreateStudio(SingleSceneProject());
+        await studio.ValidateMediaAsync();
+        var sceneId = studio.Scene.Id;
+        Assert.Contains(sceneId, studio.MediaChecks.Keys);
+
+        studio.Mutate(project => project.Scenes[0].Media = "media/replacement.mp4");
+        Assert.DoesNotContain(sceneId, studio.MediaChecks.Keys);
+        Assert.False(studio.HasVideo(studio.Scene));
+
+        studio.Undo();
+        Assert.Contains(sceneId, studio.MediaChecks.Keys);
+    }
+
+    [Fact]
     public async Task LoadSaveAndExportAreRefusedWhileARunIsActive()
     {
         var project = SingleSceneProject();

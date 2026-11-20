@@ -29,6 +29,29 @@ public sealed class ShowRunnerTests
     }
 
     [Fact]
+    public void AStalledNarratorReturnsToTheManualRecordingGate()
+    {
+        var project = ProjectJson.Deserialize(
+            File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "fixtures/documents/film02.relight")));
+        project.Scenes[0].Media = null;
+        project.Scenes[0].Capture!.GateFrame = 0;
+        var (runner, host, clock) = CreateRunner(project);
+
+        runner.BeginRun(true);
+        runner.Tick();
+        Assert.Equal(ShowState.Countdown, runner.State);
+        clock.Now = 40;
+        runner.Tick();
+        Assert.Equal(ShowState.Gate, runner.State);
+        Assert.False(host.Audio.IsCapturing);
+
+        runner.RecordAtGate();
+        runner.FinishRecording();
+        Assert.Equal(400, host.Audio.FinishedBoostLimit);
+        Assert.Equal(project.Rate.Timecode(project.TimecodeStartFrame!.Value), runner.Timecode);
+    }
+
+    [Fact]
     public void RehearsalUsesGateAndDeclineThenCompletes()
     {
         var project = Project.CreateStarter();

@@ -1,4 +1,6 @@
 using System.Globalization;
+using System.Runtime.InteropServices;
+using System.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using RELight.Core;
@@ -234,10 +236,12 @@ public sealed partial class MainWindow
     {
         var field = AddEditorText(panel, label + " (relative to project folder)", value);
         var root = _studio.RootDirectory;
+        var error = new TextBlock { TextWrapping = TextWrapping.Wrap, Visibility = Visibility.Collapsed };
         panel.Children.Add(MakeButton("Choose " + label.ToLowerInvariant(), async (_, _) =>
         {
             try
             {
+                error.Visibility = Visibility.Collapsed;
                 var picker = new FileOpenPicker();
                 foreach (var extension in extensions)
                 {
@@ -254,18 +258,72 @@ public sealed partial class MainWindow
                 var relative = Path.GetRelativePath(root, file.Path).Replace('\\', '/');
                 if (_studio.Project.AssetPath(relative, root) is null)
                 {
-                    _studio.ReportIssue("Move the file into the project folder, then choose it again.");
-                    return;
+                    throw new InvalidOperationException("Choose a file inside the project folder.");
                 }
 
                 field.Text = relative;
             }
             catch (Exception exception)
             {
-                _studio.ReportIssue(exception.Message);
+                error.Text = exception.Message;
+                error.Visibility = Visibility.Visible;
             }
         }));
+        panel.Children.Add(error);
         return field;
+    }
+
+    private async void SaveSupportReport_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var picker = new FileSavePicker { SuggestedFileName = "RE-light Support Report" };
+            picker.FileTypeChoices.Add("Text report", new[] { ".txt" });
+            InitializePicker(picker);
+            var file = await picker.PickSaveFileAsync();
+            if (file is null)
+            {
+                return;
+            }
+
+            var report = new StringBuilder()
+                .AppendLine("RE:Light Native — Windows support report")
+                .AppendLine($"Collected {DateTimeOffset.Now:yyyy-MM-dd HH:mm:ss zzz}")
+                .AppendLine($"App {typeof(MainWindow).Assembly.GetName().Version}")
+                .AppendLine($"Windows {Environment.OSVersion.Version} / {RuntimeInformation.ProcessArchitecture}")
+                .AppendLine($"Setup: {_studio.Setup} · {_studio.State} · {_studio.Timecode}")
+                .AppendLine($"Project: {_studio.Project.Title}")
+                .AppendLine($"Project scenes: {_studio.Project.Scenes.Count}")
+                .AppendLine($"USB controls required: {_studio.Project.RequiresPhysicalControls ?? true}")
+                .AppendLine($"Connected displays: {_displays.Count}")
+                .AppendLine($"Microphones: {_availableInputs.Count} · Speakers: {_availableOutputs.Count}")
+                .AppendLine()
+                .AppendLine("Readiness");
+            foreach (var issue in _studio.Blockers)
+            {
+                report.AppendLine(issue);
+            }
+
+            report.AppendLine().AppendLine("Media");
+            var media = _studio.MediaChecks;
+            foreach (var scene in _studio.Project.Scenes)
+            {
+                report.AppendLine($"{scene.Name}: {(media.TryGetValue(scene.Id, out var check) ? check.Detail : "Unchecked")}");
+            }
+
+            report.AppendLine().AppendLine("Recent events");
+            foreach (var item in _studio.Events.Take(30))
+            {
+                report.AppendLine($"{item.At:HH:mm:ss}  {item.Text}");
+            }
+
+            await File.WriteAllTextAsync(file.Path, report.ToString());
+            _studio.Report("Support report saved.");
+        }
+        catch (Exception exception)
+        {
+            _studio.ReportIssue(exception.Message);
+        }
     }
 
     private async Task ValidateEditedMediaAsync()
