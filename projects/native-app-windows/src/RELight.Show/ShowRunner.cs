@@ -597,7 +597,18 @@ public sealed class ShowRunner
 
         var project = ActiveProject;
         var scene = Scene;
-        var nextFrame = Math.Min(scene.Frames, project.Rate.Frame(ScenePosition));
+        var position = ScenePosition;
+        var nextFrame = Math.Min(scene.Frames, project.Rate.Frame(position));
+        if (_sceneHasMedia && _host.Media.HasEnded)
+        {
+            if (position * project.Rate.Fps + 1.1 < scene.Frames)
+            {
+                Fail($"Film ended before the authored scene boundary: {scene.Name}");
+                return;
+            }
+
+            nextFrame = scene.Frames;
+        }
         if (_frame != nextFrame)
         {
             _frame = nextFrame;
@@ -1132,6 +1143,28 @@ public sealed class ShowRunner
             _issue = exception.Message;
             Notify();
         }
+    }
+
+    public void SeekTimecode(string timecode)
+    {
+        if (Locked)
+        {
+            return;
+        }
+
+        var project = ActiveProject;
+        if (!project.Rate.TryParseTimecode(timecode, out var position))
+        {
+            throw new FormatException("Enter a film timecode as HH:MM:SS:FF.");
+        }
+
+        var frame = position - (project.TimecodeStartFrame ?? 0) - project.GlobalFrame(_selectedScene, 0);
+        if (frame < 0 || frame >= Scene.Frames)
+        {
+            throw new ArgumentOutOfRangeException(nameof(timecode), "That timecode is outside the selected scene.");
+        }
+
+        Seek(frame);
     }
 
     public void Seek(long value)

@@ -291,7 +291,7 @@ public sealed partial class MainWindow
                 UpdateUi();
             }
         });
-        _seekButton = MakeButton("Go to frame", SeekScene_Click);
+        _seekButton = MakeButton("Go to timecode", SeekScene_Click);
         _addCueButton = MakeButton("Add cue", AddCue_Click);
         _removeCueButton = MakeButton("Remove", RemoveCue_Click);
         _undoButton = MakeButton("Undo", (_, _) => { _studio.Undo(); UpdateUi(); });
@@ -524,6 +524,7 @@ public sealed partial class MainWindow
         controlRow.Children.Add(_assignChoiceButton);
         content.Children.Add(controlRow);
         content.Children.Add(_refreshControlsButton);
+        content.Children.Add(MakeButton("Project settings", EditProject_Click));
         content.Children.Add(_sceneSettingsButton);
         content.Children.Add(MakeButton("Import media", ImportMedia_Click));
         content.Children.Add(_seekButton);

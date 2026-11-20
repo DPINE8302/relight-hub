@@ -28,6 +28,7 @@ public sealed class WinUIShowHost : IShowHost, IShowMediaHost, IDisposable
     private string? _error;
     private long _generation;
     private long _pendingInFrame;
+    private double? _endedPosition;
     private MediaSource? _previewSource;
     private MediaSource? _audienceSource;
     private bool _previewOpened;
@@ -56,6 +57,7 @@ public sealed class WinUIShowHost : IShowHost, IShowMediaHost, IDisposable
 
         PreviewPlayer.MediaOpened += OnMediaOpened;
         PreviewPlayer.MediaFailed += OnMediaFailed;
+        PreviewPlayer.MediaEnded += OnMediaEnded;
         AudiencePlayer.MediaOpened += OnMediaOpened;
         AudiencePlayer.MediaFailed += OnMediaFailed;
     }
@@ -108,7 +110,7 @@ public sealed class WinUIShowHost : IShowHost, IShowMediaHost, IDisposable
         {
             try
             {
-                return PreviewPlayer.PlaybackSession.Position.TotalSeconds;
+                return _endedPosition ?? PreviewPlayer.PlaybackSession.Position.TotalSeconds;
             }
             catch (Exception)
             {
@@ -116,6 +118,8 @@ public sealed class WinUIShowHost : IShowHost, IShowMediaHost, IDisposable
             }
         }
     }
+
+    public bool HasEnded => _endedPosition.HasValue;
 
     public bool Black => _black;
 
@@ -151,6 +155,7 @@ public sealed class WinUIShowHost : IShowHost, IShowMediaHost, IDisposable
             return;
         }
 
+        _endedPosition = null;
         var generation = Interlocked.Increment(ref _generation);
         MediaSource preview;
         MediaSource audience;
@@ -232,6 +237,7 @@ public sealed class WinUIShowHost : IShowHost, IShowMediaHost, IDisposable
 
     public void Seek(Scene scene, long localFrame)
     {
+        _endedPosition = null;
         try
         {
             var position = TimeSpan.FromSeconds(_project().Rate.Seconds(scene.MediaInFrame + localFrame));
@@ -273,6 +279,7 @@ public sealed class WinUIShowHost : IShowHost, IShowMediaHost, IDisposable
 
     public void Release()
     {
+        _endedPosition = null;
         Interlocked.Increment(ref _generation);
         Pause();
         try
@@ -384,6 +391,7 @@ public sealed class WinUIShowHost : IShowHost, IShowMediaHost, IDisposable
         _disposed = true;
         PreviewPlayer.MediaOpened -= OnMediaOpened;
         PreviewPlayer.MediaFailed -= OnMediaFailed;
+        PreviewPlayer.MediaEnded -= OnMediaEnded;
         AudiencePlayer.MediaOpened -= OnMediaOpened;
         AudiencePlayer.MediaFailed -= OnMediaFailed;
         PreviewPlayer.Dispose();
@@ -457,6 +465,27 @@ public sealed class WinUIShowHost : IShowHost, IShowMediaHost, IDisposable
             {
                 SetFailed(exception.Message);
             }
+        }
+    }
+
+    private void OnMediaEnded(MediaPlayer sender, object args)
+    {
+        if (_dispatcher is not null && !_dispatcher.HasThreadAccess)
+        {
+            var generation = Volatile.Read(ref _generation);
+            _dispatcher.TryEnqueue(() =>
+            {
+                if (generation == Volatile.Read(ref _generation))
+                {
+                    OnMediaEnded(sender, args);
+                }
+            });
+            return;
+        }
+
+        if (!_disposed && Status == MediaStatus.Ready && IsExpectedSource(sender, _previewSource))
+        {
+            _endedPosition = sender.PlaybackSession.NaturalDuration.TotalSeconds;
         }
     }
 

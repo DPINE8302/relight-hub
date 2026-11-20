@@ -18,7 +18,11 @@ Source of truth: `projects/electron-engine/native-app`, documented release
 ## Operator tools
 
 - Scene settings edit the film, source frame, scene length, and visitor recording
-  setup. Put films and narrator files in the project folder before choosing them.
+  setup. Import media copies external films and narrator audio into the project.
+  Film replacement can keep the scene length or use the full clip while retaining
+  authored cue positions.
+- Preview film starts at the operator’s playhead and skips recording gates.
+  Project settings edit the mix, output timing, timecode, and ending blackout.
 - Voice cues support source trim, fades, repeat/fill, built-in and project
   presets, and per-effect automation. Record and play a test take from the
   operator window. Support reports can be saved to a text file.

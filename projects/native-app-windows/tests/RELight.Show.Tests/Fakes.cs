@@ -17,6 +17,8 @@ internal sealed class FakeMediaHost : IShowMediaHost
 
     public double PositionSeconds { get; set; }
 
+    public bool HasEnded { get; set; }
+
     public FrameRate Rate { get; set; } = new();
 
     public Scene? PreparedScene { get; private set; }

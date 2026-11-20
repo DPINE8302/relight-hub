@@ -45,6 +45,8 @@ public interface IShowMediaHost
     /// <summary>Absolute source position of the current item, in seconds.</summary>
     double PositionSeconds { get; }
 
+    bool HasEnded { get; }
+
     void Prepare(Scene scene, long localFrame = 0);
 
     void Play(double speed);

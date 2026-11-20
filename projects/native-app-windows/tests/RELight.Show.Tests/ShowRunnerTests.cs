@@ -7,6 +7,25 @@ namespace RELight.Show.Tests;
 public sealed class ShowRunnerTests
 {
     [Fact]
+    public void SeekTimecodeUsesTheProjectStartAndTheSelectedSceneOffset()
+    {
+        var project = Project.CreateStarter();
+        project.TimecodeStartFrame = 86_400;
+        var (runner, _, _) = CreateRunner(project);
+        runner.SelectScene(1);
+        var start = project.GlobalFrame(1, 0) + 86_400;
+        var requested = project.Rate.Timecode(start + 12);
+
+        runner.SeekTimecode(requested);
+
+        Assert.Equal(12, runner.Frame);
+        Assert.Equal(requested, runner.Timecode);
+        Assert.Throws<ArgumentOutOfRangeException>(() => runner.SeekTimecode("01:00:00:00"));
+        Assert.Throws<FormatException>(() => runner.SeekTimecode("01:00:00:24"));
+        Assert.Equal(12, runner.Frame);
+    }
+
+    [Fact]
     public void PreviewStartsAtPlayheadWithoutRecordingOrOpeningAudience()
     {
         var project = Project.CreateStarter();
@@ -30,13 +49,15 @@ public sealed class ShowRunnerTests
         runner.TogglePlayback();
         Assert.Equal(ShowState.Paused, runner.State);
         runner.TogglePlayback();
-        host.Media.Advance(scene.Frames / 24.0);
+        host.Media.PositionSeconds = (scene.MediaInFrame + scene.Frames - 1) / 24.0;
+        host.Media.HasEnded = true;
         runner.Tick();
         Assert.Equal(ShowState.Idle, runner.State);
         Assert.False(runner.PreviewingFilm);
         Assert.Equal(0, runner.SelectedScene);
         Assert.Equal(scene.Frames - 1, runner.Frame);
 
+        host.Media.HasEnded = false;
         runner.StartFilmPreview();
         runner.Tick();
         Assert.Equal(0, runner.Frame);

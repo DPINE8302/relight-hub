@@ -12,6 +12,42 @@ public sealed partial class MainWindow
 {
     private CancellationTokenSource? _mediaImportCancellation;
 
+    private async void EditProject_Click(object sender, RoutedEventArgs e)
+    {
+        if (_studio.Locked)
+        {
+            return;
+        }
+
+        var project = _studio.Project;
+        var panel = new StackPanel { Spacing = 10 };
+        var title = AddEditorText(panel, "Project name", project.Title);
+        var film = AddEditorNumber(panel, "Film volume (0–1)", project.FilmLevel);
+        var voice = AddEditorNumber(panel, "Visitor voice volume (0–1)", project.VoiceLevel);
+        var duck = AddEditorNumber(panel, "Film volume during voice (0–1)", project.DuckLevel);
+        var advance = AddEditorNumber(panel, "Voice advance (ms)", project.OutputOffsetMs);
+        var timecode = AddEditorText(panel, "Film starts at (HH:MM:SS:FF)", project.TimecodeStartFrame is long frame
+            ? project.Rate.Timecode(frame)
+            : "");
+        var black = AddEditorText(panel, "End on black at global frame (optional)",
+            project.BlackFromFrame?.ToString(CultureInfo.CurrentCulture));
+
+        await ShowEditorAsync("Project settings", panel, project, edited =>
+        {
+            edited.Title = title.Text.Trim();
+            edited.FilmLevel = ReadNumber(film);
+            edited.VoiceLevel = ReadNumber(voice);
+            edited.DuckLevel = ReadNumber(duck);
+            edited.OutputOffsetMs = ReadNumber(advance);
+            edited.BlackFromFrame = EmptyAsNull(black.Text) is { } text
+                ? long.TryParse(text, out var blackFrame) ? blackFrame : throw new FormatException("Enter a whole frame for the ending black.")
+                : null;
+            edited.TimecodeStartFrame = EmptyAsNull(timecode.Text) is { } start
+                ? project.Rate.TryParseTimecode(start, out var startFrame) ? startFrame : throw new FormatException("Enter a film timecode as HH:MM:SS:FF.")
+                : null;
+        });
+    }
+
     private async void EditScene_Click(object sender, RoutedEventArgs e)
     {
         if (_studio.Locked)
@@ -279,10 +315,12 @@ public sealed partial class MainWindow
         }
 
         var panel = new StackPanel { Spacing = 10 };
-        var frame = AddEditorNumber(panel, $"Scene frame (0–{_studio.Scene.Frames - 1})", _studio.Frame);
+        var project = _studio.Project;
+        var index = _studio.SelectedScene;
+        var timecode = AddEditorText(panel, "Timecode (HH:MM:SS:FF)", _studio.Timecode);
         var dialog = new ContentDialog
         {
-            Title = "Go to frame",
+            Title = "Go to timecode",
             Content = panel,
             PrimaryButtonText = "Go",
             CloseButtonText = "Cancel",
@@ -295,7 +333,12 @@ public sealed partial class MainWindow
 
         try
         {
-            _studio.Seek(ReadFrame(frame));
+            if (!ReferenceEquals(project, _studio.Project) || index != _studio.SelectedScene)
+            {
+                throw new InvalidOperationException("The scene changed. Open Go to timecode again.");
+            }
+
+            _studio.Runner.SeekTimecode(timecode.Text);
             UpdateUi();
         }
         catch (Exception exception)

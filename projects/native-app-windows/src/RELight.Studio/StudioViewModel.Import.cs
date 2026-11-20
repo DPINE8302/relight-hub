@@ -78,7 +78,7 @@ public sealed partial class StudioViewModel
                 var media = await Task.Run(() => IsoBmffProbe.Probe(checkPath), cancellationToken);
                 var clipFrames = media.DurationSeconds * candidate.Rate.Fps;
                 if (media.Video is not { Width: > 0, Height: > 0 } video ||
-                    Math.Abs(video.FrameRate - candidate.Rate.Fps) >= 0.05 ||
+                    !(Math.Abs(video.FrameRate - candidate.Rate.Fps) < 0.05) ||
                     !double.IsFinite(clipFrames) || clipFrames < 1 ||
                     (fitScene ? clipFrames > 1_000_000 : clipFrames + 1.1 < scene.Frames))
                 {
