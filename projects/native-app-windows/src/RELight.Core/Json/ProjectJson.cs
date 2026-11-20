@@ -59,6 +59,14 @@ public static class ProjectJson
         {
             properties.Add(("blackFromFrame", w => w.WriteNumber(blackFromFrame)));
         }
+        if (project.TimecodeStartFrame is long timecodeStartFrame)
+        {
+            properties.Add(("timecodeStartFrame", w => w.WriteNumber(timecodeStartFrame)));
+        }
+        if (project.RequiresPhysicalControls is bool requiresPhysicalControls)
+        {
+            properties.Add(("requiresPhysicalControls", w => w.WriteBoolean(requiresPhysicalControls)));
+        }
 
         WriteObject(writer, properties.ToArray());
     }
@@ -175,6 +183,10 @@ public static class ProjectJson
         {
             properties.Add(("loopToFill", w => w.WriteBoolean(loopToFill)));
         }
+        if (cue.GainBoost is double gainBoost)
+        {
+            properties.Add(("gainBoost", w => w.WriteNumber(gainBoost)));
+        }
 
         WriteObject(writer, properties.ToArray());
     }
@@ -219,6 +231,22 @@ public static class ProjectJson
         {
             properties.Add(("gateFrame", w => w.WriteNumber(gateFrame)));
         }
+        if (capture.StartMethod is CaptureStartMethod startMethod)
+        {
+            properties.Add(("startMethod", w => w.WriteString(CaptureNames.JsonName(startMethod))));
+        }
+        if (capture.CountdownSeconds is int countdownSeconds)
+        {
+            properties.Add(("countdownSeconds", w => w.WriteNumber(countdownSeconds)));
+        }
+        if (capture.Narrator is string narrator)
+        {
+            properties.Add(("narrator", w => w.WriteString(narrator)));
+        }
+        if (capture.NarratorMuted is bool narratorMuted)
+        {
+            properties.Add(("narratorMuted", w => w.WriteBoolean(narratorMuted)));
+        }
 
         WriteObject(writer, properties.ToArray());
     }
@@ -255,6 +283,8 @@ public static class ProjectJson
             OutputOffsetMs = RequireDouble(root, "outputOffsetMs"),
             EffectPresets = ReadEffectPresets(RequireObject(root, "effectPresets")),
             BlackFromFrame = OptionalInt64(root, "blackFromFrame"),
+            TimecodeStartFrame = OptionalInt64(root, "timecodeStartFrame"),
+            RequiresPhysicalControls = OptionalBool(root, "requiresPhysicalControls"),
             Scenes = ReadScenes(RequireArray(root, "scenes"))
         };
     }
@@ -345,6 +375,7 @@ public static class ProjectJson
         FadeInFrames = RequireInt64(element, "fadeInFrames"),
         FadeOutFrames = RequireInt64(element, "fadeOutFrames"),
         Bypass = RequireBool(element, "bypass"),
+        GainBoost = OptionalDouble(element, "gainBoost"),
         RepeatCount = OptionalInt64(element, "repeatCount"),
         LoopToFill = OptionalBool(element, "loopToFill"),
         Effects = ReadEffectSettings(RequireObject(element, "effects")),
@@ -388,8 +419,22 @@ public static class ProjectJson
             Trigger = trigger,
             StartFrame = RequireInt64(element, "startFrame"),
             DurationSeconds = RequireDouble(element, "durationSeconds"),
-            GateFrame = OptionalInt64(element, "gateFrame")
+            GateFrame = OptionalInt64(element, "gateFrame"),
+            CountdownSeconds = OptionalInt32(element, "countdownSeconds"),
+            Narrator = OptionalString(element, "narrator"),
+            NarratorMuted = OptionalBool(element, "narratorMuted")
         };
+
+        var startMethodText = OptionalString(element, "startMethod");
+        if (startMethodText is not null)
+        {
+            if (!CaptureNames.TryParse(startMethodText, out CaptureStartMethod startMethod))
+            {
+                throw new RelightJsonException($"Invalid capture start method '{startMethodText}'.");
+            }
+
+            capture.StartMethod = startMethod;
+        }
 
         var modeText = OptionalString(element, "mode");
         if (modeText is not null)
@@ -508,6 +553,21 @@ public static class ProjectJson
         }
 
         return Int64Value(value, name);
+    }
+
+    private static int? OptionalInt32(JsonElement parent, string name)
+    {
+        if (!parent.TryGetProperty(name, out var value) || value.ValueKind == JsonValueKind.Null)
+        {
+            return null;
+        }
+
+        if (value.ValueKind != JsonValueKind.Number || !value.TryGetInt32(out var result))
+        {
+            throw new RelightJsonException($"Property '{name}' must be a 32-bit integer.");
+        }
+
+        return result;
     }
 
     private static long Int64Value(JsonElement value, string name)

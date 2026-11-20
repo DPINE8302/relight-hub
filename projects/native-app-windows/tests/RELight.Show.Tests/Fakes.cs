@@ -17,6 +17,8 @@ internal sealed class FakeMediaHost : IShowMediaHost
 
     public double PositionSeconds { get; set; }
 
+    public bool HasEnded { get; set; }
+
     public FrameRate Rate { get; set; } = new();
 
     public Scene? PreparedScene { get; private set; }
@@ -34,7 +36,7 @@ internal sealed class FakeMediaHost : IShowMediaHost
     public bool HasPlayableMedia(Scene scene) =>
         PlayableScenes.Contains(scene.Id) || (AllPlayable && scene.Media is not null);
 
-    public void Prepare(Scene scene)
+    public void Prepare(Scene scene, long localFrame = 0)
     {
         PreparedScene = scene;
         Status = PrepareStatus;
@@ -42,7 +44,7 @@ internal sealed class FakeMediaHost : IShowMediaHost
         Calls.Add($"prepare:{scene.Name}");
         if (Status == MediaStatus.Ready)
         {
-            PositionSeconds = Rate.Seconds(scene.MediaInFrame);
+            PositionSeconds = Rate.Seconds(scene.MediaInFrame + localFrame);
         }
     }
 
@@ -202,13 +204,16 @@ internal sealed class FakeAudioHost : IShowAudioHost
         Calls.Add($"capture:{seconds}");
     }
 
-    public void FinishCapture()
+    public double FinishedBoostLimit { get; private set; }
+
+    public void FinishCapture(double boostLimit)
     {
         if (FailFinish)
         {
             throw new ShowHostException("Recording was silent.");
         }
 
+        FinishedBoostLimit = boostLimit;
         TakeSeconds = FinishedTakeSeconds;
         CaptureFinished = true;
         IsCapturing = false;
@@ -267,6 +272,27 @@ internal sealed class FakeAudioHost : IShowAudioHost
         MeterPeak = 0;
         Calls.Add("stop-all");
     }
+
+    public bool NarratorPlaying { get; private set; }
+    public double NarratorSeconds { get; set; } = 6.191;
+    public void ValidateNarrator(string absolutePath)
+    {
+        if (new FileInfo(absolutePath).Length == 0)
+        {
+            throw new ShowHostException("Narrator audio is empty.");
+        }
+    }
+
+    public void PlayNarrator(string absolutePath, bool muted)
+    {
+        NarratorPlaying = !muted;
+        Calls.Add($"narrator:{Path.GetFileName(absolutePath)}:{muted}");
+    }
+    public void StopNarrator()
+    {
+        NarratorPlaying = false;
+        Calls.Add("stop-narrator");
+    }
 }
 
 internal sealed class FakeShowHost : IShowHost
@@ -296,6 +322,7 @@ internal sealed class FakeShowHost : IShowHost
     }
 
     public void CloseAudience() => AudienceOpen = false;
+    public string? ResolveAssetPath(string relativePath) => "/fixtures/" + relativePath;
 }
 
 internal sealed class TestClock

@@ -1,0 +1,67 @@
+name: Windows native app
+
+on:
+  pull_request:
+    paths:
+      - 'projects/native-app-windows/**'
+      - '.github/workflows/windows-native.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: projects/native-app-windows
+
+jobs:
+  windows:
+    name: Windows ${{ matrix.arch }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x64
+            runner: windows-2025
+          - arch: arm64
+            runner: windows-11-arm
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: projects/native-app-windows
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Test the show engine
+        run: dotnet test RELightNative.Windows.slnx --configuration Release --nologo
+      - name: Build the unsigned installer
+        run: ./installer/publish.ps1 -Architecture ${{ matrix.arch }}
+      - name: Install and smoke-test the app
+        run: |
+          $setup = Get-ChildItem artifacts/installer/*.exe | Select-Object -First 1
+          if (-not $setup) { throw "Installer missing." }
+          $install = Start-Process $setup.FullName -ArgumentList '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -Wait -PassThru
+          if ($install.ExitCode -ne 0) { throw "Setup failed with exit code $($install.ExitCode)." }
+          $association = (Get-Item 'HKCU:\Software\Classes\.relight').GetValue('')
+          if ($association -ne 'RELightNative.Project') { throw "The .relight file association was not registered." }
+          $app = Join-Path $env:LOCALAPPDATA 'Programs\RELight Native\RELight.App.exe'
+          $process = Start-Process $app -PassThru
+          try {
+            $deadline = (Get-Date).AddSeconds(45)
+            do {
+              Start-Sleep -Seconds 1
+              $process.Refresh()
+              if ($process.HasExited) { throw "RELight exited early with code $($process.ExitCode)." }
+            } until ($process.MainWindowHandle -ne 0 -or (Get-Date) -ge $deadline)
+            if ($process.MainWindowHandle -eq 0) { throw "The operator window did not open." }
+          } finally {
+            if (-not $process.HasExited) { Stop-Process -Id $process.Id }
+          }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: RE-light Windows ${{ matrix.arch }} Preview
+          path: projects/native-app-windows/artifacts/installer/*.exe
+          if-no-files-found: error
+          retention-days: 14

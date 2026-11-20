@@ -10,6 +10,7 @@ public enum ShowState
     Paused,
     Gate,
     Recording,
+    Countdown,
     Finished
 }
 
@@ -44,7 +45,9 @@ public interface IShowMediaHost
     /// <summary>Absolute source position of the current item, in seconds.</summary>
     double PositionSeconds { get; }
 
-    void Prepare(Scene scene);
+    bool HasEnded { get; }
+
+    void Prepare(Scene scene, long localFrame = 0);
 
     void Play(double speed);
 
@@ -77,7 +80,7 @@ public interface IShowAudioHost
 
     void BeginCapture(double seconds);
 
-    void FinishCapture();
+    void FinishCapture(double boostLimit);
 
     /// <summary>Authored voice bus gain for the current project.</summary>
     double VoiceGain { get; set; }
@@ -99,6 +102,16 @@ public interface IShowAudioHost
     void ClearTake();
 
     void StopAll();
+
+    void ValidateNarrator(string absolutePath);
+
+    void PlayNarrator(string absolutePath, bool muted);
+
+    void StopNarrator();
+
+    bool NarratorPlaying { get; }
+
+    double NarratorSeconds { get; }
 }
 
 public interface IShowHost
@@ -110,6 +123,8 @@ public interface IShowHost
     void OpenAudience();
 
     void CloseAudience();
+
+    string? ResolveAssetPath(string relativePath);
 }
 
 public sealed class ShowHostException : Exception

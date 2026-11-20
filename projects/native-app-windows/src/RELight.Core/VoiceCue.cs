@@ -10,6 +10,8 @@ public sealed class VoiceCue : IEquatable<VoiceCue>
     public long FadeInFrames { get; set; } = 2;
     public long FadeOutFrames { get; set; } = 6;
     public bool Bypass { get; set; }
+    public double? GainBoost { get; set; }
+    public double BoostLimit => GainBoost ?? 1;
     public long? RepeatCount { get; set; }
     public bool? LoopToFill { get; set; }
     public EffectSettings Effects { get; set; } = new();
@@ -89,6 +91,7 @@ public sealed class VoiceCue : IEquatable<VoiceCue>
             FadeInFrames = FadeInFrames,
             FadeOutFrames = FadeOutFrames,
             Bypass = Bypass,
+            GainBoost = GainBoost,
             RepeatCount = RepeatCount,
             LoopToFill = LoopToFill,
             Effects = Effects.Clone()
@@ -117,6 +120,7 @@ public sealed class VoiceCue : IEquatable<VoiceCue>
             FadeInFrames != other.FadeInFrames ||
             FadeOutFrames != other.FadeOutFrames ||
             Bypass != other.Bypass ||
+            GainBoost != other.GainBoost ||
             RepeatCount != other.RepeatCount ||
             LoopToFill != other.LoopToFill ||
             !Effects.Equals(other.Effects) ||
@@ -149,6 +153,7 @@ public sealed class VoiceCue : IEquatable<VoiceCue>
         hash.Add(FadeInFrames);
         hash.Add(FadeOutFrames);
         hash.Add(Bypass);
+        hash.Add(GainBoost);
         hash.Add(RepeatCount);
         hash.Add(LoopToFill);
         hash.Add(Effects);

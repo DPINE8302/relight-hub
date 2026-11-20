@@ -1,10 +1,115 @@
 using RELight.Core;
+using RELight.Core.Json;
 using RELight.Show;
 
 namespace RELight.Show.Tests;
 
 public sealed class ShowRunnerTests
 {
+    [Fact]
+    public void SeekTimecodeUsesTheProjectStartAndTheSelectedSceneOffset()
+    {
+        var project = Project.CreateStarter();
+        project.TimecodeStartFrame = 86_400;
+        var (runner, _, _) = CreateRunner(project);
+        runner.SelectScene(1);
+        var start = project.GlobalFrame(1, 0) + 86_400;
+        var requested = project.Rate.Timecode(start + 12);
+
+        runner.SeekTimecode(requested);
+
+        Assert.Equal(12, runner.Frame);
+        Assert.Equal(requested, runner.Timecode);
+        Assert.Throws<ArgumentOutOfRangeException>(() => runner.SeekTimecode("01:00:00:00"));
+        Assert.Throws<FormatException>(() => runner.SeekTimecode("01:00:00:24"));
+        Assert.Equal(12, runner.Frame);
+    }
+
+    [Fact]
+    public void PreviewStartsAtPlayheadWithoutRecordingOrOpeningAudience()
+    {
+        var project = Project.CreateStarter();
+        var scene = project.Scenes[0];
+        scene.Media = "media/test.mov";
+        scene.MediaInFrame = 72;
+        scene.Capture = new CaptureCue { GateFrame = 30, StartMethod = CaptureStartMethod.Countdown };
+        project.BlackFromFrame = 42;
+        var (runner, host, _) = CreateRunner(project, ShowSetup.Exhibition);
+        host.Media.AllPlayable = true;
+        runner.Seek(48);
+
+        runner.StartFilmPreview();
+        runner.Tick();
+        Assert.Equal(ShowState.Playing, runner.State);
+        Assert.Equal(48, runner.Frame);
+        Assert.False(runner.IsBlack);
+        Assert.False(host.AudienceOpen);
+        Assert.DoesNotContain(host.Audio.Calls, call => call.StartsWith("capture:", StringComparison.Ordinal));
+
+        runner.TogglePlayback();
+        Assert.Equal(ShowState.Paused, runner.State);
+        runner.TogglePlayback();
+        host.Media.PositionSeconds = (scene.MediaInFrame + scene.Frames - 1) / 24.0;
+        host.Media.HasEnded = true;
+        runner.Tick();
+        Assert.Equal(ShowState.Idle, runner.State);
+        Assert.False(runner.PreviewingFilm);
+        Assert.Equal(0, runner.SelectedScene);
+        Assert.Equal(scene.Frames - 1, runner.Frame);
+
+        host.Media.HasEnded = false;
+        runner.StartFilmPreview();
+        runner.Tick();
+        Assert.Equal(0, runner.Frame);
+        runner.Stop();
+        Assert.DoesNotContain("stop-all", host.Audio.Calls);
+    }
+
+    [Fact]
+    public void Film02NarratorGateWaitsThenRecordsAndResumesAtGateFrame()
+    {
+        var project = ProjectJson.Deserialize(
+            File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "fixtures/documents/film02.relight")));
+        project.Scenes[0].Media = null;
+        project.Scenes[0].Capture!.GateFrame = 0;
+        var (runner, host, clock) = CreateRunner(project);
+
+        runner.BeginRun(true);
+        runner.Tick();
+        Assert.Equal(ShowState.Countdown, runner.State);
+        Assert.Contains(host.Audio.Calls, item => item.StartsWith("narrator:", StringComparison.Ordinal));
+
+        clock.Now = 26;
+        host.Audio.StopNarrator();
+        runner.Tick();
+        Assert.Equal(ShowState.Recording, runner.State);
+        Assert.Equal(0, runner.Frame);
+        Assert.Equal(6, host.Audio.BeginCaptureSeconds);
+    }
+
+    [Fact]
+    public void AStalledNarratorReturnsToTheManualRecordingGate()
+    {
+        var project = ProjectJson.Deserialize(
+            File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "fixtures/documents/film02.relight")));
+        project.Scenes[0].Media = null;
+        project.Scenes[0].Capture!.GateFrame = 0;
+        var (runner, host, clock) = CreateRunner(project);
+
+        runner.BeginRun(true);
+        runner.Tick();
+        Assert.Equal(ShowState.Countdown, runner.State);
+        clock.Now = 40;
+        runner.Tick();
+        Assert.Equal(ShowState.Gate, runner.State);
+        Assert.False(host.Audio.IsCapturing);
+
+        runner.RecordAtGate();
+        runner.FinishRecording();
+        Assert.Equal(400, host.Audio.FinishedBoostLimit);
+        Assert.Equal(project.Rate.Timecode(project.TimecodeStartFrame!.Value), runner.Timecode);
+    }
+
     [Fact]
     public void RehearsalUsesGateAndDeclineThenCompletes()
     {

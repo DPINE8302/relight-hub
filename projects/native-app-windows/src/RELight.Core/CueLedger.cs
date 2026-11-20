@@ -8,6 +8,8 @@ public sealed class CueLedger
 {
     private readonly HashSet<Guid> _fired = [];
 
+    public bool HasFired(Guid id) => _fired.Contains(id);
+
     public void Reset() => _fired.Clear();
 
     public void Skip(long throughFrame, IEnumerable<VoiceCue> cues)

@@ -28,13 +28,21 @@ public static class VoiceTakeValidator
         float[] samples,
         int sampleRate,
         out VoiceTake? take,
-        out string? error)
+        out string? error,
+        double boostLimit = 1)
     {
         ArgumentNullException.ThrowIfNull(samples);
         if (samples.Length == 0)
         {
             take = null;
             error = "No recording was captured. Continuing without voice (DREAM-00).";
+            return false;
+        }
+
+        if (!double.IsFinite(boostLimit) || boostLimit is < 1 or > 400)
+        {
+            take = null;
+            error = "Dream recording boost must be between 1 and 400.";
             return false;
         }
 
@@ -45,7 +53,7 @@ public static class VoiceTakeValidator
         }
 
         var rms = Math.Sqrt(sum / samples.Length);
-        if (rms <= SilenceRms)
+        if (!double.IsFinite(rms) || rms <= SilenceRms / boostLimit)
         {
             take = null;
             error = "Recording was silent. Continuing without voice (DREAM-00).";

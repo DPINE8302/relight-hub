@@ -52,6 +52,25 @@ public sealed class FrameRate : IEquatable<FrameRate>
             frames);
     }
 
+    public bool TryParseTimecode(string timecode, out long frame)
+    {
+        frame = 0;
+        var parts = timecode.Trim().Split(':');
+        var nominal = Math.Max(1L, (long)Math.Round(Fps, MidpointRounding.AwayFromZero));
+        if (parts.Length != 4 ||
+            !int.TryParse(parts[0], NumberStyles.None, CultureInfo.InvariantCulture, out var hours) ||
+            !int.TryParse(parts[1], NumberStyles.None, CultureInfo.InvariantCulture, out var minutes) ||
+            !int.TryParse(parts[2], NumberStyles.None, CultureInfo.InvariantCulture, out var seconds) ||
+            !int.TryParse(parts[3], NumberStyles.None, CultureInfo.InvariantCulture, out var frames) ||
+            hours > 1_000_000 || minutes >= 60 || seconds >= 60 || frames >= nominal)
+        {
+            return false;
+        }
+
+        frame = ((hours * 60L + minutes) * 60 + seconds) * nominal + frames;
+        return true;
+    }
+
     public FrameRate Clone() => new(Numerator, Denominator);
 
     public bool Equals(FrameRate? other) =>

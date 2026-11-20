@@ -124,6 +124,28 @@ public sealed class ConformanceTests
     }
 
     [Fact]
+    public void Film02NarratedCueMatchesTheMac23Release()
+    {
+        var film02 = ProjectJson.Deserialize(
+            FixtureFiles.Read(Path.Combine(FixtureFiles.Documents, "film02.relight")));
+
+        Assert.Empty(film02.Validation());
+        Assert.Equal("Film 02", film02.Scenes[0].Name);
+        Assert.Equal(7200, film02.Scenes[0].Frames);
+        Assert.Equal("media/RE;light film 02.mov", film02.Scenes[0].Media);
+        Assert.Equal(CaptureTrigger.Gate, film02.Scenes[0].Capture!.Trigger);
+        Assert.Equal(CaptureStartMethod.Narrator, film02.Scenes[0].Capture!.RecordingStartMethod);
+        Assert.Equal("media/RELight-Ainsley-Thai-Countdown.mp3", film02.Scenes[0].Capture!.Narrator);
+        Assert.False(film02.Scenes[0].Capture!.NarratorMuted);
+        Assert.Equal(452, film02.Scenes[0].Capture!.GateFrame);
+        Assert.Equal(6380, film02.Scenes[0].Cues[0].StartFrame);
+        Assert.Equal(163, film02.Scenes[0].Cues[0].LengthFrames);
+        Assert.Equal(400, film02.Scenes[0].Cues[0].BoostLimit);
+        Assert.Equal(86400, film02.TimecodeStartFrame);
+        Assert.False(film02.RequiresPhysicalControls);
+    }
+
+    [Fact]
     public void DraftAndFullFixturesPreserveTheirShape()
     {
         var draft = ProjectJson.Deserialize(FixtureFiles.Read(Path.Combine(FixtureFiles.Documents, "draft1.relight")));

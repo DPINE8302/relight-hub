@@ -18,7 +18,7 @@ using FontWeight = Windows.UI.Text.FontWeight;
 
 namespace RELight.App;
 
-public sealed class MainWindow
+public sealed partial class MainWindow
 {
     private readonly Window _window;
     private readonly WinUIShowHost _host;
@@ -43,12 +43,18 @@ public sealed class MainWindow
     private readonly TextBlock _recordingSeconds;
     private readonly TextBlock _take;
     private readonly Button _playButton;
+    private readonly Button _previewButton;
     private readonly Button _stopButton;
     private readonly Button _restartButton;
     private readonly Button _nextButton;
     private readonly Button _recordButton;
     private readonly Button _continueButton;
     private readonly Button _finishButton;
+    private readonly Button _sceneSettingsButton;
+    private readonly Button _voiceSettingsButton;
+    private readonly Button _testMicButton;
+    private readonly Button _auditionButton;
+    private readonly Button _seekButton;
     private readonly Button _addCueButton;
     private readonly Button _removeCueButton;
     private readonly Button _undoButton;
@@ -118,6 +124,7 @@ public sealed class MainWindow
         _machineVoiceAdvanceMs = calibration.VoiceAdvanceMs;
         _studio = studio;
         _host.MediaAvailability = scene => _studio.HasVideo(scene);
+        _host.IsOperatorPreview = () => _studio.Runner.PreviewingFilm;
 
         _host.BlackChanged += (_, _) => UpdateUi();
         _host.OpenAudienceRequested += (_, _) => OpenAudience();
@@ -249,6 +256,19 @@ public sealed class MainWindow
         _speedCombo.SelectedIndex = 0;
         _speedCombo.SelectionChanged += Speed_SelectionChanged;
 
+        _previewButton = MakeButton("Preview film", (_, _) =>
+        {
+            if (_studio.Runner.PreviewingFilm)
+            {
+                _studio.TogglePlayback();
+            }
+            else
+            {
+                CloseAudience();
+                _studio.Runner.StartFilmPreview();
+            }
+            UpdateUi();
+        });
         _playButton = MakeButton("Start", PlayPause_Click);
         _stopButton = MakeButton("Stop", Stop_Click);
         _restartButton = MakeButton("Restart", Restart_Click);
@@ -256,6 +276,22 @@ public sealed class MainWindow
         _recordButton = MakeButton("Record", Record_Click);
         _continueButton = MakeButton("Continue without voice", ContinueWithoutVoice_Click);
         _finishButton = MakeButton("Stop & continue", FinishRecording_Click);
+        _sceneSettingsButton = MakeButton("Scene settings", EditScene_Click);
+        _voiceSettingsButton = MakeButton("Edit voice cue", EditVoice_Click);
+        _testMicButton = MakeButton("Record test take", (_, _) =>
+        {
+            _studio.RecordTest();
+            UpdateUi();
+        });
+        _auditionButton = MakeButton("Play test take", (_, _) =>
+        {
+            if (_studio.SelectedCue is { } cue)
+            {
+                _studio.Audition(cue);
+                UpdateUi();
+            }
+        });
+        _seekButton = MakeButton("Go to timecode", SeekScene_Click);
         _addCueButton = MakeButton("Add cue", AddCue_Click);
         _removeCueButton = MakeButton("Remove", RemoveCue_Click);
         _undoButton = MakeButton("Undo", (_, _) => { _studio.Undo(); UpdateUi(); });
@@ -300,6 +336,7 @@ public sealed class MainWindow
         _window.Closed += (_, _) =>
         {
             _closed = true;
+            _mediaImportCancellation?.Cancel();
             _timer?.Stop();
             SetAwake(false);
             _audience?.Close();
@@ -487,6 +524,11 @@ public sealed class MainWindow
         controlRow.Children.Add(_assignChoiceButton);
         content.Children.Add(controlRow);
         content.Children.Add(_refreshControlsButton);
+        content.Children.Add(MakeButton("Project settings", EditProject_Click));
+        content.Children.Add(_sceneSettingsButton);
+        content.Children.Add(MakeButton("Import media", ImportMedia_Click));
+        content.Children.Add(_seekButton);
+        content.Children.Add(_previewButton);
         content.Children.Add(SectionHeader("Voice cues"));
         var editRow = new StackPanel
         {
@@ -497,6 +539,11 @@ public sealed class MainWindow
         editRow.Children.Add(_removeCueButton);
         content.Children.Add(editRow);
         content.Children.Add(_cueCombo);
+        content.Children.Add(_voiceSettingsButton);
+        var testRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+        testRow.Children.Add(_testMicButton);
+        testRow.Children.Add(_auditionButton);
+        content.Children.Add(testRow);
         var undoRow = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -507,6 +554,7 @@ public sealed class MainWindow
         content.Children.Add(undoRow);
         content.Children.Add(SectionHeader("Event log"));
         content.Children.Add(_eventList);
+        content.Children.Add(MakeButton("Save support report", SaveSupportReport_Click));
 
         return new Border
         {
@@ -668,7 +716,7 @@ public sealed class MainWindow
         if (inputs is not null)
         {
             var current = inputs.Select(item => item.Id).ToHashSet(StringComparer.Ordinal);
-            audioLost |= _studio.InputUid.Length > 0 &&
+            audioLost |= !_studio.Runner.PreviewingFilm && _studio.InputUid.Length > 0 &&
                          _availableInputs.Contains(_studio.InputUid) &&
                          !current.Contains(_studio.InputUid);
             _availableInputs = current;
@@ -704,7 +752,7 @@ public sealed class MainWindow
         }
 
         var enumerationFailed = inputs is null || outputs is null || displays is null;
-        if (_studio.Locked && _studio.Setup == ShowSetup.Exhibition && enumerationFailed)
+        if (_studio.Locked && !_studio.Runner.PreviewingFilm && _studio.Setup == ShowSetup.Exhibition && enumerationFailed)
         {
             if (displays is null)
             {
@@ -715,7 +763,7 @@ public sealed class MainWindow
             return;
         }
 
-        if (_studio.Locked && (audioLost || (screenLost && _studio.Setup == ShowSetup.Exhibition)))
+        if (_studio.Locked && (audioLost || (screenLost && !_studio.Runner.PreviewingFilm && _studio.Setup == ShowSetup.Exhibition)))
         {
             _studio.Abort("A selected device disconnected. Reconnect it or continue a new rehearsal.");
         }
@@ -756,7 +804,12 @@ public sealed class MainWindow
             }
 
             var canPlay = state is ShowState.Idle or ShowState.Finished or ShowState.Playing or ShowState.Paused;
-            _playButton.IsEnabled = canPlay;
+            var previewing = _studio.Runner.PreviewingFilm;
+            _previewButton.IsEnabled = (previewing && state != ShowState.Preparing) || (!_studio.Locked && hasVideo);
+            _previewButton.Content = previewing
+                ? (state == ShowState.Paused ? "Resume preview" : "Pause preview")
+                : "Preview film";
+            _playButton.IsEnabled = canPlay && !previewing;
             _playButton.Content = state switch
             {
                 ShowState.Playing => "Pause",
@@ -764,10 +817,18 @@ public sealed class MainWindow
                 _ => "Start"
             };
             _stopButton.IsEnabled = state is not (ShowState.Idle or ShowState.Finished);
-            _restartButton.IsEnabled = state is ShowState.Playing or ShowState.Paused;
-            _nextButton.IsEnabled = _studio.Setup == ShowSetup.Rehearsal &&
+            _restartButton.IsEnabled = !previewing && state is ShowState.Playing or ShowState.Paused;
+            _nextButton.IsEnabled = !previewing && _studio.Setup == ShowSetup.Rehearsal &&
                                     state is ShowState.Playing or ShowState.Paused;
-            _gatePanel.Visibility = state == ShowState.Gate ? Visibility.Visible : Visibility.Collapsed;
+            _gatePanel.Visibility = state is ShowState.Gate or ShowState.Countdown ? Visibility.Visible : Visibility.Collapsed;
+            if (_gatePanel.Children.FirstOrDefault() is TextBlock gatePrompt)
+            {
+                gatePrompt.Text = state == ShowState.Countdown
+                    ? (_studio.CountdownRemaining > 0
+                        ? $"Recording starts in {_studio.CountdownRemaining}"
+                        : "Starting recording")
+                    : "Recording is optional.";
+            }
             _recordingPanel.Visibility = state == ShowState.Recording ? Visibility.Visible : Visibility.Collapsed;
             _recordButton.Content = scene.Capture?.Mode == CaptureMode.Manual
                 ? "Start manual take"
@@ -780,6 +841,11 @@ public sealed class MainWindow
             _saveButton.IsEnabled = !_studio.Locked && _studio.Dirty;
             _exportButton.IsEnabled = !_studio.Locked;
             _devicesButton.IsEnabled = !_studio.Locked;
+            _sceneSettingsButton.IsEnabled = !_studio.Locked;
+            _seekButton.IsEnabled = !_studio.Locked;
+            _testMicButton.IsEnabled = !_studio.Locked;
+            _auditionButton.IsEnabled = !_studio.Locked && _studio.SelectedCue is not null && _studio.TakeSeconds > 0;
+            _voiceSettingsButton.IsEnabled = !_studio.Locked && _studio.SelectedCue is not null;
             _addCueButton.IsEnabled = !_studio.Locked;
             _removeCueButton.IsEnabled = !_studio.Locked && _studio.SelectedCueId is not null;
             _undoButton.IsEnabled = !_studio.Locked;
@@ -811,7 +877,7 @@ public sealed class MainWindow
         _previewPlaceholder.Visibility = visible ? Visibility.Collapsed : Visibility.Visible;
         _previewBadge.Visibility = black ? Visibility.Collapsed : Visibility.Visible;
         _previewTime.Text = _studio.Timecode;
-        _previewBadgeText.Text = _studio.Setup == ShowSetup.Rehearsal
+        _previewBadgeText.Text = _studio.Runner.PreviewingFilm ? "PREVIEW" : _studio.Setup == ShowSetup.Rehearsal
             ? (scene.Draft ? "REHEARSAL  ·  DRAFT" : "REHEARSAL")
             : "EXHIBITION";
 
@@ -947,17 +1013,18 @@ public sealed class MainWindow
             }
         }
 
+        var mediaChecks = _studio.MediaChecks;
         var mediaSignature = string.Join(
             "|",
             _studio.Project.Scenes.Select(scene =>
-                $"{scene.Id}:{(_studio.MediaChecks.TryGetValue(scene.Id, out var check) ? check.Valid + check.Detail : "unchecked")}"));
+                $"{scene.Id}:{(mediaChecks.TryGetValue(scene.Id, out var check) ? check.Valid + check.Detail : "unchecked")}"));
         if (mediaSignature != _mediaSignature)
         {
             _mediaSignature = mediaSignature;
             _mediaList.Children.Clear();
             foreach (var scene in _studio.Project.Scenes)
             {
-                var hasCheck = _studio.MediaChecks.TryGetValue(scene.Id, out var check);
+                var hasCheck = mediaChecks.TryGetValue(scene.Id, out var check);
                 var detail = hasCheck ? check.Detail : "Not checked yet";
                 var color = hasCheck && check.Valid ? Rgb(0x6AD6A0) : Rgb(0xFFB27A);
                 var line = TextBlock($"{scene.Name}: {detail}", 11, FontWeights.Normal, color);
@@ -993,6 +1060,11 @@ public sealed class MainWindow
 
     private void UpdateAudience(Scene scene, bool hasVideo, ShowState state)
     {
+        if (_studio.Runner.PreviewingFilm)
+        {
+            return;
+        }
+
         if (_studio.Setup == ShowSetup.Exhibition &&
             state is not (ShowState.Idle or ShowState.Finished) &&
             _audience is null)
@@ -1010,14 +1082,14 @@ public sealed class MainWindow
             scene,
             hasVideo,
             black,
-            state == ShowState.Gate,
-            state == ShowState.Recording,
+            state,
+            _studio.CountdownRemaining,
             _studio.Setup == ShowSetup.Rehearsal);
     }
 
     private void OpenAudience()
     {
-        if (_audience is not null)
+        if (_studio.Runner.PreviewingFilm || _audience is not null)
         {
             return;
         }
@@ -1131,8 +1203,12 @@ public sealed class MainWindow
 
     private void Stop_Click(object sender, RoutedEventArgs e)
     {
+        var previewing = _studio.Runner.PreviewingFilm;
         _studio.Stop();
-        _studio.SelectScene(_studio.SelectedScene);
+        if (!previewing)
+        {
+            _studio.SelectScene(_studio.SelectedScene);
+        }
         UpdateUi();
     }
 
@@ -1230,7 +1306,7 @@ public sealed class MainWindow
     {
         _window.DispatcherQueue.TryEnqueue(() =>
         {
-            if (_closed || _studio.Setup != ShowSetup.Exhibition)
+            if (_closed || _studio.Setup != ShowSetup.Exhibition || _studio.Project.RequiresPhysicalControls == false)
             {
                 return;
             }
@@ -1254,7 +1330,8 @@ public sealed class MainWindow
                 return;
             }
 
-            if (_studio.Setup == ShowSetup.Exhibition && _studio.Locked)
+            if (_studio.Setup == ShowSetup.Exhibition && _studio.Locked && !_studio.Runner.PreviewingFilm &&
+                _studio.Project.RequiresPhysicalControls != false)
             {
                 foreach (var role in new[] { ControlRole.Record, ControlRole.Choice })
                 {
@@ -1323,7 +1400,8 @@ public sealed class MainWindow
                 : "Assign Continue";
         _controlStatus.Text = string.Join("\n", lines);
 
-        if (_studio.Setup == ShowSetup.Exhibition && _studio.Locked)
+        if (_studio.Setup == ShowSetup.Exhibition && _studio.Locked && !_studio.Runner.PreviewingFilm &&
+                _studio.Project.RequiresPhysicalControls != false)
         {
             foreach (var role in new[] { ControlRole.Record, ControlRole.Choice })
             {
@@ -1793,6 +1871,11 @@ public sealed class MainWindow
         }
 
         WindowsPower.AddExhibitionBlocker(issues);
+        if (_studio.Project.RequiresPhysicalControls == false)
+        {
+            return issues;
+        }
+
         var controlStatus = _controls.Status;
         if (!controlStatus.Devices.Any(device => device.Assignable))
         {
@@ -1869,6 +1952,7 @@ public sealed class MainWindow
         ShowState.Playing => "RUNNING",
         ShowState.Paused => "PAUSED",
         ShowState.Gate => "WAITING FOR CONSENT",
+        ShowState.Countdown => "STARTING RECORDING",
         ShowState.Recording => "RECORDING",
         ShowState.Finished => "COMPLETE",
         _ => state.ToString().ToUpperInvariant()
@@ -1878,6 +1962,7 @@ public sealed class MainWindow
     {
         ShowState.Playing => Rgb(0x6AD6A0),
         ShowState.Gate => Rgb(0xF5B84B),
+        ShowState.Countdown => Rgb(0xF5B84B),
         ShowState.Recording => Rgb(0xFF8A8A),
         ShowState.Paused => Rgb(0xD8D8D8),
         ShowState.Finished => Rgb(0x9A9AA4),

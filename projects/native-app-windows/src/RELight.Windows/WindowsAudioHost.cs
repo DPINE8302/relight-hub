@@ -36,6 +36,9 @@ public sealed class WindowsAudioHost : IShowAudioHost, IDisposable
     private VoiceTake? _take;
     private WasapiOut? _voiceOut;
     private float[]? _voiceBuffer;
+    private AudioFileReader? _narratorReader;
+    private WasapiOut? _narratorOut;
+    private double _narratorSeconds;
     private string _inputUid = "";
     private string _outputUid = "";
     private int _captureSampleRate = OutputSampleRate;
@@ -228,7 +231,7 @@ public sealed class WindowsAudioHost : IShowAudioHost, IDisposable
         }
     }
 
-    public void FinishCapture()
+    public void FinishCapture(double boostLimit)
     {
         lock (_gate)
         {
@@ -246,7 +249,7 @@ public sealed class WindowsAudioHost : IShowAudioHost, IDisposable
             {
                 Array.Clear(raw.Samples);
             }
-            if (!VoiceTakeValidator.TryCreate(resampled, OutputSampleRate, out var validated, out var error))
+            if (!VoiceTakeValidator.TryCreate(resampled, OutputSampleRate, out var validated, out var error, boostLimit))
             {
                 Array.Clear(resampled);
                 throw new ShowHostException(error ?? "The recording could not be used.");
@@ -363,10 +366,97 @@ public sealed class WindowsAudioHost : IShowAudioHost, IDisposable
         }
     }
 
+    public bool NarratorPlaying
+    {
+        get
+        {
+            lock (_gate)
+            {
+                return _narratorOut is not null && _narratorOut.PlaybackState == PlaybackState.Playing;
+            }
+        }
+    }
+
+    public double NarratorSeconds
+    {
+        get
+        {
+            lock (_gate)
+            {
+                return _narratorSeconds;
+            }
+        }
+    }
+
+    public void ValidateNarrator(string absolutePath)
+    {
+        try
+        {
+            using var reader = new AudioFileReader(absolutePath);
+            if (reader.TotalTime <= TimeSpan.Zero || reader.Read(new float[64], 0, 64) <= 0)
+            {
+                throw new InvalidDataException("Narrator audio is empty.");
+            }
+        }
+        catch (Exception exception)
+        {
+            throw new ShowHostException("Choose a playable narrator audio file.", exception);
+        }
+    }
+
+    public void PlayNarrator(string absolutePath, bool muted)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(absolutePath);
+        lock (_gate)
+        {
+            ObjectDisposedException.ThrowIf(_disposed, this);
+            StopNarratorLocked();
+            if (!File.Exists(absolutePath))
+            {
+                throw new ShowHostException("Narrator audio is missing.");
+            }
+            if (_output is null)
+            {
+                throw new ShowHostException("No speakers are selected.");
+            }
+
+            try
+            {
+                var reader = new AudioFileReader(absolutePath);
+                _narratorSeconds = reader.TotalTime.TotalSeconds;
+                if (muted)
+                {
+                    reader.Dispose();
+                    return;
+                }
+
+                _narratorReader = reader;
+                _narratorOut = new WasapiOut(_output, AudioClientShareMode.Shared, useEventSync: false, latency: 100);
+                reader.Volume = 1f;
+                _narratorOut.Init(reader);
+                _narratorOut.Play();
+            }
+            catch (Exception exception) when (exception is not ShowHostException)
+            {
+                StopNarratorLocked();
+                throw new ShowHostException("Narrator playback could not start.", exception);
+            }
+        }
+    }
+
+    public void StopNarrator()
+    {
+        lock (_gate)
+        {
+            StopNarratorLocked();
+        }
+    }
+
     public void StopAll()
     {
         lock (_gate)
         {
+            StopNarratorLocked();
             StopVoiceLocked();
             ReleaseMicrophoneLocked();
             ClearTakeLocked();
@@ -384,6 +474,7 @@ public sealed class WindowsAudioHost : IShowAudioHost, IDisposable
                 return;
             }
 
+            StopNarratorLocked();
             StopVoiceLocked();
             ReleaseMicrophoneLocked();
             ClearTakeLocked();
@@ -559,6 +650,30 @@ public sealed class WindowsAudioHost : IShowAudioHost, IDisposable
         }
 
         _takeSeconds = 0;
+    }
+
+    private void StopNarratorLocked()
+    {
+        if (_narratorOut is not null)
+        {
+            try
+            {
+                _narratorOut.Stop();
+            }
+            catch (Exception)
+            {
+            }
+            _narratorOut.Dispose();
+            _narratorOut = null;
+        }
+
+        if (_narratorReader is not null)
+        {
+            _narratorReader.Dispose();
+            _narratorReader = null;
+        }
+
+        _narratorSeconds = 0;
     }
 
     private void StopVoiceLocked()

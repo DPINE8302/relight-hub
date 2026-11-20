@@ -12,11 +12,14 @@ namespace RELight.Studio;
 /// the caller's synchronization context: the WinUI host requires model and
 /// playback-host mutations to resume on its UI thread.
 /// </summary>
-public sealed class StudioViewModel
+public sealed partial class StudioViewModel
 {
     private readonly ShowRunner _runner;
+    private readonly IShowAudioHost _audio;
     private readonly Func<IReadOnlyList<string>>? _deviceBlockers;
     private Dictionary<Guid, MediaCheck> _mediaChecks = [];
+    private Project? _checkedProject;
+    private string? _checkedRoot;
     private string? _localIssue;
     private string? _localNote;
 
@@ -37,6 +40,8 @@ public sealed class StudioViewModel
         RootDirectory = Path.GetFullPath(rootDirectory);
         ProjectFile = Path.GetFullPath(projectFile);
         _deviceBlockers = deviceBlockers;
+        ArgumentNullException.ThrowIfNull(host);
+        _audio = host.Audio;
         _runner = new ShowRunner(
             project,
             host,
@@ -62,7 +67,9 @@ public sealed class StudioViewModel
 
     public string ProjectFile { get; private set; }
 
-    public IReadOnlyDictionary<Guid, MediaCheck> MediaChecks => _mediaChecks;
+    public IReadOnlyDictionary<Guid, MediaCheck> MediaChecks => Project.Scenes
+        .Where(scene => HasCurrentMediaCheck(scene) && _mediaChecks.ContainsKey(scene.Id))
+        .ToDictionary(scene => scene.Id, scene => _mediaChecks[scene.Id]);
 
     public IReadOnlyList<ShowEvent> Events => _runner.Events;
 
@@ -105,6 +112,7 @@ public sealed class StudioViewModel
     public double Peak => _runner.Peak;
 
     public bool IsManualRecording => _runner.IsManualRecording;
+    public int CountdownRemaining => _runner.CountdownRemaining;
 
     public bool IsCapturingTest => _runner.IsCapturingTest;
 
@@ -145,9 +153,19 @@ public sealed class StudioViewModel
         Project.Scenes.Count(scene => scene.Media is null || !HasVideo(scene));
 
     public bool HasVideo(Scene scene) =>
-        scene.Media is not null &&
+        scene.Media is not null && HasCurrentMediaCheck(scene) &&
         _mediaChecks.TryGetValue(scene.Id, out var check) &&
         check.Valid;
+
+    private bool HasCurrentMediaCheck(Scene scene) =>
+        _checkedRoot == RootDirectory &&
+        _checkedProject is { } checkedProject &&
+        checkedProject.Rate.Equals(Project.Rate) &&
+        checkedProject.Scenes.Any(previous =>
+            previous.Id == scene.Id &&
+            previous.Media == scene.Media &&
+            previous.Frames == scene.Frames &&
+            previous.MediaInFrame == scene.MediaInFrame);
 
     public void SetSetup(ShowSetup setup)
     {
@@ -194,7 +212,7 @@ public sealed class StudioViewModel
     {
         var action = ControlActionPolicy.Resolve(
             role,
-            atGate: State == ShowState.Gate,
+            atGate: State is ShowState.Gate or ShowState.Countdown,
             recording: State == ShowState.Recording,
             recordingSeconds: RecordingSeconds);
         switch (action)
@@ -370,6 +388,8 @@ public sealed class StudioViewModel
                 continue;
             }
 
+            _checkedProject = snapshot;
+            _checkedRoot = root;
             _mediaChecks = new Dictionary<Guid, MediaCheck>(checks);
             Changed?.Invoke(this, EventArgs.Empty);
             return;

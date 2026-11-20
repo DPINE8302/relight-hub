@@ -37,8 +37,19 @@ public static class ProjectExport
         }
 
         var mediaPaths = project.Scenes
-            .Where(scene => scene.Media is not null)
-            .Select(scene => scene.Media!)
+            .SelectMany(scene =>
+            {
+                var paths = new List<string>();
+                if (scene.Media is string film)
+                {
+                    paths.Add(film);
+                }
+                if (scene.Capture?.Narrator is string narrator)
+                {
+                    paths.Add(narrator);
+                }
+                return paths;
+            })
             .Distinct(StringComparer.Ordinal)
             .ToList();
 

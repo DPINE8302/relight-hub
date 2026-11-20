@@ -28,6 +28,7 @@ public sealed class WinUIShowHost : IShowHost, IShowMediaHost, IDisposable
     private string? _error;
     private long _generation;
     private long _pendingInFrame;
+    private double? _endedPosition;
     private MediaSource? _previewSource;
     private MediaSource? _audienceSource;
     private bool _previewOpened;
@@ -56,6 +57,7 @@ public sealed class WinUIShowHost : IShowHost, IShowMediaHost, IDisposable
 
         PreviewPlayer.MediaOpened += OnMediaOpened;
         PreviewPlayer.MediaFailed += OnMediaFailed;
+        PreviewPlayer.MediaEnded += OnMediaEnded;
         AudiencePlayer.MediaOpened += OnMediaOpened;
         AudiencePlayer.MediaFailed += OnMediaFailed;
     }
@@ -73,6 +75,12 @@ public sealed class WinUIShowHost : IShowHost, IShowMediaHost, IDisposable
     public IShowMediaHost Media => this;
 
     public IShowAudioHost Audio { get; }
+
+    public string? ResolveAssetPath(string relativePath)
+    {
+        var project = _project();
+        return project.AssetPath(relativePath, _root());
+    }
 
     public MediaStatus Status
     {
@@ -102,7 +110,7 @@ public sealed class WinUIShowHost : IShowHost, IShowMediaHost, IDisposable
         {
             try
             {
-                return PreviewPlayer.PlaybackSession.Position.TotalSeconds;
+                return _endedPosition ?? PreviewPlayer.PlaybackSession.Position.TotalSeconds;
             }
             catch (Exception)
             {
@@ -110,6 +118,8 @@ public sealed class WinUIShowHost : IShowHost, IShowMediaHost, IDisposable
             }
         }
     }
+
+    public bool HasEnded => _endedPosition.HasValue;
 
     public bool Black => _black;
 
@@ -124,10 +134,12 @@ public sealed class WinUIShowHost : IShowHost, IShowMediaHost, IDisposable
 
     public Func<Scene, bool>? MediaAvailability { get; set; }
 
+    public Func<bool>? IsOperatorPreview { get; set; }
+
     public bool HasPlayableMedia(Scene scene) =>
         scene.Media is not null && (MediaAvailability?.Invoke(scene) ?? false);
 
-    public void Prepare(Scene scene)
+    public void Prepare(Scene scene, long localFrame = 0)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
         if (scene.Media is null)
@@ -143,6 +155,7 @@ public sealed class WinUIShowHost : IShowHost, IShowMediaHost, IDisposable
             return;
         }
 
+        _endedPosition = null;
         var generation = Interlocked.Increment(ref _generation);
         MediaSource preview;
         MediaSource audience;
@@ -169,7 +182,7 @@ public sealed class WinUIShowHost : IShowHost, IShowMediaHost, IDisposable
         {
             _status = MediaStatus.Preparing;
             _error = null;
-            _pendingInFrame = scene.MediaInFrame;
+            _pendingInFrame = scene.MediaInFrame + localFrame;
             _previewOpened = false;
             _audienceOpened = false;
             _previewSource = preview;
@@ -198,7 +211,10 @@ public sealed class WinUIShowHost : IShowHost, IShowMediaHost, IDisposable
             PreviewPlayer.PlaybackSession.PlaybackRate = speed;
             AudiencePlayer.PlaybackSession.PlaybackRate = speed;
             PreviewPlayer.Play();
-            AudiencePlayer.Play();
+            if (IsOperatorPreview?.Invoke() != true)
+            {
+                AudiencePlayer.Play();
+            }
         }
         catch (Exception exception)
         {
@@ -221,6 +237,7 @@ public sealed class WinUIShowHost : IShowHost, IShowMediaHost, IDisposable
 
     public void Seek(Scene scene, long localFrame)
     {
+        _endedPosition = null;
         try
         {
             var position = TimeSpan.FromSeconds(_project().Rate.Seconds(scene.MediaInFrame + localFrame));
@@ -238,8 +255,10 @@ public sealed class WinUIShowHost : IShowHost, IShowMediaHost, IDisposable
         var volume = Math.Clamp(gain, 0, 1);
         try
         {
-            AudiencePlayer.Volume = volume;
-            PreviewPlayer.Volume = 0;
+            var operatorPreview = IsOperatorPreview?.Invoke() == true;
+            PreviewPlayer.IsMuted = !operatorPreview;
+            PreviewPlayer.Volume = operatorPreview ? volume : 0;
+            AudiencePlayer.Volume = operatorPreview ? 0 : volume;
         }
         catch (Exception)
         {
@@ -260,6 +279,7 @@ public sealed class WinUIShowHost : IShowHost, IShowMediaHost, IDisposable
 
     public void Release()
     {
+        _endedPosition = null;
         Interlocked.Increment(ref _generation);
         Pause();
         try
@@ -371,6 +391,7 @@ public sealed class WinUIShowHost : IShowHost, IShowMediaHost, IDisposable
         _disposed = true;
         PreviewPlayer.MediaOpened -= OnMediaOpened;
         PreviewPlayer.MediaFailed -= OnMediaFailed;
+        PreviewPlayer.MediaEnded -= OnMediaEnded;
         AudiencePlayer.MediaOpened -= OnMediaOpened;
         AudiencePlayer.MediaFailed -= OnMediaFailed;
         PreviewPlayer.Dispose();
@@ -444,6 +465,27 @@ public sealed class WinUIShowHost : IShowHost, IShowMediaHost, IDisposable
             {
                 SetFailed(exception.Message);
             }
+        }
+    }
+
+    private void OnMediaEnded(MediaPlayer sender, object args)
+    {
+        if (_dispatcher is not null && !_dispatcher.HasThreadAccess)
+        {
+            var generation = Volatile.Read(ref _generation);
+            _dispatcher.TryEnqueue(() =>
+            {
+                if (generation == Volatile.Read(ref _generation))
+                {
+                    OnMediaEnded(sender, args);
+                }
+            });
+            return;
+        }
+
+        if (!_disposed && Status == MediaStatus.Ready && IsExpectedSource(sender, _previewSource))
+        {
+            _endedPosition = sender.PlaybackSession.NaturalDuration.TotalSeconds;
         }
     }
 

@@ -21,4 +21,10 @@
     <ProjectReference Include="..\..\src\RELight.Core\RELight.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="../../fixtures/documents/film02.relight"
+          Link="fixtures/documents/film02.relight"
+          CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>
