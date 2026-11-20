@@ -767,7 +767,15 @@ public sealed class MainWindow
             _restartButton.IsEnabled = state is ShowState.Playing or ShowState.Paused;
             _nextButton.IsEnabled = _studio.Setup == ShowSetup.Rehearsal &&
                                     state is ShowState.Playing or ShowState.Paused;
-            _gatePanel.Visibility = state == ShowState.Gate ? Visibility.Visible : Visibility.Collapsed;
+            _gatePanel.Visibility = state is ShowState.Gate or ShowState.Countdown ? Visibility.Visible : Visibility.Collapsed;
+            if (_gatePanel.Children.FirstOrDefault() is TextBlock gatePrompt)
+            {
+                gatePrompt.Text = state == ShowState.Countdown
+                    ? (_studio.CountdownRemaining > 0
+                        ? $"Recording starts in {_studio.CountdownRemaining}"
+                        : "Starting recording")
+                    : "Recording is optional.";
+            }
             _recordingPanel.Visibility = state == ShowState.Recording ? Visibility.Visible : Visibility.Collapsed;
             _recordButton.Content = scene.Capture?.Mode == CaptureMode.Manual
                 ? "Start manual take"
@@ -1010,7 +1018,7 @@ public sealed class MainWindow
             scene,
             hasVideo,
             black,
-            state == ShowState.Gate,
+            state is ShowState.Gate or ShowState.Countdown,
             state == ShowState.Recording,
             _studio.Setup == ShowSetup.Rehearsal);
     }
@@ -1869,6 +1877,7 @@ public sealed class MainWindow
         ShowState.Playing => "RUNNING",
         ShowState.Paused => "PAUSED",
         ShowState.Gate => "WAITING FOR CONSENT",
+        ShowState.Countdown => "STARTING RECORDING",
         ShowState.Recording => "RECORDING",
         ShowState.Finished => "COMPLETE",
         _ => state.ToString().ToUpperInvariant()
@@ -1878,6 +1887,7 @@ public sealed class MainWindow
     {
         ShowState.Playing => Rgb(0x6AD6A0),
         ShowState.Gate => Rgb(0xF5B84B),
+        ShowState.Countdown => Rgb(0xF5B84B),
         ShowState.Recording => Rgb(0xFF8A8A),
         ShowState.Paused => Rgb(0xD8D8D8),
         ShowState.Finished => Rgb(0x9A9AA4),

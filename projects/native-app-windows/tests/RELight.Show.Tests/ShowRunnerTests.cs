@@ -1,10 +1,33 @@
 using RELight.Core;
+using RELight.Core.Json;
 using RELight.Show;
 
 namespace RELight.Show.Tests;
 
 public sealed class ShowRunnerTests
 {
+    [Fact]
+    public void Film02NarratorGateWaitsThenRecordsAndResumesAtGateFrame()
+    {
+        var project = ProjectJson.Deserialize(
+            File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "fixtures/documents/film02.relight")));
+        project.Scenes[0].Media = null;
+        project.Scenes[0].Capture!.GateFrame = 0;
+        var (runner, host, clock) = CreateRunner(project);
+
+        runner.BeginRun(true);
+        runner.Tick();
+        Assert.Equal(ShowState.Countdown, runner.State);
+        Assert.Contains(host.Audio.Calls, item => item.StartsWith("narrator:", StringComparison.Ordinal));
+
+        clock.Now = 26;
+        host.Audio.StopNarrator();
+        runner.Tick();
+        Assert.Equal(ShowState.Recording, runner.State);
+        Assert.Equal(0, runner.Frame);
+        Assert.Equal(6, host.Audio.BeginCaptureSeconds);
+    }
+
     [Fact]
     public void RehearsalUsesGateAndDeclineThenCompletes()
     {

@@ -10,6 +10,7 @@ public enum ShowState
     Paused,
     Gate,
     Recording,
+    Countdown,
     Finished
 }
 
@@ -99,6 +100,14 @@ public interface IShowAudioHost
     void ClearTake();
 
     void StopAll();
+
+    void PlayNarrator(string absolutePath, bool muted);
+
+    void StopNarrator();
+
+    bool NarratorPlaying { get; }
+
+    double NarratorSeconds { get; }
 }
 
 public interface IShowHost
@@ -110,6 +119,8 @@ public interface IShowHost
     void OpenAudience();
 
     void CloseAudience();
+
+    string? ResolveAssetPath(string relativePath);
 }
 
 public sealed class ShowHostException : Exception

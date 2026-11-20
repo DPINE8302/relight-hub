@@ -74,6 +74,12 @@ public sealed class WinUIShowHost : IShowHost, IShowMediaHost, IDisposable
 
     public IShowAudioHost Audio { get; }
 
+    public string? ResolveAssetPath(string relativePath)
+    {
+        var project = _project();
+        return project.AssetPath(relativePath, _root());
+    }
+
     public MediaStatus Status
     {
         get

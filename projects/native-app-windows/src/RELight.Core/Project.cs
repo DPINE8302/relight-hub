@@ -14,6 +14,8 @@ public sealed class Project : IEquatable<Project>
     public double VoiceLevel { get; set; } = 0.85;
     public double DuckLevel { get; set; } = 0.35;
     public double OutputOffsetMs { get; set; }
+    public long? TimecodeStartFrame { get; set; }
+    public bool? RequiresPhysicalControls { get; set; }
     public Dictionary<string, EffectSettings> EffectPresets { get; set; } = new(StringComparer.Ordinal);
     public long? BlackFromFrame { get; set; } = 2808;
     public List<Scene> Scenes { get; set; } = [];
@@ -143,6 +145,11 @@ public sealed class Project : IEquatable<Project>
             issues.Add("Ending black frame lies outside project");
         }
 
+        if (TimecodeStartFrame is long timecode && (timecode < 0 || timecode > 100_000_000))
+        {
+            issues.Add("Source timecode start is outside supported limits");
+        }
+
         var hasCapture = false;
 
         foreach (var scene in Scenes)
@@ -159,6 +166,27 @@ public sealed class Project : IEquatable<Project>
 
             if (scene.Capture is { } capture)
             {
+                if (capture.Narrator is { } narrator && !SafeRelativePath(narrator))
+                {
+                    issues.Add($"{scene.Name}: narrator path must stay inside project");
+                }
+
+                if (capture.DelaySeconds is < 0 or > 30)
+                {
+                    issues.Add($"{scene.Name}: countdown must be 0–30 seconds");
+                }
+
+                if (capture.RecordingStartMethod == CaptureStartMethod.Narrator && capture.Narrator is null)
+                {
+                    issues.Add($"{scene.Name}: choose narrator audio or another recording start");
+                }
+
+                if (capture.Trigger == CaptureTrigger.Automatic &&
+                    capture.RecordingStartMethod != CaptureStartMethod.Button)
+                {
+                    issues.Add($"{scene.Name}: countdown and narrator require the paused recording screen");
+                }
+
                 if (!double.IsFinite(capture.DurationSeconds) ||
                     capture.DurationSeconds < 1 || capture.DurationSeconds > 60)
                 {
@@ -195,6 +223,11 @@ public sealed class Project : IEquatable<Project>
             for (var i = 0; i < sorted.Count; i++)
             {
                 var cue = sorted[i];
+
+                if (!double.IsFinite(cue.BoostLimit) || cue.BoostLimit < 1 || cue.BoostLimit > 400)
+                {
+                    issues.Add($"{scene.Name}: voice boost must be between 1 and 400");
+                }
 
                 if (cue.RepeatCount is long repeatCount && (repeatCount < 1 || repeatCount > 100))
                 {
@@ -371,6 +404,8 @@ public sealed class Project : IEquatable<Project>
             VoiceLevel = VoiceLevel,
             DuckLevel = DuckLevel,
             OutputOffsetMs = OutputOffsetMs,
+            TimecodeStartFrame = TimecodeStartFrame,
+            RequiresPhysicalControls = RequiresPhysicalControls,
             BlackFromFrame = BlackFromFrame,
             Scenes = Scenes.Select(scene => scene.Clone()).ToList()
         };
@@ -397,6 +432,8 @@ public sealed class Project : IEquatable<Project>
             VoiceLevel != other.VoiceLevel ||
             DuckLevel != other.DuckLevel ||
             OutputOffsetMs != other.OutputOffsetMs ||
+            TimecodeStartFrame != other.TimecodeStartFrame ||
+            RequiresPhysicalControls != other.RequiresPhysicalControls ||
             BlackFromFrame != other.BlackFromFrame ||
             !Scenes.SequenceEqual(other.Scenes) ||
             EffectPresets.Count != other.EffectPresets.Count)
@@ -427,6 +464,8 @@ public sealed class Project : IEquatable<Project>
         hash.Add(VoiceLevel);
         hash.Add(DuckLevel);
         hash.Add(OutputOffsetMs);
+        hash.Add(TimecodeStartFrame);
+        hash.Add(RequiresPhysicalControls);
         hash.Add(BlackFromFrame);
         foreach (var scene in Scenes)
         {

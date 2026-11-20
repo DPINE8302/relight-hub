@@ -105,6 +105,7 @@ public sealed class StudioViewModel
     public double Peak => _runner.Peak;
 
     public bool IsManualRecording => _runner.IsManualRecording;
+    public int CountdownRemaining => _runner.CountdownRemaining;
 
     public bool IsCapturingTest => _runner.IsCapturingTest;
 
@@ -194,7 +195,7 @@ public sealed class StudioViewModel
     {
         var action = ControlActionPolicy.Resolve(
             role,
-            atGate: State == ShowState.Gate,
+            atGate: State is ShowState.Gate or ShowState.Countdown,
             recording: State == ShowState.Recording,
             recordingSeconds: RecordingSeconds);
         switch (action)

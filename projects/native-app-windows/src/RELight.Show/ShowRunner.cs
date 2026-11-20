@@ -41,6 +41,9 @@ public sealed class ShowRunner
     private bool _captureFired;
     private bool _captureForTest;
     private bool _captureManual;
+    private double? _countdownDeadline;
+    private double? _narratorStarted;
+    private double _narratorDuration;
     private bool _auditioning;
     private double _auditionStart;
     private bool _sceneHasMedia;
@@ -162,6 +165,30 @@ public sealed class ShowRunner
 
     public bool IsManualRecording => _captureManual;
 
+    public int CountdownRemaining
+    {
+        get
+        {
+            if (_state != ShowState.Countdown)
+            {
+                return 0;
+            }
+
+            if (_narratorStarted is double started)
+            {
+                var remaining = Math.Max(0, _narratorDuration - (Now() - started));
+                return remaining <= 3 ? (int)Math.Ceiling(remaining) : 0;
+            }
+
+            if (_countdownDeadline is double deadline)
+            {
+                return Math.Max(0, (int)Math.Ceiling(deadline - Now()));
+            }
+
+            return 0;
+        }
+    }
+
     public bool IsCapturingTest => _captureForTest;
 
     public bool ConsentGranted => _consent;
@@ -199,7 +226,7 @@ public sealed class ShowRunner
         _project.Scenes.Count(scene => scene.Media is null || !_host.Media.HasPlayableMedia(scene));
 
     public bool IsBlack =>
-        _state == ShowState.Gate ||
+        _state is ShowState.Gate or ShowState.Countdown ||
         (_state == ShowState.Recording && !_captureForTest &&
          Scene.Capture?.Trigger == CaptureTrigger.Gate) ||
         (ActiveProject.BlackFromFrame is long black && GlobalFrame >= black);
@@ -401,6 +428,27 @@ public sealed class ShowRunner
                 _auditioning = false;
                 _note = "Audition complete";
             }
+        }
+
+        if (_state == ShowState.Countdown)
+        {
+            var finished = _narratorStarted is double started
+                ? now - started >= _narratorDuration &&
+                  !_host.Audio.NarratorPlaying
+                : _countdownDeadline is double deadline && now >= deadline;
+
+            if (finished)
+            {
+                _host.Audio.StopNarrator();
+                _narratorStarted = null;
+                _countdownDeadline = null;
+                _state = ShowState.Gate;
+                RecordAtGate();
+                return;
+            }
+
+            Notify();
+            return;
         }
 
         if (_state == ShowState.Preparing)
@@ -701,16 +749,68 @@ public sealed class ShowRunner
 
         Log($"Off-clock consent gate after {Scene.Name}");
         UpdateBlack();
+        StartRecordingLeadIn();
         Notify();
     }
 
-    public void RecordAtGate()
+    private void StartRecordingLeadIn()
     {
         if (_state != ShowState.Gate)
         {
             return;
         }
 
+        var capture = Scene.Capture;
+        if (capture is null || capture.RecordingStartMethod == CaptureStartMethod.Button)
+        {
+            return;
+        }
+
+        _host.Audio.StopNarrator();
+        if (capture.RecordingStartMethod == CaptureStartMethod.Narrator)
+        {
+            if (capture.Narrator is not string narrator ||
+                _host.ResolveAssetPath(narrator) is not string absolute ||
+                string.IsNullOrWhiteSpace(absolute))
+            {
+                _issue = "Narrator unavailable. Press Record to start manually, or skip recording.";
+                return;
+            }
+
+            try
+            {
+                _host.Audio.PlayNarrator(absolute, capture.NarratorMuted == true);
+                _narratorStarted = Now();
+                _narratorDuration = Math.Max(0.1, _host.Audio.NarratorSeconds);
+                _countdownDeadline = null;
+                _state = ShowState.Countdown;
+                _note = "Recording starts after the narrated lead-in.";
+                return;
+            }
+            catch (Exception exception) when (exception is ShowHostException or InvalidOperationException or IOException)
+            {
+                _host.Audio.StopNarrator();
+                _issue = $"{exception.Message} Press Record to start manually, or skip recording.";
+                return;
+            }
+        }
+
+        _narratorStarted = null;
+        _countdownDeadline = Now() + capture.DelaySeconds;
+        _state = ShowState.Countdown;
+        _note = "Recording starts after the countdown.";
+    }
+
+    public void RecordAtGate()
+    {
+        if (_state is not (ShowState.Gate or ShowState.Countdown))
+        {
+            return;
+        }
+
+        _host.Audio.StopNarrator();
+        _narratorStarted = null;
+        _countdownDeadline = null;
         _consent = true;
         var capture = Scene.Capture;
         var manual = capture?.RecordingMode == CaptureMode.Manual;
@@ -722,11 +822,14 @@ public sealed class ShowRunner
 
     public void DeclineAtGate()
     {
-        if (_state != ShowState.Gate)
+        if (_state is not (ShowState.Gate or ShowState.Countdown))
         {
             return;
         }
 
+        _host.Audio.StopNarrator();
+        _narratorStarted = null;
+        _countdownDeadline = null;
         _consent = false;
         _host.Audio.ClearTake();
         _host.Audio.ReleaseMicrophone();
@@ -902,7 +1005,7 @@ public sealed class ShowRunner
 
     public void Seek(long value)
     {
-        if (_state is ShowState.Recording or ShowState.Gate or ShowState.Preparing)
+        if (_state is ShowState.Recording or ShowState.Gate or ShowState.Countdown or ShowState.Preparing)
         {
             return;
         }

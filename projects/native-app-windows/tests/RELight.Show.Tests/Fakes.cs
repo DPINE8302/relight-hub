@@ -267,6 +267,19 @@ internal sealed class FakeAudioHost : IShowAudioHost
         MeterPeak = 0;
         Calls.Add("stop-all");
     }
+
+    public bool NarratorPlaying { get; private set; }
+    public double NarratorSeconds { get; set; } = 6.191;
+    public void PlayNarrator(string absolutePath, bool muted)
+    {
+        NarratorPlaying = !muted;
+        Calls.Add($"narrator:{Path.GetFileName(absolutePath)}:{muted}");
+    }
+    public void StopNarrator()
+    {
+        NarratorPlaying = false;
+        Calls.Add("stop-narrator");
+    }
 }
 
 internal sealed class FakeShowHost : IShowHost
@@ -296,6 +309,7 @@ internal sealed class FakeShowHost : IShowHost
     }
 
     public void CloseAudience() => AudienceOpen = false;
+    public string? ResolveAssetPath(string relativePath) => "/fixtures/" + relativePath;
 }
 
 internal sealed class TestClock

@@ -1,5 +1,6 @@
 using System.Buffers.Binary;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
 using NAudio.CoreAudioApi;
 using NAudio.Wave;
 using RELight.Audio;
@@ -36,6 +37,10 @@ public sealed class WindowsAudioHost : IShowAudioHost, IDisposable
     private VoiceTake? _take;
     private WasapiOut? _voiceOut;
     private float[]? _voiceBuffer;
+    private AudioFileReader? _narratorReader;
+    private WasapiOut? _narratorOut;
+    private Stopwatch? _narratorClock;
+    private double _narratorSeconds;
     private string _inputUid = "";
     private string _outputUid = "";
     private int _captureSampleRate = OutputSampleRate;
@@ -363,10 +368,84 @@ public sealed class WindowsAudioHost : IShowAudioHost, IDisposable
         }
     }
 
+    public bool NarratorPlaying
+    {
+        get
+        {
+            lock (_gate)
+            {
+                return _narratorOut is not null && _narratorOut.PlaybackState == PlaybackState.Playing;
+            }
+        }
+    }
+
+    public double NarratorSeconds
+    {
+        get
+        {
+            lock (_gate)
+            {
+                return _narratorSeconds;
+            }
+        }
+    }
+
+    public void PlayNarrator(string absolutePath, bool muted)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(absolutePath);
+        lock (_gate)
+        {
+            ObjectDisposedException.ThrowIf(_disposed, this);
+            StopNarratorLocked();
+            if (!File.Exists(absolutePath))
+            {
+                throw new ShowHostException("Narrator audio is missing.");
+            }
+            if (_output is null)
+            {
+                throw new ShowHostException("No speakers are selected.");
+            }
+
+            try
+            {
+                var reader = new AudioFileReader(absolutePath);
+                _narratorSeconds = reader.TotalTime.TotalSeconds;
+                if (muted)
+                {
+                    reader.Dispose();
+                    _narratorClock = Stopwatch.StartNew();
+                    return;
+                }
+
+                var output = new WasapiOut(_output, AudioClientShareMode.Shared, useEventSync: false, latency: 100);
+                reader.Volume = 1f;
+                output.Init(reader);
+                output.Play();
+                _narratorReader = reader;
+                _narratorOut = output;
+                _narratorClock = Stopwatch.StartNew();
+            }
+            catch (Exception exception) when (exception is not ShowHostException)
+            {
+                StopNarratorLocked();
+                throw new ShowHostException("Narrator playback could not start.", exception);
+            }
+        }
+    }
+
+    public void StopNarrator()
+    {
+        lock (_gate)
+        {
+            StopNarratorLocked();
+        }
+    }
+
     public void StopAll()
     {
         lock (_gate)
         {
+            StopNarratorLocked();
             StopVoiceLocked();
             ReleaseMicrophoneLocked();
             ClearTakeLocked();
@@ -384,6 +463,7 @@ public sealed class WindowsAudioHost : IShowAudioHost, IDisposable
                 return;
             }
 
+            StopNarratorLocked();
             StopVoiceLocked();
             ReleaseMicrophoneLocked();
             ClearTakeLocked();
@@ -559,6 +639,31 @@ public sealed class WindowsAudioHost : IShowAudioHost, IDisposable
         }
 
         _takeSeconds = 0;
+    }
+
+    private void StopNarratorLocked()
+    {
+        if (_narratorOut is not null)
+        {
+            try
+            {
+                _narratorOut.Stop();
+            }
+            catch (Exception)
+            {
+            }
+            _narratorOut.Dispose();
+            _narratorOut = null;
+        }
+
+        if (_narratorReader is not null)
+        {
+            _narratorReader.Dispose();
+            _narratorReader = null;
+        }
+
+        _narratorClock = null;
+        _narratorSeconds = 0;
     }
 
     private void StopVoiceLocked()
