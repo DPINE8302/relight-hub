@@ -7,6 +7,44 @@ namespace RELight.Show.Tests;
 public sealed class ShowRunnerTests
 {
     [Fact]
+    public void PreviewStartsAtPlayheadWithoutRecordingOrOpeningAudience()
+    {
+        var project = Project.CreateStarter();
+        var scene = project.Scenes[0];
+        scene.Media = "media/test.mov";
+        scene.MediaInFrame = 72;
+        scene.Capture = new CaptureCue { GateFrame = 30, StartMethod = CaptureStartMethod.Countdown };
+        project.BlackFromFrame = 42;
+        var (runner, host, _) = CreateRunner(project, ShowSetup.Exhibition);
+        host.Media.AllPlayable = true;
+        runner.Seek(48);
+
+        runner.StartFilmPreview();
+        runner.Tick();
+        Assert.Equal(ShowState.Playing, runner.State);
+        Assert.Equal(48, runner.Frame);
+        Assert.False(runner.IsBlack);
+        Assert.False(host.AudienceOpen);
+        Assert.DoesNotContain(host.Audio.Calls, call => call.StartsWith("capture:", StringComparison.Ordinal));
+
+        runner.TogglePlayback();
+        Assert.Equal(ShowState.Paused, runner.State);
+        runner.TogglePlayback();
+        host.Media.Advance(scene.Frames / 24.0);
+        runner.Tick();
+        Assert.Equal(ShowState.Idle, runner.State);
+        Assert.False(runner.PreviewingFilm);
+        Assert.Equal(0, runner.SelectedScene);
+        Assert.Equal(scene.Frames - 1, runner.Frame);
+
+        runner.StartFilmPreview();
+        runner.Tick();
+        Assert.Equal(0, runner.Frame);
+        runner.Stop();
+        Assert.DoesNotContain("stop-all", host.Audio.Calls);
+    }
+
+    [Fact]
     public void Film02NarratorGateWaitsThenRecordsAndResumesAtGateFrame()
     {
         var project = ProjectJson.Deserialize(

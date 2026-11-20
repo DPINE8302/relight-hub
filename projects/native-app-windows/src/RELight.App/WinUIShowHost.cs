@@ -130,10 +130,12 @@ public sealed class WinUIShowHost : IShowHost, IShowMediaHost, IDisposable
 
     public Func<Scene, bool>? MediaAvailability { get; set; }
 
+    public Func<bool>? IsOperatorPreview { get; set; }
+
     public bool HasPlayableMedia(Scene scene) =>
         scene.Media is not null && (MediaAvailability?.Invoke(scene) ?? false);
 
-    public void Prepare(Scene scene)
+    public void Prepare(Scene scene, long localFrame = 0)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
         if (scene.Media is null)
@@ -175,7 +177,7 @@ public sealed class WinUIShowHost : IShowHost, IShowMediaHost, IDisposable
         {
             _status = MediaStatus.Preparing;
             _error = null;
-            _pendingInFrame = scene.MediaInFrame;
+            _pendingInFrame = scene.MediaInFrame + localFrame;
             _previewOpened = false;
             _audienceOpened = false;
             _previewSource = preview;
@@ -204,7 +206,10 @@ public sealed class WinUIShowHost : IShowHost, IShowMediaHost, IDisposable
             PreviewPlayer.PlaybackSession.PlaybackRate = speed;
             AudiencePlayer.PlaybackSession.PlaybackRate = speed;
             PreviewPlayer.Play();
-            AudiencePlayer.Play();
+            if (IsOperatorPreview?.Invoke() != true)
+            {
+                AudiencePlayer.Play();
+            }
         }
         catch (Exception exception)
         {
@@ -244,8 +249,10 @@ public sealed class WinUIShowHost : IShowHost, IShowMediaHost, IDisposable
         var volume = Math.Clamp(gain, 0, 1);
         try
         {
-            AudiencePlayer.Volume = volume;
-            PreviewPlayer.Volume = 0;
+            var operatorPreview = IsOperatorPreview?.Invoke() == true;
+            PreviewPlayer.IsMuted = !operatorPreview;
+            PreviewPlayer.Volume = operatorPreview ? volume : 0;
+            AudiencePlayer.Volume = operatorPreview ? 0 : volume;
         }
         catch (Exception)
         {

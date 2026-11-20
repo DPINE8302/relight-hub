@@ -43,6 +43,7 @@ public sealed partial class MainWindow
     private readonly TextBlock _recordingSeconds;
     private readonly TextBlock _take;
     private readonly Button _playButton;
+    private readonly Button _previewButton;
     private readonly Button _stopButton;
     private readonly Button _restartButton;
     private readonly Button _nextButton;
@@ -123,6 +124,7 @@ public sealed partial class MainWindow
         _machineVoiceAdvanceMs = calibration.VoiceAdvanceMs;
         _studio = studio;
         _host.MediaAvailability = scene => _studio.HasVideo(scene);
+        _host.IsOperatorPreview = () => _studio.Runner.PreviewingFilm;
 
         _host.BlackChanged += (_, _) => UpdateUi();
         _host.OpenAudienceRequested += (_, _) => OpenAudience();
@@ -254,6 +256,19 @@ public sealed partial class MainWindow
         _speedCombo.SelectedIndex = 0;
         _speedCombo.SelectionChanged += Speed_SelectionChanged;
 
+        _previewButton = MakeButton("Preview film", (_, _) =>
+        {
+            if (_studio.Runner.PreviewingFilm)
+            {
+                _studio.TogglePlayback();
+            }
+            else
+            {
+                CloseAudience();
+                _studio.Runner.StartFilmPreview();
+            }
+            UpdateUi();
+        });
         _playButton = MakeButton("Start", PlayPause_Click);
         _stopButton = MakeButton("Stop", Stop_Click);
         _restartButton = MakeButton("Restart", Restart_Click);
@@ -321,6 +336,7 @@ public sealed partial class MainWindow
         _window.Closed += (_, _) =>
         {
             _closed = true;
+            _mediaImportCancellation?.Cancel();
             _timer?.Stop();
             SetAwake(false);
             _audience?.Close();
@@ -509,7 +525,9 @@ public sealed partial class MainWindow
         content.Children.Add(controlRow);
         content.Children.Add(_refreshControlsButton);
         content.Children.Add(_sceneSettingsButton);
+        content.Children.Add(MakeButton("Import media", ImportMedia_Click));
         content.Children.Add(_seekButton);
+        content.Children.Add(_previewButton);
         content.Children.Add(SectionHeader("Voice cues"));
         var editRow = new StackPanel
         {
@@ -697,7 +715,7 @@ public sealed partial class MainWindow
         if (inputs is not null)
         {
             var current = inputs.Select(item => item.Id).ToHashSet(StringComparer.Ordinal);
-            audioLost |= _studio.InputUid.Length > 0 &&
+            audioLost |= !_studio.Runner.PreviewingFilm && _studio.InputUid.Length > 0 &&
                          _availableInputs.Contains(_studio.InputUid) &&
                          !current.Contains(_studio.InputUid);
             _availableInputs = current;
@@ -733,7 +751,7 @@ public sealed partial class MainWindow
         }
 
         var enumerationFailed = inputs is null || outputs is null || displays is null;
-        if (_studio.Locked && _studio.Setup == ShowSetup.Exhibition && enumerationFailed)
+        if (_studio.Locked && !_studio.Runner.PreviewingFilm && _studio.Setup == ShowSetup.Exhibition && enumerationFailed)
         {
             if (displays is null)
             {
@@ -744,7 +762,7 @@ public sealed partial class MainWindow
             return;
         }
 
-        if (_studio.Locked && (audioLost || (screenLost && _studio.Setup == ShowSetup.Exhibition)))
+        if (_studio.Locked && (audioLost || (screenLost && !_studio.Runner.PreviewingFilm && _studio.Setup == ShowSetup.Exhibition)))
         {
             _studio.Abort("A selected device disconnected. Reconnect it or continue a new rehearsal.");
         }
@@ -785,7 +803,12 @@ public sealed partial class MainWindow
             }
 
             var canPlay = state is ShowState.Idle or ShowState.Finished or ShowState.Playing or ShowState.Paused;
-            _playButton.IsEnabled = canPlay;
+            var previewing = _studio.Runner.PreviewingFilm;
+            _previewButton.IsEnabled = (previewing && state != ShowState.Preparing) || (!_studio.Locked && hasVideo);
+            _previewButton.Content = previewing
+                ? (state == ShowState.Paused ? "Resume preview" : "Pause preview")
+                : "Preview film";
+            _playButton.IsEnabled = canPlay && !previewing;
             _playButton.Content = state switch
             {
                 ShowState.Playing => "Pause",
@@ -793,8 +816,8 @@ public sealed partial class MainWindow
                 _ => "Start"
             };
             _stopButton.IsEnabled = state is not (ShowState.Idle or ShowState.Finished);
-            _restartButton.IsEnabled = state is ShowState.Playing or ShowState.Paused;
-            _nextButton.IsEnabled = _studio.Setup == ShowSetup.Rehearsal &&
+            _restartButton.IsEnabled = !previewing && state is ShowState.Playing or ShowState.Paused;
+            _nextButton.IsEnabled = !previewing && _studio.Setup == ShowSetup.Rehearsal &&
                                     state is ShowState.Playing or ShowState.Paused;
             _gatePanel.Visibility = state is ShowState.Gate or ShowState.Countdown ? Visibility.Visible : Visibility.Collapsed;
             if (_gatePanel.Children.FirstOrDefault() is TextBlock gatePrompt)
@@ -853,7 +876,7 @@ public sealed partial class MainWindow
         _previewPlaceholder.Visibility = visible ? Visibility.Collapsed : Visibility.Visible;
         _previewBadge.Visibility = black ? Visibility.Collapsed : Visibility.Visible;
         _previewTime.Text = _studio.Timecode;
-        _previewBadgeText.Text = _studio.Setup == ShowSetup.Rehearsal
+        _previewBadgeText.Text = _studio.Runner.PreviewingFilm ? "PREVIEW" : _studio.Setup == ShowSetup.Rehearsal
             ? (scene.Draft ? "REHEARSAL  ·  DRAFT" : "REHEARSAL")
             : "EXHIBITION";
 
@@ -1036,6 +1059,11 @@ public sealed partial class MainWindow
 
     private void UpdateAudience(Scene scene, bool hasVideo, ShowState state)
     {
+        if (_studio.Runner.PreviewingFilm)
+        {
+            return;
+        }
+
         if (_studio.Setup == ShowSetup.Exhibition &&
             state is not (ShowState.Idle or ShowState.Finished) &&
             _audience is null)
@@ -1060,7 +1088,7 @@ public sealed partial class MainWindow
 
     private void OpenAudience()
     {
-        if (_audience is not null)
+        if (_studio.Runner.PreviewingFilm || _audience is not null)
         {
             return;
         }
@@ -1174,8 +1202,12 @@ public sealed partial class MainWindow
 
     private void Stop_Click(object sender, RoutedEventArgs e)
     {
+        var previewing = _studio.Runner.PreviewingFilm;
         _studio.Stop();
-        _studio.SelectScene(_studio.SelectedScene);
+        if (!previewing)
+        {
+            _studio.SelectScene(_studio.SelectedScene);
+        }
         UpdateUi();
     }
 
@@ -1297,7 +1329,8 @@ public sealed partial class MainWindow
                 return;
             }
 
-            if (_studio.Setup == ShowSetup.Exhibition && _studio.Locked && _studio.Project.RequiresPhysicalControls != false)
+            if (_studio.Setup == ShowSetup.Exhibition && _studio.Locked && !_studio.Runner.PreviewingFilm &&
+                _studio.Project.RequiresPhysicalControls != false)
             {
                 foreach (var role in new[] { ControlRole.Record, ControlRole.Choice })
                 {
@@ -1366,7 +1399,8 @@ public sealed partial class MainWindow
                 : "Assign Continue";
         _controlStatus.Text = string.Join("\n", lines);
 
-        if (_studio.Setup == ShowSetup.Exhibition && _studio.Locked && _studio.Project.RequiresPhysicalControls != false)
+        if (_studio.Setup == ShowSetup.Exhibition && _studio.Locked && !_studio.Runner.PreviewingFilm &&
+                _studio.Project.RequiresPhysicalControls != false)
         {
             foreach (var role in new[] { ControlRole.Record, ControlRole.Choice })
             {

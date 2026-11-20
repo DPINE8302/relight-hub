@@ -45,7 +45,7 @@ public interface IShowMediaHost
     /// <summary>Absolute source position of the current item, in seconds.</summary>
     double PositionSeconds { get; }
 
-    void Prepare(Scene scene);
+    void Prepare(Scene scene, long localFrame = 0);
 
     void Play(double speed);
 
@@ -100,6 +100,8 @@ public interface IShowAudioHost
     void ClearTake();
 
     void StopAll();
+
+    void ValidateNarrator(string absolutePath);
 
     void PlayNarrator(string absolutePath, bool muted);
 

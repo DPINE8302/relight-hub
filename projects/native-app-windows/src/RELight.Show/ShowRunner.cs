@@ -45,6 +45,7 @@ public sealed class ShowRunner
     private double? _narratorStarted;
     private double _narratorDuration;
     private bool _auditioning;
+    private bool _previewReachedEnd;
     private double _auditionStart;
     private bool _sceneHasMedia;
     private bool _dirty;
@@ -195,6 +196,8 @@ public sealed class ShowRunner
 
     public bool Auditioning => _auditioning;
 
+    public bool PreviewingFilm { get; private set; }
+
     public VoiceCue? ActiveCue => _activeCue;
 
     public double TakeSeconds => _host.Audio.TakeSeconds;
@@ -229,7 +232,7 @@ public sealed class ShowRunner
         _state is ShowState.Gate or ShowState.Countdown ||
         (_state == ShowState.Recording && !_captureForTest &&
          Scene.Capture?.Trigger == CaptureTrigger.Gate) ||
-        (ActiveProject.BlackFromFrame is long black && GlobalFrame >= black);
+        (!PreviewingFilm && ActiveProject.BlackFromFrame is long black && GlobalFrame >= black);
 
     public double ScenePosition
     {
@@ -293,6 +296,7 @@ public sealed class ShowRunner
             return;
         }
 
+        _previewReachedEnd = false;
         _consent = consented;
         _needsConsent = false;
         _issue = null;
@@ -336,6 +340,64 @@ public sealed class ShowRunner
         }
 
         EnterScene(0);
+        Notify();
+    }
+
+    public void StartFilmPreview()
+    {
+        if (Locked)
+        {
+            return;
+        }
+
+        if (!HasVideo)
+        {
+            _issue = "Choose a valid film before previewing.";
+            Notify();
+            return;
+        }
+
+        _issue = null;
+        _needsConsent = false;
+        _frame = _previewReachedEnd ? 0 : Math.Clamp(_frame, 0, Scene.Frames - 1);
+        _previewReachedEnd = false;
+        PreviewingFilm = true;
+        _sceneHasMedia = true;
+        _activeCue = null;
+        _ledger.Reset();
+        _ledger.Skip(_frame, Scene.Cues.Where(cue => cue.StartFrame + cue.LengthFrames <= _frame));
+        _clockPosition = ActiveProject.Rate.Seconds(_frame);
+        _preparationStarted = Now();
+        _state = ShowState.Preparing;
+        try
+        {
+            _host.Audio.StopNarrator();
+            _host.Audio.ReleaseMicrophone();
+            _host.Audio.VoiceGain = ActiveProject.VoiceLevel;
+            _host.Media.Prepare(Scene, _frame);
+            UpdateBlack();
+        }
+        catch (Exception exception) when (exception is ShowHostException or IOException or InvalidOperationException)
+        {
+            Fail(exception.Message);
+            return;
+        }
+
+        _note = "Film preview from the playhead. Recording screens are skipped.";
+        Notify();
+    }
+
+    private void EndFilmPreview()
+    {
+        _host.Media.Pause();
+        _host.Audio.StopVoice();
+        _host.Audio.PauseEngine();
+        _activeCue = null;
+        PreviewingFilm = false;
+        _state = ShowState.Idle;
+        _frame = Math.Min(_frame, Scene.Frames - 1);
+        _host.Media.SetFilmVolume(ActiveProject.FilmLevel);
+        _note = "Preview stopped at the playhead.";
         Notify();
     }
 
@@ -491,7 +553,7 @@ public sealed class ShowRunner
 
             _clockStart = now;
             _state = ShowState.Playing;
-            _note = $"Running {Scene.Name}";
+            _note = PreviewingFilm ? "Previewing film" : $"Running {Scene.Name}";
             Log(_note);
         }
 
@@ -527,6 +589,12 @@ public sealed class ShowRunner
             return;
         }
 
+        if (_sceneHasMedia && _host.Media.Status == MediaStatus.Failed)
+        {
+            Fail(_host.Media.Error ?? "Film playback failed.");
+            return;
+        }
+
         var project = ActiveProject;
         var scene = Scene;
         var nextFrame = Math.Min(scene.Frames, project.Rate.Frame(ScenePosition));
@@ -535,7 +603,7 @@ public sealed class ShowRunner
             _frame = nextFrame;
         }
 
-        if (scene.Capture is { Trigger: CaptureTrigger.Gate, GateFrame: long gate } &&
+        if (!PreviewingFilm && scene.Capture is { Trigger: CaptureTrigger.Gate, GateFrame: long gate } &&
             !_gateResolved.Contains(_selectedScene) &&
             _frame >= gate)
         {
@@ -544,7 +612,7 @@ public sealed class ShowRunner
             return;
         }
 
-        if (scene.Capture is { Trigger: CaptureTrigger.Automatic } automatic &&
+        if (!PreviewingFilm && scene.Capture is { Trigger: CaptureTrigger.Automatic } automatic &&
             !_captureFired &&
             _frame >= automatic.StartFrame)
         {
@@ -567,6 +635,11 @@ public sealed class ShowRunner
             var desired = (project.Rate.Seconds(cue.StartFrame) - ScenePosition) / _speed -
                           VoiceAdvanceMs / 1000;
             var offset = Math.Max(0, project.Rate.Frame(-desired * _speed));
+            if (PreviewingFilm && _host.Audio.TakeSeconds <= 0)
+            {
+                continue;
+            }
+
             if (offset >= cue.LengthFrames)
             {
                 Log("Voice cue missed: its region has ended; skipped without replaying late");
@@ -582,7 +655,7 @@ public sealed class ShowRunner
                     Log($"Voice scheduling late by {(int)(-desired * 1000)} ms · resumed at region frame {offset}");
                 }
 
-                Log($"Voice scheduled at {project.Rate.Timecode(project.GlobalFrame(_selectedScene, cue.StartFrame))} · lead {(int)(desired * 1000)} ms");
+                Log($"Voice scheduled at {project.Rate.Timecode(project.GlobalFrame(_selectedScene, cue.StartFrame) + (project.TimecodeStartFrame ?? 0))} · lead {(int)(desired * 1000)} ms");
             }
             catch (Exception exception) when (exception is ShowHostException or InvalidOperationException or ArgumentException)
             {
@@ -612,6 +685,13 @@ public sealed class ShowRunner
 
         if (_frame >= scene.Frames)
         {
+            if (PreviewingFilm)
+            {
+                _previewReachedEnd = true;
+                EndFilmPreview();
+                return;
+            }
+
             if (_state == ShowState.Recording)
             {
                 var wasTest = _captureForTest;
@@ -708,7 +788,7 @@ public sealed class ShowRunner
 
     public void RestartScene()
     {
-        if (_state is not (ShowState.Playing or ShowState.Paused))
+        if (PreviewingFilm || _state is not (ShowState.Playing or ShowState.Paused))
         {
             return;
         }
@@ -720,7 +800,7 @@ public sealed class ShowRunner
 
     public void NextScene()
     {
-        if (_setup != ShowSetup.Rehearsal ||
+        if (PreviewingFilm || _setup != ShowSetup.Rehearsal ||
             _state is not (ShowState.Playing or ShowState.Paused))
         {
             return;
@@ -1061,6 +1141,7 @@ public sealed class ShowRunner
             return;
         }
 
+        _previewReachedEnd = false;
         _frame = Math.Clamp(value, 0, Math.Max(0, Scene.Frames - 1));
         _host.Audio.StopVoice();
         _activeCue = null;
@@ -1085,6 +1166,7 @@ public sealed class ShowRunner
         }
 
         _selectedScene = index;
+        _previewReachedEnd = false;
         SelectedCueId = _project.Scenes[index].Cues.FirstOrDefault()?.Id;
         _frame = 0;
         _activeCue = null;
@@ -1225,6 +1307,12 @@ public sealed class ShowRunner
 
     public void Stop(bool clearMessage = true)
     {
+        if (PreviewingFilm)
+        {
+            EndFilmPreview();
+            return;
+        }
+
         _host.Media.Pause();
         _host.Media.Release();
         _host.Audio.StopAll();

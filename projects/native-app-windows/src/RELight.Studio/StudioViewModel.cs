@@ -12,9 +12,10 @@ namespace RELight.Studio;
 /// the caller's synchronization context: the WinUI host requires model and
 /// playback-host mutations to resume on its UI thread.
 /// </summary>
-public sealed class StudioViewModel
+public sealed partial class StudioViewModel
 {
     private readonly ShowRunner _runner;
+    private readonly IShowAudioHost _audio;
     private readonly Func<IReadOnlyList<string>>? _deviceBlockers;
     private Dictionary<Guid, MediaCheck> _mediaChecks = [];
     private Project? _checkedProject;
@@ -39,6 +40,8 @@ public sealed class StudioViewModel
         RootDirectory = Path.GetFullPath(rootDirectory);
         ProjectFile = Path.GetFullPath(projectFile);
         _deviceBlockers = deviceBlockers;
+        ArgumentNullException.ThrowIfNull(host);
+        _audio = host.Audio;
         _runner = new ShowRunner(
             project,
             host,

@@ -10,6 +10,8 @@ namespace RELight.App;
 
 public sealed partial class MainWindow
 {
+    private CancellationTokenSource? _mediaImportCancellation;
+
     private async void EditScene_Click(object sender, RoutedEventArgs e)
     {
         if (_studio.Locked)
@@ -84,6 +86,73 @@ public sealed partial class MainWindow
         if (changes && !_studio.Locked)
         {
             await ValidateEditedMediaAsync();
+        }
+    }
+
+    private async void ImportMedia_Click(object sender, RoutedEventArgs e)
+    {
+        if (_studio.Locked || _mediaImportCancellation is not null)
+        {
+            return;
+        }
+
+        var project = _studio.Project;
+        var sceneId = _studio.Scene.Id;
+        using var cancellation = new CancellationTokenSource();
+        _mediaImportCancellation = cancellation;
+        try
+        {
+            var options = new StackPanel();
+            var type = AddEditorChoice(options, "Import into " + _studio.Scene.Name,
+                new[] { "Film · keep scene length", "Film · use full clip length", "Narrator audio" }, 0);
+            var dialog = new ContentDialog
+            {
+                Title = "Import media",
+                Content = options,
+                XamlRoot = _root.XamlRoot,
+                PrimaryButtonText = "Choose file",
+                CloseButtonText = "Cancel"
+            };
+            if (await dialog.ShowAsync() != ContentDialogResult.Primary)
+            {
+                return;
+            }
+
+            var narrator = type.SelectedIndex == 2;
+            var picker = new FileOpenPicker();
+            var extensions = narrator ? new[] { ".wav", ".mp3", ".m4a" } : new[] { ".mp4", ".mov", ".m4v" };
+            foreach (var extension in extensions)
+            {
+                picker.FileTypeFilter.Add(extension);
+            }
+            InitializePicker(picker);
+
+            var file = await picker.PickSingleFileAsync();
+            if (file is null || _closed)
+            {
+                return;
+            }
+
+            if (!ReferenceEquals(project, _studio.Project) || sceneId != _studio.Scene.Id)
+            {
+                throw new InvalidOperationException("The scene changed. Open Import media again.");
+            }
+
+            _studio.Report("Importing media…");
+            await _studio.ImportAssetAsync(file.Path, narrator, fitScene: type.SelectedIndex == 1,
+                cancellationToken: cancellation.Token);
+            UpdateUi();
+        }
+        catch (Exception exception)
+        {
+            if (!_closed)
+            {
+                _studio.ReportIssue(exception.Message);
+            }
+        }
+        finally
+        {
+            _mediaImportCancellation = null;
         }
     }
 

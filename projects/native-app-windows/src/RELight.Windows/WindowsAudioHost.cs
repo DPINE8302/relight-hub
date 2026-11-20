@@ -388,6 +388,22 @@ public sealed class WindowsAudioHost : IShowAudioHost, IDisposable
         }
     }
 
+    public void ValidateNarrator(string absolutePath)
+    {
+        try
+        {
+            using var reader = new AudioFileReader(absolutePath);
+            if (reader.TotalTime <= TimeSpan.Zero || reader.Read(new float[64], 0, 64) <= 0)
+            {
+                throw new InvalidDataException("Narrator audio is empty.");
+            }
+        }
+        catch (Exception exception)
+        {
+            throw new ShowHostException("Choose a playable narrator audio file.", exception);
+        }
+    }
+
     public void PlayNarrator(string absolutePath, bool muted)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(absolutePath);

@@ -33,6 +33,43 @@ public sealed class StudioViewModelTests : IDisposable
     }
 
     [Fact]
+    public async Task NarratorImportCopiesExternalFileWithoutOverwritingExistingMedia()
+    {
+        var projectRoot = Path.Combine(_root, "project");
+        Directory.CreateDirectory(Path.Combine(projectRoot, "media"));
+        var source = Path.Combine(_root, "Narrator.wav");
+        await File.WriteAllTextAsync(source, "source contents");
+        await File.WriteAllTextAsync(Path.Combine(projectRoot, "media", "Narrator.wav"), "existing contents");
+        var studio = new StudioViewModel(projectRoot, Path.Combine(projectRoot, "project.relight"),
+            SingleSceneProject(), new FakeShowHost());
+
+        await studio.ImportAssetAsync(source, narrator: true);
+
+        Assert.Equal("media/Narrator (2).wav", studio.Scene.Capture!.Narrator);
+        Assert.Equal("source contents", await File.ReadAllTextAsync(Path.Combine(projectRoot, "media", "Narrator (2).wav")));
+        Assert.Equal("existing contents", await File.ReadAllTextAsync(Path.Combine(projectRoot, "media", "Narrator.wav")));
+        Assert.Equal(2, Directory.GetFiles(Path.Combine(projectRoot, "media")).Length);
+        Assert.True(studio.Dirty);
+    }
+
+    [Fact]
+    public async Task RejectedFilmDoesNotReplaceTheSceneOrLeaveAPartialCopy()
+    {
+        var projectRoot = Path.Combine(_root, "project");
+        var source = Path.Combine(_root, "Broken.mov");
+        await File.WriteAllTextAsync(source, "invalid media");
+        var studio = new StudioViewModel(projectRoot, Path.Combine(projectRoot, "project.relight"),
+            SingleSceneProject(), new FakeShowHost());
+        var original = studio.Project;
+
+        await Assert.ThrowsAnyAsync<Exception>(() => studio.ImportAssetAsync(source));
+
+        Assert.Same(original, studio.Project);
+        Assert.False(studio.Dirty);
+        Assert.Empty(Directory.GetFiles(Path.Combine(projectRoot, "media")));
+    }
+
+    [Fact]
     public async Task LoadAsyncReplacesTheProjectAndChecksItsMedia()
     {
         var project = Project.CreateStarter();
