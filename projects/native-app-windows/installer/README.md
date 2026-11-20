@@ -1,9 +1,10 @@
 # RE:Light Native for Windows — offline installer
 
 This directory contains the unsigned, per-user Inno Setup packaging path. The
-script produces separate x64 and ARM64 installers. It has not been compiled or
-installed on Windows yet because no Windows machine was available when this
-packaging path was written.
+script produces separate x64 and ARM64 installers. The Windows native app
+workflow builds both installers on GitHub Actions and checks setup, project
+association, and operator-window startup. Download previews from the workflow's
+Artifacts section.
 
 ## Build on Windows 10 22H2 x64 or Windows 11 x64/ARM64
 

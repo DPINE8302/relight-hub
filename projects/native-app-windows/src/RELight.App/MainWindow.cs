@@ -51,6 +51,9 @@ public sealed partial class MainWindow
     private readonly Button _finishButton;
     private readonly Button _sceneSettingsButton;
     private readonly Button _voiceSettingsButton;
+    private readonly Button _testMicButton;
+    private readonly Button _auditionButton;
+    private readonly Button _seekButton;
     private readonly Button _addCueButton;
     private readonly Button _removeCueButton;
     private readonly Button _undoButton;
@@ -260,6 +263,20 @@ public sealed partial class MainWindow
         _finishButton = MakeButton("Stop & continue", FinishRecording_Click);
         _sceneSettingsButton = MakeButton("Scene settings", EditScene_Click);
         _voiceSettingsButton = MakeButton("Edit voice cue", EditVoice_Click);
+        _testMicButton = MakeButton("Record test take", (_, _) =>
+        {
+            _studio.RecordTest();
+            UpdateUi();
+        });
+        _auditionButton = MakeButton("Play test take", (_, _) =>
+        {
+            if (_studio.SelectedCue is { } cue)
+            {
+                _studio.Audition(cue);
+                UpdateUi();
+            }
+        });
+        _seekButton = MakeButton("Go to frame", SeekScene_Click);
         _addCueButton = MakeButton("Add cue", AddCue_Click);
         _removeCueButton = MakeButton("Remove", RemoveCue_Click);
         _undoButton = MakeButton("Undo", (_, _) => { _studio.Undo(); UpdateUi(); });
@@ -492,6 +509,7 @@ public sealed partial class MainWindow
         content.Children.Add(controlRow);
         content.Children.Add(_refreshControlsButton);
         content.Children.Add(_sceneSettingsButton);
+        content.Children.Add(_seekButton);
         content.Children.Add(SectionHeader("Voice cues"));
         var editRow = new StackPanel
         {
@@ -503,6 +521,10 @@ public sealed partial class MainWindow
         content.Children.Add(editRow);
         content.Children.Add(_cueCombo);
         content.Children.Add(_voiceSettingsButton);
+        var testRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+        testRow.Children.Add(_testMicButton);
+        testRow.Children.Add(_auditionButton);
+        content.Children.Add(testRow);
         var undoRow = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -796,6 +818,9 @@ public sealed partial class MainWindow
             _exportButton.IsEnabled = !_studio.Locked;
             _devicesButton.IsEnabled = !_studio.Locked;
             _sceneSettingsButton.IsEnabled = !_studio.Locked;
+            _seekButton.IsEnabled = !_studio.Locked;
+            _testMicButton.IsEnabled = !_studio.Locked;
+            _auditionButton.IsEnabled = !_studio.Locked && _studio.SelectedCue is not null && _studio.TakeSeconds > 0;
             _voiceSettingsButton.IsEnabled = !_studio.Locked && _studio.SelectedCue is not null;
             _addCueButton.IsEnabled = !_studio.Locked;
             _removeCueButton.IsEnabled = !_studio.Locked && _studio.SelectedCueId is not null;

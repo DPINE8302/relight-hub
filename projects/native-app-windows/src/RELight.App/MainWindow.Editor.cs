@@ -108,8 +108,14 @@ public sealed partial class MainWindow
         var passes = AddEditorNumber(panel, "Repeat count", cue.RepeatCount ?? 1);
         var fill = AddEditorCheck(panel, "Loop to fill the cue", cue.LoopToFill == true);
         var bypass = AddEditorCheck(panel, "Bypass effects", cue.Bypass);
-        var preset = AddEditorChoice(panel, "Apply an effect preset",
-            new[] { "Current settings", "Clean", "Echo", "Decay", "Distorted" }, 0);
+        var builtInPresets = new[] { "Clean", "Echo", "Decay", "Distorted" };
+        const string customPresetPrefix = "Project preset · ";
+        var choices = new[] { "Current settings" }
+            .Concat(builtInPresets)
+            .Concat(project.EffectPresets.Keys.OrderBy(key => key, StringComparer.CurrentCulture)
+                .Select(key => customPresetPrefix + key)).ToArray();
+        var preset = AddEditorChoice(panel, "Apply an effect preset", choices, 0);
+        var savePreset = AddEditorText(panel, "Save these effect settings as a new project preset (optional)", null);
         var effects = new Dictionary<EffectParameter, NumberBox>();
         var automation = new Dictionary<EffectParameter, TextBox>();
         var automationPanel = new StackPanel { Spacing = 10 };
@@ -143,7 +149,10 @@ public sealed partial class MainWindow
                 return;
             }
 
-            var values = EffectSettings.Preset((string)preset.SelectedItem);
+            var selected = choices[preset.SelectedIndex];
+            var values = preset.SelectedIndex <= builtInPresets.Length
+                ? EffectSettings.Preset(selected)
+                : project.EffectPresets[selected[customPresetPrefix.Length..]];
             foreach (var (parameter, field) in effects)
             {
                 field.Value = values[parameter];
@@ -184,7 +193,46 @@ public sealed partial class MainWindow
                     edited.Automation.Remove(key);
                 }
             }
+
+            if (EmptyAsNull(savePreset.Text) is { } presetName &&
+                !changed.EffectPresets.TryAdd(presetName, edited.Effects.Clone()))
+            {
+                throw new FormatException("A project preset already has that name.");
+            }
         });
+    }
+
+    private async void SeekScene_Click(object sender, RoutedEventArgs e)
+    {
+        if (_studio.Locked)
+        {
+            return;
+        }
+
+        var panel = new StackPanel { Spacing = 10 };
+        var frame = AddEditorNumber(panel, $"Scene frame (0–{_studio.Scene.Frames - 1})", _studio.Frame);
+        var dialog = new ContentDialog
+        {
+            Title = "Go to frame",
+            Content = panel,
+            PrimaryButtonText = "Go",
+            CloseButtonText = "Cancel",
+            XamlRoot = _root.XamlRoot
+        };
+        if (await dialog.ShowAsync() != ContentDialogResult.Primary || _studio.Locked)
+        {
+            return;
+        }
+
+        try
+        {
+            _studio.Seek(ReadFrame(frame));
+            UpdateUi();
+        }
+        catch (Exception exception)
+        {
+            _studio.ReportIssue(exception.Message);
+        }
     }
 
     private async Task<bool> ShowEditorAsync(string title, StackPanel fields, Project project, Action<Project> edit)

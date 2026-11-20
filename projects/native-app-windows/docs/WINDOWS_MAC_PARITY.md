@@ -15,6 +15,16 @@ Source of truth: `projects/electron-engine/native-app`, documented release
   after the lead-in.
 - Portable export now stages both film and narrator assets.
 
+## Operator tools
+
+- Scene settings edit the film, source frame, scene length, and visitor recording
+  setup. Put films and narrator files in the project folder before choosing them.
+- Voice cues support source trim, fades, repeat/fill, built-in and project
+  presets, and per-effect automation. Record and play a test take from the
+  operator window. Support reports can be saved to a text file.
+- Film 02 uses its authored timecode, optional USB controls, and dream boost.
+  The audience window shows the recording countdown in Thai and English.
+
 ## Available verification
 
 - The pinned .NET 10.0.402 SDK passes the portable solution test suite.
