@@ -202,7 +202,7 @@ internal sealed class FakeAudioHost : IShowAudioHost
         Calls.Add($"capture:{seconds}");
     }
 
-    public void FinishCapture()
+    public void FinishCapture(double boostLimit)
     {
         if (FailFinish)
         {

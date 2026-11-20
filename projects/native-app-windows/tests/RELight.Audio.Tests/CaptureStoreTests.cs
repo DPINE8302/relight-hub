@@ -3,6 +3,16 @@ namespace RELight.Audio.Tests;
 public sealed class CaptureStoreTests
 {
     [Fact]
+    public void AcceptsAQuietTakeWithBoostButRejectsSilenceAndCorruptSamples()
+    {
+        float[] quiet = [0.0001f, -0.0001f];
+        Assert.False(VoiceTakeValidator.TryCreate(quiet, 48_000, out _, out _));
+        Assert.True(VoiceTakeValidator.TryCreate(quiet, 48_000, out _, out _, boostLimit: 400));
+        Assert.False(VoiceTakeValidator.TryCreate([0f], 48_000, out _, out _, boostLimit: 400));
+        Assert.False(VoiceTakeValidator.TryCreate([float.NaN], 48_000, out _, out _, boostLimit: 400));
+    }
+
+    [Fact]
     public void CapturesABoundedTakeAndReportsMeter()
     {
         using var store = new CaptureStore();

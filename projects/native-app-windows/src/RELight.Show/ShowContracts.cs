@@ -78,7 +78,7 @@ public interface IShowAudioHost
 
     void BeginCapture(double seconds);
 
-    void FinishCapture();
+    void FinishCapture(double boostLimit);
 
     /// <summary>Authored voice bus gain for the current project.</summary>
     double VoiceGain { get; set; }

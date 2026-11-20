@@ -78,6 +78,24 @@ public static class VoiceBufferBuilder
             throw new AudioException("Voice trim is outside the captured recording");
         }
 
+        var boostLimit = cue.BoostLimit;
+        if (!double.IsFinite(boostLimit) || boostLimit is < 1 or > 400)
+        {
+            throw new AudioException("Dream recording boost must be between 1 and 400.");
+        }
+
+        // Measure the same source on every pass, including when resuming mid-cue.
+        var peak = 0f;
+        if (boostLimit > 1)
+        {
+            var source = take.Samples.AsSpan(sourceOffset, (int)Math.Min(sourceCount, fullCount));
+            foreach (var sample in source)
+            {
+                peak = Math.Max(peak, Math.Abs(sample));
+            }
+        }
+
+        var boost = peak > 0 ? (float)Math.Min(boostLimit, 0.9 / peak) : 1f;
         var countInt = (int)count;
         var fullCountInt = (int)fullCount;
         var buffer = new float[countInt];
@@ -109,7 +127,7 @@ public static class VoiceBufferBuilder
                 sample = take.Samples[sourceOffset + resumeOffset + index];
             }
 
-            buffer[index] = sample * incoming * outgoing;
+            buffer[index] = sample * boost * incoming * outgoing;
         }
 
         return buffer;

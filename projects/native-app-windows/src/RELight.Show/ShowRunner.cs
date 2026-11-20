@@ -128,7 +128,7 @@ public sealed class ShowRunner
 
     public long GlobalFrame => ActiveProject.GlobalFrame(_selectedScene, _frame);
 
-    public string Timecode => ActiveProject.Rate.Timecode(GlobalFrame);
+    public string Timecode => ActiveProject.Rate.Timecode(GlobalFrame + (ActiveProject.TimecodeStartFrame ?? 0));
 
     public double Speed
     {
@@ -919,7 +919,7 @@ public sealed class ShowRunner
 
         try
         {
-            _host.Audio.FinishCapture();
+            _host.Audio.FinishCapture(CaptureBoostLimit());
             _note = $"{_host.Audio.TakeSeconds:0.0} seconds captured · ready for voice cues";
             Log(_note);
         }
@@ -950,6 +950,44 @@ public sealed class ShowRunner
             _state = ShowState.Playing;
             Notify();
         }
+    }
+
+    private double CaptureBoostLimit()
+    {
+        if (_captureForTest)
+        {
+            return SelectedCue?.BoostLimit ?? 1;
+        }
+
+        var boost = 1.0;
+        var scenes = ActiveProject.Scenes;
+        for (var index = _selectedScene; index < scenes.Count; index++)
+        {
+            var scene = scenes[index];
+            var nextCapture = index > _selectedScene ? scene.Capture : null;
+            var cutoff = nextCapture?.Trigger switch
+            {
+                CaptureTrigger.Gate => nextCapture.GateFrame ?? scene.Frames,
+                null => scene.Frames,
+                _ => nextCapture.StartFrame
+            };
+
+            foreach (var cue in scene.Cues)
+            {
+                if (cue.StartFrame < cutoff &&
+                    (index != _selectedScene || (cue.StartFrame >= _frame && !_ledger.HasFired(cue.Id))))
+                {
+                    boost = Math.Max(boost, cue.BoostLimit);
+                }
+            }
+
+            if (nextCapture is not null)
+            {
+                break;
+            }
+        }
+
+        return boost;
     }
 
     private void ContinueAfterGate()

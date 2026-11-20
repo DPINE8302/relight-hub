@@ -105,6 +105,28 @@ public sealed class VoiceBufferBuilderTests
         Assert.Throws<AudioException>(() => VoiceBufferBuilder.Build(take, trimmed, new FrameRate(24)));
     }
 
+    [Fact]
+    public void BoostsTheTrimmedSourceWithTheSamePeakLimitAfterResume()
+    {
+        var take = ConstantTake(seconds: 2, value: 0.02f);
+        take.Samples[0] = 1f; // Outside the trim.
+        take.Samples[2_000] = 0.1f;
+        var cue = new VoiceCue(0, 72)
+        {
+            SourceInFrame = 1,
+            FadeInFrames = 0,
+            FadeOutFrames = 0,
+            GainBoost = 400,
+            LoopToFill = true
+        };
+        var rate = new FrameRate(24);
+
+        var full = VoiceBufferBuilder.Build(take, cue, rate);
+        Assert.Equal(0.9f, full[0], 5);
+        Assert.Equal(0.18f, full[2_000], 5);
+        Assert.Equal(full[2_000..], VoiceBufferBuilder.Build(take, cue, rate, offsetFrames: 1));
+    }
+
     private static VoiceTake ConstantTake(double seconds, float value) =>
         new(Enumerable.Repeat(value, (int)(seconds * VoiceBufferBuilder.SampleRate)).ToArray(), VoiceBufferBuilder.SampleRate);
 

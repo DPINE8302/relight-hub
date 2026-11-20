@@ -1,6 +1,5 @@
 using System.Buffers.Binary;
 using System.Runtime.InteropServices;
-using System.Diagnostics;
 using NAudio.CoreAudioApi;
 using NAudio.Wave;
 using RELight.Audio;
@@ -39,7 +38,6 @@ public sealed class WindowsAudioHost : IShowAudioHost, IDisposable
     private float[]? _voiceBuffer;
     private AudioFileReader? _narratorReader;
     private WasapiOut? _narratorOut;
-    private Stopwatch? _narratorClock;
     private double _narratorSeconds;
     private string _inputUid = "";
     private string _outputUid = "";
@@ -233,7 +231,7 @@ public sealed class WindowsAudioHost : IShowAudioHost, IDisposable
         }
     }
 
-    public void FinishCapture()
+    public void FinishCapture(double boostLimit)
     {
         lock (_gate)
         {
@@ -251,7 +249,7 @@ public sealed class WindowsAudioHost : IShowAudioHost, IDisposable
             {
                 Array.Clear(raw.Samples);
             }
-            if (!VoiceTakeValidator.TryCreate(resampled, OutputSampleRate, out var validated, out var error))
+            if (!VoiceTakeValidator.TryCreate(resampled, OutputSampleRate, out var validated, out var error, boostLimit))
             {
                 Array.Clear(resampled);
                 throw new ShowHostException(error ?? "The recording could not be used.");
@@ -413,17 +411,14 @@ public sealed class WindowsAudioHost : IShowAudioHost, IDisposable
                 if (muted)
                 {
                     reader.Dispose();
-                    _narratorClock = Stopwatch.StartNew();
                     return;
                 }
 
-                var output = new WasapiOut(_output, AudioClientShareMode.Shared, useEventSync: false, latency: 100);
-                reader.Volume = 1f;
-                output.Init(reader);
-                output.Play();
                 _narratorReader = reader;
-                _narratorOut = output;
-                _narratorClock = Stopwatch.StartNew();
+                _narratorOut = new WasapiOut(_output, AudioClientShareMode.Shared, useEventSync: false, latency: 100);
+                reader.Volume = 1f;
+                _narratorOut.Init(reader);
+                _narratorOut.Play();
             }
             catch (Exception exception) when (exception is not ShowHostException)
             {
@@ -662,7 +657,6 @@ public sealed class WindowsAudioHost : IShowAudioHost, IDisposable
             _narratorReader = null;
         }
 
-        _narratorClock = null;
         _narratorSeconds = 0;
     }
 
